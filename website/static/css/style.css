@@ -1,0 +1,54 @@
+.input_parameters {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.input_parameters input {
+    margin: 5px;
+    padding: 5px;
+    width: 600px;
+}
+.input_parameters_az {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.input_parameters_az input {
+    margin: 5px;
+    padding: 5px;
+    width: 100px;
+}
+.input_parameters_com {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.input_parameters_com input {
+    margin: 5px;
+    padding: 5px;
+    width: 200px;
+}
+
+header {
+	background-color: #696969;
+	height: 60px;
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	overflow: hidden;
+	padding: 0 20px;
+}
+h1 {
+    color: #000000;
+    text-align: center;
+    font-size: calc(0.6rem + 1vw);
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+

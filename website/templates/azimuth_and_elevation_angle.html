@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Азимут и угол места</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="input_parameters_az">
+        <span>Широта 1, градусы</span>
+        <input id="lat1" type="text" value="10,456">
+        <span>Долгота 1, градусы</span>
+        <input id="lon1" type="text" value="10">
+        <span>Высота 1, км</span>
+        <input id="alt1" type="text" value="10">
+        <span>Широта 2, градусы</span>
+        <input id="lat2" type="text" value="10">
+        <span>Долгота 2, градусы</span>
+        <input id="lon2" type="text" value="20">
+        <span>Высота 2, км</span>
+        <input id="alt2" type="text" value="20">
+
+        <button id="task-btn" onclick="azimuth_and_elevation_angle()">Рассчитать</button>
+        <span>Азимут</span>
+        <span id="azimuth"></span>
+        <span>Угол</span>
+        <span id="elevation"></span>
+        <span>Дистанция</span>
+        <span id="distance"></span>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+</body>
+</html>

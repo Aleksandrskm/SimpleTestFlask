@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поиск координат через API</title>
+
+<style>
+    .input_parameters {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .input_parameters input {
+        margin: 5px;
+        padding: 5px;
+        width: 600px;
+    }
+</style>
+</head>
+<body>
+    <div class="input_parameters">
+        <span>Первая строка TLE</span>
+        <input id="first_TLE_line" type="text" value="1 25544U 98067A   24095.11237420  .00015431  00000-0  27870-3 0  9991">
+        <span>Вторая строка TLE</span>
+        <input id="second_TLE_line" type="text" value="2 25544  51.6412 322.6552 0004444  35.1429 100.9890 15.49904998447051">
+        <span>Название</span>
+        <input id="name" type="text" value="GONETS M-1">
+
+        <button id="task-btn"    onclick="get_coordinates()">Отправить</button>
+        <span>Ответ</span>
+        <span id="response"></span>
+
+    </div>
+
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+
+</body>
+</html>
