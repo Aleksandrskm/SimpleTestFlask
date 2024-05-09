@@ -1,12 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Поиск координат</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Поиск координат</title>-->
+<!--    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">-->
+<!--</head>-->
+<!--<body>-->
+{% extends "base.html" %}
+{% block content %}
     <div class="input_parameters">
         <span>Первая строка TLE</span>
         <input id="first_TLE_line" type="text" value="1 25544U 98067A   24095.11237420  .00015431  00000-0  27870-3 0  9991">
@@ -22,7 +24,7 @@
         <span>Высота</span>
         <span id="height.km"></span>
     </div>
-
-    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
-</body>
-</html>
+{% endblock %}
+<!--    <script src="{{ url_for('static', filename='js/index.js') }}"></script>-->
+<!--</body>-->
+<!--</html>-->

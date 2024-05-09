@@ -6,13 +6,10 @@
     <title>Имитатор центра вызовов</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
-    .btn {
-        font-size: 20px; /* Устанавливаем размер текста кнопки */
-        padding: 10px 20px; /* Устанавливаем отступы внутри кнопки */
-    }
+
     </style>
     <style>
-    main {
+    butt {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -20,35 +17,25 @@
         margin: 0;
     }
 
-    h1 {
-        text-align: center;
-    }
-
-    a {
-        text-decoration: none;
-        margin: 0 10px;
-    }
-
-
     </style>
 </head>
 <body>
 
     <header>
         <div class="ref">
-            <a class="home-ref" href="/" title="Главная страница">
-                <img class="home" src="{{ url_for('static', filename='img/home_icon/home.svg') }}" alt="Стартовая страница">
-            </a>
-            <a class="logo-ref" href="https://www.niir.ru/" title="НИИ РАДИО">
-                <img class="logo" src="{{ url_for('static', filename='img/logo/logo_radio.png') }}" alt="Сайт НИИР">
-            </a>
+<!--            <a class="home-ref" href="/" title="Главная страница">-->
+<!--                <img class="home" src="{{ url_for('static', filename='img/home_icon/home.svg') }}" alt="Стартовая страница">-->
+<!--            </a>-->
+<!--            <a class="logo-ref" href="https://www.niir.ru/" title="НИИ РАДИО">-->
+<!--                <img class="logo" src="{{ url_for('static', filename='img/logo_radio.png') }}" alt="Сайт НИИР">-->
+<!--            </a>-->
         </div>
         <div class="title">
             <h1>Имитатор центра вызовов</h1>
         </div>
     </header>
     {% block content %}
-    <main>
+    <main class="butt">
     <a href="/azimuth_and_elevation_angle"><button class="btn">Определение азимута и угла места </button></a>
     <a href="/finding_coordinates"><button class="btn">Нахождение координат</button></a>
     <a href="/get_coordinates"><button class="btn">Нахождение координат через API</button></a>
