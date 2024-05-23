@@ -7,14 +7,14 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <header class="title">
-        <h1>Имитатор центра вызовов</h1>
+    <header>
+        <h1>Имитатор центра обработки вызовов</h1>
     </header>
 
     {% block content %}
 
     <main class="butt">
-        <a href="/azimuth_and_elevation_angle"><button class="btn">Определение азимута и угла места </button></a>
+        <a href="/azimuth_and_elevation_angle"><button class="btn">Определение азимута и угла места</button></a>
         <a href="/finding_coordinates"><button class="btn">Нахождение координат</button></a>
         <a href="/get_coordinates"><button class="btn">Нахождение координат через API</button></a>
         <a href="/communication_availability"><button class="btn">Вычисление доступности связи</button></a>

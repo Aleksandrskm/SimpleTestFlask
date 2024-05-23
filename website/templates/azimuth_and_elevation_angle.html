@@ -2,26 +2,45 @@
 
 {% block content %}
 
-    <div class="input_parameters_az">
-        <span>Широта 1, градусы</span>
-        <input id="lat1" type="text" value="10.456">
-        <span>Долгота 1, градусы</span>
-        <input id="lon1" type="text" value="10.11">
-        <span>Высота 1, км</span>
-        <input id="alt1" type="text" value="10">
-        <span>Широта 2, градусы</span>
-        <input id="lat2" type="text" value="10">
-        <span>Долгота 2, градусы</span>
-        <input id="lon2" type="text" value="20">
-        <span>Высота 2, км</span>
-        <input id="alt2" type="text" value="20">
+    <h2>Определение азимута и угла места</h2>
 
+
+    <div class="input_parameters_az">
+        <div class="row_az">
+            <div class="column1_az">
+                <span>Широта 1, градусы</span>
+                <input id="lat1" type="text" value="10.456">
+                <span>Долгота 1, градусы</span>
+                <input id="lon1" type="text" value="10.11">
+                <span>Высота 1, км</span>
+                <input id="alt1" type="text" value="10">
+            </div>
+            <div class="column2_az">
+                <span>Широта 2, градусы</span>
+                <input id="lat2" type="text" value="10">
+                <span>Долгота 2, градусы</span>
+                <input id="lon2" type="text" value="20">
+                <span>Высота 2, км</span>
+                <input id="alt2" type="text" value="20">
+            </div>
+        </div>
+        <div class="btn2">
         <button id="task-btn" onclick="azimuth_and_elevation_angle()">Рассчитать</button>
-        <span>Азимут</span>
-        <span id="azimuth"></span>
-        <span>Угол</span>
-        <span id="elevation"></span>
-        <span>Дистанция</span>
-        <span id="distance"></span>
+        </div>
+        <div class="centered_az">
+            <div class="row_az">
+                <div class="column1_az">
+                    <span>Азимут:</span>
+                    <span>Угол:</span>
+                    <span>Дистанция:</span>
+                    </div>
+                <div class="column2_az">
+
+                    <span id="azimuth"></span>
+                    <span id="elevation"></span>
+                    <span id="distance"></span>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

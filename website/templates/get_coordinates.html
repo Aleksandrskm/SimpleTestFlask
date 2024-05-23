@@ -1,18 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+    <h2>Нахождение координат через API</h2>
+
     <div class="input_parameters">
-        <span>Первая строка TLE</span>
-        <input id="first_TLE_line" type="text" value="1 25544U 98067A   24095.11237420  .00015431  00000-0  27870-3 0  9991">
-        <span>Вторая строка TLE</span>
-        <input id="second_TLE_line" type="text" value="2 25544  51.6412 322.6552 0004444  35.1429 100.9890 15.49904998447051">
-        <span>Название</span>
-        <input id="name" type="text" value="GONETS M-1">
-
-        <button id="task-btn"    onclick="get_coordinates()">Отправить</button>
-        <span>Ответ</span>
-        <span id="response"></span>
-
+        <div class="btn2">
+            <span>Первая строка TLE</span>
+            <input id="first_TLE_line" type="text" value="1 25544U 98067A   24095.11237420  .00015431  00000-0  27870-3 0  9991">
+            <span>Вторая строка TLE</span>
+            <input id="second_TLE_line" type="text" value="2 25544  51.6412 322.6552 0004444  35.1429 100.9890 15.49904998447051">
+            <span>Название</span>
+            <input id="name" type="text" value="GONETS M-1">
+            <button id="task-btn"    onclick="get_coordinates()">Отправить</button>
+        </div>
+        <div class="row_az">
+            <span>Ответ:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span id="response"></span>
+        </div>
     </div>
 {% endblock %}
 
