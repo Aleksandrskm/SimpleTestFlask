@@ -5,43 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Имитатор центра вызовов</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <style>
-
-    </style>
-    <style>
-    butt {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-    }
-
-    </style>
 </head>
 <body>
-
-    <header>
-        <div class="ref">
-<!--            <a class="home-ref" href="/" title="Главная страница">-->
-<!--                <img class="home" src="{{ url_for('static', filename='img/home_icon/home.svg') }}" alt="Стартовая страница">-->
-<!--            </a>-->
-<!--            <a class="logo-ref" href="https://www.niir.ru/" title="НИИ РАДИО">-->
-<!--                <img class="logo" src="{{ url_for('static', filename='img/logo_radio.png') }}" alt="Сайт НИИР">-->
-<!--            </a>-->
-        </div>
-        <div class="title">
-            <h1>Имитатор центра вызовов</h1>
-        </div>
+    <header class="title">
+        <h1>Имитатор центра вызовов</h1>
     </header>
+
     {% block content %}
+
     <main class="butt">
-    <a href="/azimuth_and_elevation_angle"><button class="btn">Определение азимута и угла места </button></a>
-    <a href="/finding_coordinates"><button class="btn">Нахождение координат</button></a>
-    <a href="/get_coordinates"><button class="btn">Нахождение координат через API</button></a>
-    <a href="/communication_availability"><button class="btn">Вычисление доступности связи</button></a>
+        <a href="/azimuth_and_elevation_angle"><button class="btn">Определение азимута и угла места </button></a>
+        <a href="/finding_coordinates"><button class="btn">Нахождение координат</button></a>
+        <a href="/get_coordinates"><button class="btn">Нахождение координат через API</button></a>
+        <a href="/communication_availability"><button class="btn">Вычисление доступности связи</button></a>
     </main>
+
     {% endblock %}
+
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>
 </html>

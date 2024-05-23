@@ -1,6 +1,5 @@
 import math
 import requests
-import json
 from datetime import datetime, timedelta, timezone
 from skyfield.api import load
 from skyfield.sgp4lib import EarthSatellite
