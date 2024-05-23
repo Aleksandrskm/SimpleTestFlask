@@ -25,3 +25,7 @@ def function_get():
 @views.route('/communication_availability')
 def function_com():
     return render_template('communication_availability.html')
+
+@views.route('/viewing_tables')
+def function_view():
+    return render_template('viewing_tables.html')
