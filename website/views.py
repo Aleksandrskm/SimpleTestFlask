@@ -12,12 +12,6 @@ def index():
 def function_az():
     return render_template('azimuth_and_elevation_angle.html')
 
-
-@views.route('/finding_coordinates')
-def function_find():
-    return render_template('finding_coordinates.html')
-
-
 @views.route('/get_coordinates')
 def function_get():
     return render_template('get_coordinates.html')

@@ -355,3 +355,34 @@ body {
 td{
     white-space: pre;
 }
+
+.container__nav{
+  color: #000000;
+  line-height: 1;
+  font-size: 16;
+  font-weight: normal;
+  font-family: Arial, sans-serif;
+
+}
+
+.table-name{
+  color: #000000;
+  line-height: 1;
+  font-size: calc(0.4rem + 0.8vw);
+  font-weight: normal;
+  font-family: Arial, sans-serif;
+  margin-top: 0px;
+  margin-bottom: 20px;
+  text-align: center; /* Центрируем текст заголовка */
+  padding-bottom: 15px; /* Отступ снизу */
+  border-bottom: 6px solid #999999; /* Темная полоса снизу */
+}
+
+.table-buttons{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 80vh;
+        margin: 0;
+}

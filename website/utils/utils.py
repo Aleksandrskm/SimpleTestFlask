@@ -54,19 +54,6 @@ def calculate_distance(lat1, lon1, lat2, lon2):
     distance = radius * c
     return distance
 
-def get_satellite_position_and_height_from_TLE(first_TLE_line: str, second_TLE_line: str):
-    print(first_TLE_line)
-    print(second_TLE_line)
-    datetime_msc = datetime.now()
-    ts = load.timescale()
-    satellite = EarthSatellite(line1=first_TLE_line, line2=second_TLE_line, ts=ts)
-    sat_date_time = ts.utc(datetime_msc.year, datetime_msc.month, datetime_msc.day,
-                           datetime_msc.hour - 3, datetime_msc.minute, datetime_msc.second)
-    geocentric = satellite.at(sat_date_time)
-    lat, lon = wgs84.latlon_of(geocentric)
-    height = wgs84.height_of(geocentric)
-    print(lat, lon, height)
-    return lat.degrees, lon.degrees, height.km
 
 def get_coordinates(first_TLE_line: str, second_TLE_line: str, name: str):
     lat1 = first_TLE_line

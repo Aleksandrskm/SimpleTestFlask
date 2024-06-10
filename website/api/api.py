@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from ..utils.utils  import calculate_distance, calculate_azimuth, elevation_eagle, get_satellite_position_and_height_from_TLE, get_coordinates, communication_availability
+from ..utils.utils  import calculate_distance, calculate_azimuth, elevation_eagle, get_coordinates, communication_availability
 
 api = Blueprint("api", __name__)
 
@@ -22,19 +22,6 @@ def index():
         "elevation": elevation
     })
 
-@api.route("/finding_coordinates")
-def index2():
-    first_TLE_line = (request.args.get('first_TLE_line'))
-    second_TLE_line = (request.args.get('second_TLE_line'))
-
-    lat, lon, height = get_satellite_position_and_height_from_TLE(first_TLE_line, second_TLE_line)
-
-
-    return jsonify({
-        "lat.degrees": str(lat),
-        "lon.degrees": str(lon),
-        "height.km": str(height)
-    })
 
 @api.route("/get_coordinates")
 def index3():

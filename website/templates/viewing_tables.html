@@ -2,19 +2,14 @@
 
 {% block content %}
 
-    <h2>Редактор таблиц</h2>
+    <h2>Редактор данных</h2>
 
     <main class="tables_vi">
-        <div class="loader-container">
-<!--            <div class="spinner"></div>-->
-        </div>
+        <div class="loader-container"></div>
         <div class="row_vi">
             <div class="column1_vi">
             <h3>Список таблиц</h3>
-                <div class="container__nav">
-                </div>
                 <div class="container__nav"></div>
-<!--                <div class="container_content"></div>-->
             </div>
             <div class="column2_vi">
                 <div class="container_content"></div>
@@ -25,10 +20,31 @@
                         <form action="#">
                             <div data-close class="modal__close">&times;</div>
                             <div class="modal__title">Редактирование таблицы</div>
-                            <!-- <input required placeholder="Ваше имя" name="name" type="text" class="modal__input">
-                             <input required placeholder="Ваш номер телефона" name="phone" type="phone" class="modal__input"> -->
                             <button class="btn btn_dark btn_min">Сохранить</button>
                         </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="confirmation-modal hide">
+                <div class="modal__dialog">
+                    <div class="confirmation-modal__content">
+                        <div class="confirmation-modal__title">Подтвердите удаление</div>
+                        <div class="confirmation-modal__buttons">
+                            <button class="btn btn_confirm">Удалить</button>
+                            <button class="btn btn_cancel">Отмена</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="confirmation-modal-add hide">
+                <div class="modal__dialog">
+                    <div class="confirmation-modal__content-add">
+                        <div class="confirmation-modal__title-add">Добавление строки</div>
+                        <div class="confirmation-modal__buttons-add">
+                            <button class="btn btn_confirm-add">Соханить</button>
+                            <button class="btn btn_cancel">Отмена</button>
+                        </div>
                     </div>
                 </div>
             </div>

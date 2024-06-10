@@ -85,206 +85,450 @@ function communication_availability() {
       });
    }
 
+
 function closeModal(modal) {
   modal.classList.add('hide');
   modal.classList.remove('show');
-  document.body.style.overflow='';
+  document.body.style.overflow = '';
 }
+
 function openModal(modal) {
   modal.classList.add('show');
   modal.classList.remove('hide');
-  document.body.style.overflow='hidden';
-  // clearInterval(modalTimerId);
+  document.body.style.overflow = 'hidden';
 }
-function checkVoidTable(tableName,totalRowsCount){
-  if (totalRowsCount==0) {
-    const name=document.createElement('div');
-    name.classList='table-name';
-      name.innerHTML=`<div>${list_Tables[tableName]}</div>`;
-      document.querySelector('.container_content').append(name);
 
+function checkVoidTable(tableName, totalRowsCount) {
+  if (totalRowsCount == 0) {
+    const name = document.createElement('div');
+    name.classList = 'table-name';
+    name.innerHTML = `<div>${list_Tables[tableName]}</div>`;
+    document.querySelector('.container_content').append(name);
   }
 }
-function createTableContent(rows,tableName){
-  rows.forEach(element => {
-    if (rows[0]===element) {
-      const name=document.createElement('div');
-      name.classList='table-name';
-      name.innerHTML=`<div>${list_Tables[tableName]}</div>`;
+
+function createTableContent(result,rows, tableName) {
+  const containerContent=document.querySelector('.container_content');
+  containerContent.innerHTML='';
+  rows.forEach((element, rowIndex) => {
+    if (rowIndex === 0) {
+      const name = document.createElement('div');
+      name.classList = 'table-name';
+      name.innerHTML = `<div>${list_Tables[tableName]}</div>`;
       document.querySelector('.container_content').append(name);
+      const table=document.createElement('table');
+      document.querySelector('.container_content').append(table);
     }
-    const table=document.createElement('tr');
+    const tableRow = document.createElement('tr');
+    tableRow.classList='row_of_table';
 
-    table.innerHTML+=`<tr></tr>`;
-    document.querySelector('.container_content').append(table);
-    element.forEach(el=>{
-      // if (typeof(el)=='string') {
-
-      //   // table.innerHTML+=`<td>${el.replace(/\s/g, "")}</td>`;
-
-      // }
-      // else{
-        table.innerHTML+=`<td>${el}</td>`;
-      // }
-
+    element.forEach((el, colIndex) => {
+      const cell = document.createElement('td');
+      cell.classList='cell_of_table';
+      cell.innerText = el;
+      if (colIndex === 0) { // Assume first column is primary key for simplicity
+        cell.setAttribute('data-key', 'ID');
+      }
+      tableRow.appendChild(cell);
     });
 
 
-    createButtonsTable(table);
-    document.querySelector('.container_content').append(table);
-  });
-}
-function generateTable(result){
-  checkVoidTable(result.name,result.total_rows_count);
-  createTableContent(result.rows,result.name);
-  functionalEdit(result.total_rows_count);
-  functionalDelete();
-}
-function createButtonsTable(table){
-  const buttons=document.createElement('div');
-    buttons.classList='table-buttons';
-    buttons.innerHTML+=`<button class=edit>редактировать</button>`;
-    buttons.innerHTML+=`<button class=delete>удалить</button>`;
-    table.append(buttons);
-}
-function functionalEdit(totalRowsCount){
-  const buttonsEdit=document.querySelectorAll('.edit');
-  // console.log(buttonsEdit);
-  buttonsEdit.forEach(buttonEdit=>{
-    buttonEdit.addEventListener('click',(e)=>{
-      // e.target.parentElement.parentElement.innerHTML=``;
-      const modal=document.querySelector('.modal');
-      const modalContent=document.querySelector('.modal__content');
-      let rowTable=e.target.parentElement.parentElement.children;
-      console.log(rowTable);
-      for (let i = 0; i < totalRowsCount; i++) {
-        if (rowTable[i].innerHTML=='Не в сети') {
-          console.log(rowTable[i].innerHTML);
-          modalContent.innerHTML+=`<input required placeholder="Не в сети" type="text" class="modal__input">`;
-        }
-        else if (rowTable[i].innerHTML=='В сети') {
-          console.log(rowTable[i].innerHTML);
-          modalContent.innerHTML+=`<input required placeholder="В сети" type="text" class="modal__input">`;
-        }
-        else if (rowTable[i].innerHTML=='Не подключен') {
+    const table=document.querySelector('table')
+    table.append(tableRow);
+    table.classList='display_of_table';
 
-          modalContent.innerHTML+=`<input required placeholder="Не подключен" type="text" class="modal__input">`;
-        }
-        else{
-          modalContent.innerHTML+=`<input required placeholder=${rowTable[i].innerHTML} type="text" class="modal__input">`;
-          // console.log(rowTable[i]);
-        }
-
-      }
-      openModal(modal);
-     const btnSave=document.querySelector('.btn');
-     btnSave.addEventListener('click',()=>{
-      modalContent.innerHTML=`<form action="#">
-      <div data-close class="modal__close">&times;</div>
-      <div class="modal__title">Редактирование таблицы</div>
-      <!-- <input required placeholder="Ваше имя" name="name" type="text" class="modal__input">
-      <input required placeholder="Ваш номер телефона" name="phone" type="phone" class="modal__input"> -->
-      <button class="btn btn_dark btn_min">Сохранить</button>
-  </form>`;
-  closeModal(modal);
-
-     })
-
-
-      console.log(totalRowsCount);
-
-
+    tableRow.addEventListener('click',(e)=>{
+    //  console.log(e.target.parentElement);
+    let r = document.createRange();
+    r.selectNode(e.target.parentElement);
+    document.getSelection().addRange(r);
+     createButtonsTable(table,result,e.target.parentElement);
 
 
     })
   });
 }
-function functionalDelete(){
-  const buttonsDelete=document.querySelectorAll('.delete');
-      buttonsDelete.forEach(buttonDelete=>{
-        buttonDelete.addEventListener('click',(e)=>{
 
-           e.target.parentElement.parentElement.remove();
-
-        })
-      });
+function generateTable(result) {
+  checkVoidTable(result.name, result.total_rows_count);
+  createTableContent(result,result.rows, result.name);
+  // functionalEdit(result.total_rows_count);
+  // functionalDelete(result.name); // Pass the table name to the delete function
 }
-function createTable(element){
-//  displayLoading();
 
-  //  let content = e.target.innerHTML;
-  //  console.log(content);
-      let data = {name:element};
-      postJSON(data).then(result=>{
-        generateTable(result);
-         // console.log(result.rows);
-       });
-
-  document.querySelector('.container_content').innerHTML='';
-
-  setTimeout(hideLoading,3000);
-}
-async function postJSON(data) {
-    try {
-      // let timerID=setInterval(async function(){});
-      const response = await fetch("http://185.192.247.60:7128/Database/TableInfo", {
-        method: "POST", // or 'PUT'
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      const result = await response.json();
-      console.log("Success:", result);
-      return result;
-    } catch (error) {
-      console.error("Error:", error);
-    }
+function createButtonsTable(table,result,tableRow) {
+  const btns=document.querySelector('.table-buttons');
+  if (btns) {
+    btns.remove();
   }
-  const loaderContainer = document.querySelector('.loader-container');
-////const displayLoading = () => {
-//  loaderContainer.style.display = 'block';
-//
-//};
-const list_Tables={
-  KA:"Учетные данные о КА",
-ORBITA_KA:"Орбиты КА",
-ZONA_KA:"Зоны покрытия КА",
-CHANNEL_BEAM:"Частотно-поляризационный план КА",
-POLARIZATION:"Виды поляризации",
-GROUP_ABONENT:"Группы абонентов",
-VID_SV:"Виды связи",
-OPERATOR_SV:"Операторы связи",
-COUNTRY:"Страны",
-ABONENT:"Абонент",
-PRIVILEGES:"Статус абонента",
-SOST:"Состояние системы",
-SP_SOB:"Справочник событий",
-TEK_KA_SOST:"Срез положения группировки КА в момент события",
-TEK_KA_CHANNEL_SOST:"Срез занятости группировки КА в момент события",
-ZAPR:"Запрос связи",
-TEK_KA_ZAPR:"Срез положения группировки КА в момент запроса связи",
-TEK_KA_CHANNEL_ZAPR:"Срез занятости группировки КА в момент запроса связи",
-NAZN_KA:"Назначение КА на связь",
-SEANS_KA:"Сеансы связи КА",
-BEAM_KA:"Лучи КА"
+  // console.log(tableRow);
+  const buttons = document.createElement('div');
+  buttons.classList = 'table-buttons';
+  buttons.innerHTML=`<button class="insert">добавить</button>`
+  buttons.innerHTML += `<button class="edit">редактировать</button>`;
+  buttons.innerHTML += `<button class="delete">удалить</button>`;
+
+  table.append(buttons);
+  // console.log(result.rows[0].length);
+  functionalEdit(result.rows[0].length,tableRow,result);
+  functionalDelete(result.name,tableRow);
+  functionalBtnInsert(result);
+  // console.log(tableRow.parentElement.children[1])
+}
+function functionalBtnInsert(table){
+  const buttonInsert=document.querySelector('.insert');
+  const rows=document.querySelectorAll('tr');
+  buttonInsert.addEventListener('click',()=>{
+    const primaryKeys = {};
+    console.log(rows);
+    rows.forEach(row=>{
+      row.querySelectorAll('td[data-key]').forEach((td) => {
+        const key = td.getAttribute('data-key');
+        const value = td.innerText;
+        primaryKeys[key] = value;
+        primaryKeys[key]++;
+      });
+
+    });
+    console.log(primaryKeys);
+    const modal = document.querySelector('.confirmation-modal-add');
+    const modalContent = document.querySelector('.confirmation-modal__content-add');
+    for (let i = 1; i < table.columns_count; i++) {
+      console.log(modal);
+      modalContent.innerHTML+=`<input required placeholder=${table.columns[i]} type="text" class="modal__input">`;
+    }
+    openModal(modal);
+    const btnAdd=document.querySelector('.btn_confirm-add');
+    btnAdd.addEventListener('click',()=>{
+      const inputs=document.querySelectorAll('.modal__input');
+      const arrData=[];
+      arrData.push(String(primaryKeys.ID));
+        inputs.forEach((input,index)=>{
+          if(input.value){
+            arrData.push(input.value);
+          }
+
+        });
+        const data={
+          "table_name": `${table.name}`,
+          "columns":table.columns,
+          "values":arrData,
+          primary_keys: primaryKeys
+
+        };
+        console.log(data);
+        console.log(arrData);
+        insertRow(data);
+        acceptChanges();
+        modalContent.innerHTML=`<div class="confirmation-modal__title-add">Добавление строки</div>
+        <div class="confirmation-modal__buttons-add">
+          <button class="btn btn_confirm-add">Соханить</button>
+          <button class="btn btn_cancel">Отмена</button>
+        </div>`;
+        closeModal(modal);
+        const timeoutCreate =createTable(table.name);
+        setTimeout(timeoutCreate,3000);
+    });
+    const cancelButton = modal.querySelector('.btn_cancel');
+    cancelButton.onclick = () => {
+      rollbackChanges().then(() => {
+        closeModal(modal);
+      }).catch(error => {
+        console.error("Error rolling back changes:", error);
+        closeModal(modal);
+      });
+    };
+  });
+}
+function functionalEdit(totalRowsCount,rowTable,result) {
+  const buttonsEdit = document.querySelectorAll('.edit');
+  buttonsEdit.forEach(buttonEdit => {
+    buttonEdit.addEventListener('click', (e) => {
+      const modal = document.querySelector('.modal');
+      const modalContent = document.querySelector('.modal__content');
+      // let rowTablee = e.target.parentElement.parentElement.children;
+      // console.log(rowTable.children);
+      //  console.log(rowTable);
+      for (let i = 0; i < totalRowsCount; i++) {
+        if (rowTable.children[i].innerHTML=='Не в сети') {
+          // console.log(rowTablee[i].innerHTML);
+          modalContent.innerHTML+=`<input required placeholder="Не в сети" type="text" class="modal__input">`;
+        }
+        else if (rowTable.children[i].innerHTML=='В сети') {
+          // console.log(rowTablee[i].innerHTML);
+          modalContent.innerHTML+=`<input required placeholder="В сети" type="text" class="modal__input">`;
+        }
+        else if (rowTable.children[i].innerHTML=='Не подключен') {
+
+          modalContent.innerHTML+=`<input required placeholder="Не подключен" type="text" class="modal__input">`;
+        }
+        else{
+          modalContent.innerHTML+=`<input required placeholder=${rowTable.children[i].innerHTML} type="text" class="modal__input">`;
+          // console.log(rowTablee[i]);
+        }
+
+      }
+      openModal(modal);
+      const btnSave = document.querySelector('.btn');
+      btnSave.addEventListener('click', () => {
+        const inputs=document.querySelectorAll('.modal__input');
+        inputs.forEach((input,index)=>{
+          if (input.value) {
+              const fieldName=result.columns[index];
+              // console.log(fieldName);
+              const primaryKeys = {};
+              rowTable.querySelectorAll('td[data-key]').forEach((td) => {
+                const key = td.getAttribute('data-key');
+                const value = td.innerText;
+                primaryKeys[key] = value;
+              });
+              //  console.log(primaryKeys);
+            const data={
+              "table_name": `${result.name}`,
+              "field_name": `${fieldName}`,
+              "new_value": String(input.value),
+              primary_keys: primaryKeys
+
+            };
+            editRow(data);
+            // console.log(input.value);
+            // console.log(rowTable);
+
+
+          }
+
+          // else{
+          //   // console.log('пусто');
+          // }
+        })
+        acceptChanges();
+
+
+        modalContent.innerHTML = `<form action="#">
+        <div data-close class="modal__close">&times;</div>
+        <div class="modal__title">Редактирование таблицы</div>
+        <button class="btn btn_dark btn_min">Сохранить</button>
+      </form>`;
+
+        closeModal(modal);
+        const timeoutCreate =createTable(result.name);
+        setTimeout(timeoutCreate,2000);
+        // createTable(result.name);
+        //  showConfirmationModal(data, row);
+      });
+    });
+  });
+}
+
+function functionalDelete(tableName,row) {
+  const buttonsDelete = document.querySelectorAll('.delete');
+  // console.log(buttonsDelete);
+  buttonsDelete.forEach(buttonDelete => {
+    buttonDelete.addEventListener('click', (e) => {
+      // const row = e.target.parentElement.parentElement;
+      const primaryKeys = {};
+      console.log(row);
+      row.querySelectorAll('td[data-key]').forEach((td) => {
+        const key = td.getAttribute('data-key');
+        const value = td.innerText;
+        primaryKeys[key] = value;
+      });
+       console.log(primaryKeys);
+      const data = {
+        table_name: tableName,
+        primary_keys: primaryKeys
+      };
+      // row.remove();
+      console.log(data);
+      showConfirmationModal(data, row);
+    });
+  });
+}
+
+function showConfirmationModal(data, row) {
+  const modal = document.querySelector('.confirmation-modal');
+  openModal(modal);
+
+  const confirmButton = modal.querySelector('.btn_confirm');
+  const cancelButton = modal.querySelector('.btn_cancel');
+
+  confirmButton.onclick = () => {
+    deleteRow(data).then(() => {
+      acceptChanges().then(() => {
+        row.remove();
+        closeModal(modal);
+      }).catch(error => {
+        console.error("Error accepting changes:", error);
+        closeModal(modal);
+      });
+    }).catch(error => {
+      console.error("Error deleting row:", error);
+      closeModal(modal);
+    });
+  };
+
+  cancelButton.onclick = () => {
+    rollbackChanges().then(() => {
+      closeModal(modal);
+    }).catch(error => {
+      console.error("Error rolling back changes:", error);
+      closeModal(modal);
+    });
+  };
+}
+async function editRow(data) {
+  try {
+    const response = await fetch('http://185.192.247.60:7130/Database/UpdateRow', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const result = await response.json();
+    console.log("Row edit successfully:", result);
+    return result;
+  } catch (error) {
+    console.error("Error edit row:", error);
+  }
+}
+async function deleteRow(data) {
+  try {
+    const response = await fetch("http://185.192.247.60:7130/Database/DeleteRow", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const result = await response.json();
+    console.log("Row deleted successfully:", result);
+    return result;
+  } catch (error) {
+    console.error("Error deleting row:", error);
+  }
+}
+async function insertRow(data) {
+  try {
+    const response = await fetch("http://185.192.247.60:7130/Database/InsertRow", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const result = await response.json();
+    console.log("Row insert successfully:", result);
+    return result;
+  } catch (error) {
+    console.error("Error insert row:", error);
+  }
+}
+async function acceptChanges() {
+  try {
+    const response = await fetch("http://185.192.247.60:7130/Database/AcceptChanges", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+    const result = await response.json();
+    console.log("Changes accepted successfully:", result);
+    return result;
+  } catch (error) {
+    console.error("Error accepting changes:", error);
+  }
+}
+
+async function rollbackChanges() {
+  try {
+    const response = await fetch("http://185.192.247.60:7130/Database/RollbackChanges", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+    const result = await response.json();
+    console.log("Changes rolled back successfully:", result);
+    return result;
+  } catch (error) {
+    console.error("Error rolling back changes:", error);
+  }
+}
+
+function createTable(element) {
+//  displayLoading();
+  let data = { name: element };
+  postJSON(data).then(result => {
+    generateTable(result);
+  });
+
+  document.querySelector('.container_content').innerHTML = '';
+//  setTimeout(hideLoading, 3000);
+}
+
+async function postJSON(data) {
+  try {
+    const response = await fetch("http://185.192.247.60:7130/Database/TableInfo", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const result = await response.json();
+    console.log("Success:", result);
+    return result;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+const loaderContainer = document.querySelector('.loader-container');
+const displayLoading = () => {
+  loaderContainer.style.display = 'block';
 };
+
+const list_Tables = {
+  KA: "Учетные данные о КА",
+  ORBITA_KA: "Орбиты КА",
+  ZONA_KA: "Зоны покрытия КА",
+  CHANNEL_BEAM: "Частотно-поляризационный план КА",
+  POLARIZATION: "Виды поляризации",
+  GROUP_ABONENT: "Группы абонентов",
+  VID_SV: "Виды связи",
+  OPERATOR_SV: "Операторы связи",
+  COUNTRY: "Страны",
+  ABONENT: "Абонент",
+  PRIVILEGES: "Статус абонента",
+  SOST: "Состояние системы",
+  SP_SOB: "Справочник событий",
+  TEK_KA_SOST: "Срез положения группировки КА в момент события",
+  TEK_KA_CHANNEL_SOST: "Срез занятости группировки КА в момент события",
+  ZAPR: "Запрос связи",
+  TEK_KA_ZAPR: "Срез положения группировки КА в момент запроса связи",
+  TEK_KA_CHANNEL_ZAPR: "Срез занятости группировки КА в момент запроса связи",
+  NAZN_KA: "Назначение КА на связь",
+  SEANS_KA: "Сеансы связи КА",
+  BEAM_KA: "Лучи КА"
+};
+
 const hideLoading = () => {
   loaderContainer.style.display = 'none';
-
 };
-let url = 'http://185.192.247.60:7128/Database/DBTables';
-let response =  fetch(url)
-.then(response =>response.json())
-.then(json=>{
-  json.forEach(element => {
-    const elem =document.createElement('div');
-    for (let key in list_Tables){
-      if (element==key) {
-        elem.innerHTML=`<div class="container__nav__el"> ${list_Tables[key]}</div>`;
+
+let url = 'http://185.192.247.60:7130/Database/DBTables';
+let response = fetch(url)
+  .then(response => response.json())
+  .then(json => {
+    json.forEach(element => {
+      const elem = document.createElement('div');
+      for (let key in list_Tables) {
+        if (element == key) {
+          elem.innerHTML = `<div class="container__nav__el"> ${list_Tables[key]}</div>`;
+        }
       }
-    }
-    elem.addEventListener('click',()=>{createTable(element)});
-    document.querySelector('.container__nav').append(elem);
+      elem.addEventListener('click', () => { createTable(element) });
+      document.querySelector('.container__nav').append(elem);
+    });
   });
-});
