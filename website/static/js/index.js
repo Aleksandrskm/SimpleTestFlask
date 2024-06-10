@@ -86,6 +86,8 @@ function communication_availability() {
    }
 
 
+'use strict';
+
 function closeModal(modal) {
   modal.classList.add('hide');
   modal.classList.remove('show');
@@ -120,11 +122,9 @@ function createTableContent(result,rows, tableName) {
       document.querySelector('.container_content').append(table);
     }
     const tableRow = document.createElement('tr');
-    tableRow.classList='row_of_table';
 
     element.forEach((el, colIndex) => {
       const cell = document.createElement('td');
-      cell.classList='cell_of_table';
       cell.innerText = el;
       if (colIndex === 0) { // Assume first column is primary key for simplicity
         cell.setAttribute('data-key', 'ID');
@@ -135,7 +135,6 @@ function createTableContent(result,rows, tableName) {
 
     const table=document.querySelector('table')
     table.append(tableRow);
-    table.classList='display_of_table';
 
     tableRow.addEventListener('click',(e)=>{
     //  console.log(e.target.parentElement);
@@ -457,14 +456,12 @@ async function rollbackChanges() {
 }
 
 function createTable(element) {
-//  displayLoading();
   let data = { name: element };
   postJSON(data).then(result => {
     generateTable(result);
   });
 
   document.querySelector('.container_content').innerHTML = '';
-//  setTimeout(hideLoading, 3000);
 }
 
 async function postJSON(data) {
