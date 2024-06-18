@@ -240,27 +240,31 @@ header {
   height: 75px;
   width: 100%;
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center; /* Центрируем заголовок по горизонтали */
   overflow: hidden;
 
 
+
 }
 
 h1 {
+
   color: #000000;
   line-height: 1;
-  font-size: calc(0.7rem + 1vw);
+  font-size: calc(1.1rem + 1vw);
   font-weight: bold;
   font-family: Arial, sans-serif;
+
   text-align: center; /* Центрируем текст заголовка */
-  margin: 0; /* Убираем внешние отступы */
+  margin: 13 ; /* Убираем внешние отступы */
 }
 
 h2 {
   color: #000000;
   line-height: 1;
-  font-size: calc(0.7rem + 1vw);
+  font-size: calc(0.9rem + 1vw);
   font-weight: normal;
   font-family: Arial, sans-serif;
   margin-top: 20px;
@@ -273,7 +277,7 @@ h2 {
 h3 {
   color: #000000;
   line-height: 1;
-  font-size: calc(0.4rem + 0.8vw);
+  font-size: calc(0.7rem + 0.8vw);
   font-weight: normal;
   font-family: Arial, sans-serif;
   margin-top: 0px;
@@ -337,16 +341,18 @@ td{
 .container__nav{
   color: #000000;
   line-height: 1;
-  font-size: 16;
+  font-size: 18;
   font-weight: normal;
   font-family: Arial, sans-serif;
+  padding: 15px;
 
 }
+
 
 .table-name{
   color: #000000;
   line-height: 1;
-  font-size: calc(0.4rem + 0.8vw);
+  font-size: calc(0.7rem + 0.8vw);
   font-weight: normal;
   font-family: Arial, sans-serif;
   margin-top: 0px;
@@ -358,11 +364,13 @@ td{
 
 .table-buttons{
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         justify-content: center;
         align-items: center;
-        height: 80vh;
-        margin: 0;
+
+        margin-bottom: 100px;
+        margin-top: 20px;
+
 }
 
 .container{
@@ -445,3 +453,91 @@ td{
 	text-align:center;
 	font-size:22px;
 	text-transform:uppercase}
+
+.edit{
+ font-size: 20px; /* Устанавливаем размер текста кнопки */
+
+  margin: 10px;
+  width: 170px;
+  height: 35px;
+  border-radius: 7px;
+  text-align: center;
+}
+
+.delete{
+ font-size: 20px; /* Устанавливаем размер текста кнопки */
+  margin: 10px;
+  width: 170px;
+  height: 35px;
+  border-radius: 7px;
+  text-align: center;
+}
+.insert{
+ font-size: 20px; /* Устанавливаем размер текста кнопки */
+  margin: 10px;
+  width: 170px;
+  height: 35px;
+  border-radius: 7px;
+  text-align: center;
+}
+.insert:hover{
+    background-color: #C0C0C0;
+}
+.delete:hover{
+    background-color: #C0C0C0;
+}
+.edit:hover{
+    background-color: #C0C0C0;
+}
+.copy:hover{
+    background-color: #C0C0C0;
+}
+
+
+.container__nav__el:hover {
+    background-color: #C0C0C0;
+
+}
+
+.container__nav__el {
+    line-height: 1.5; /* Устанавливаем коэффициент междустрочного интервала */
+    text-indent: -20px; /* Устанавливаем отступ слева в 20 пикселей */
+    padding-left: 20px;
+
+}
+.container__nav__el::before {
+    content: "━"; /* Добавляем знак точки перед каждым параграфом */
+}
+.copy{
+  font-size: 20px;
+  margin: 10px;
+  width: 300px;
+  height: 35px;
+  border-radius: 7px;
+  text-align: center;
+
+}
+
+.home-ref {
+    margin-right: auto;
+    margin-right: 90%;
+
+
+}
+img {
+    margin-right: 90%;
+    height: 35px;
+    width: 40px;
+}
+
+.container__nav__el.clicked {
+    background-color: #555555; /* Измененный цвет кнопки при нажатии */
+}
+
+td{
+    border: 1px solid black; /* Линия-обрамление ячеек */
+    padding: 5px; /* Отступ внутренний для содержимого ячеек */
+}
+tr:hover{
+    background-color: #C0C0C0;
+}

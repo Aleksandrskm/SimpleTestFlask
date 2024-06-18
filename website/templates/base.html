@@ -8,7 +8,13 @@
 </head>
 <body>
     <header>
+        <div class="ref">
+            <a class="home-ref" href="/" title="Главная страница">
+                <img class="home" src="{{ url_for('static', filename='img/home.svg') }}" alt="Стартовая страница">
+            </a>
+        </div>
         <h1>Служебная система</h1>
+
     </header>
 
     {% block content %}

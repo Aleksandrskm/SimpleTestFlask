@@ -1,4 +1,6 @@
 'use strict';
+
+
 function azimuth_and_elevation_angle() {
     const lat1 = document.getElementById('lat1').value;
     const lon1 = document.getElementById('lon1').value;
@@ -100,13 +102,28 @@ function openModal(modal) {
   document.body.style.overflow = 'hidden';
 }
 
-function checkVoidTable(tableName, totalRowsCount) {
+function checkVoidTable(result,tableName, totalRowsCount) {
+  
   if (totalRowsCount == 0) {
+    const containerContent=document.querySelector('div .container_content');
+    containerContent.innerHTML='';
     const name = document.createElement('div');
-    name.classList = 'table-name';
-    name.innerHTML = `<div>${list_Tables[tableName]}</div>`;
-    document.querySelector('.container_content').append(name);
+     name.classList = 'table-name';
+    name.innerHTML = `${list_Tables[tableName]}`;
+    // console.log(`${name}`);
+    containerContent.append(name);
+    // console.log(`${list_Tables[tableName]}`);
+    const tr = document.createElement('tr');
+    result.columns.forEach(column=>{
+      const th =document.createElement('th');
+      th.innerHTML=`${column}`;
+      tr.append(th);
+    })
+    
+    containerContent.append(tr);
+    createButtonsTable(containerContent,result,tr)
   }
+  
 }
 
 function createTableContent(result,rows, tableName) {
@@ -116,13 +133,22 @@ function createTableContent(result,rows, tableName) {
     if (rowIndex === 0) {
       const name = document.createElement('div');
       name.classList = 'table-name';
-      name.innerHTML = `<div>${list_Tables[tableName]}</div>`;
+      name.innerHTML = `${list_Tables[tableName]}`;
+      console.log(`${name}`);
       document.querySelector('.container_content').append(name);
       const table=document.createElement('table');
       document.querySelector('.container_content').append(table);
+      const tableRow = document.createElement('tr');
+      result.columns.forEach(column=>{
+        const th =document.createElement('th');
+        th.scope="col";
+        th.innerHTML=`${column}`;
+        tableRow.append(th);
+      });
+      table.append(tableRow);
     }
     const tableRow = document.createElement('tr');
-
+    
     element.forEach((el, colIndex) => {
       const cell = document.createElement('td');
       cell.innerText = el;
@@ -135,22 +161,27 @@ function createTableContent(result,rows, tableName) {
 
     const table=document.querySelector('table')
     table.append(tableRow);
-
+   
     tableRow.addEventListener('click',(e)=>{
     //  console.log(e.target.parentElement);
     let r = document.createRange();
     r.selectNode(e.target.parentElement);
     document.getSelection().addRange(r);
      createButtonsTable(table,result,e.target.parentElement);
-
+    
 
     })
   });
 }
 
 function generateTable(result) {
-  checkVoidTable(result.name, result.total_rows_count);
-  createTableContent(result,result.rows, result.name);
+  if (result.total_rows_count==0) {
+    checkVoidTable(result,result.name, result.total_rows_count);
+  }
+  else {  
+    createTableContent(result,result.rows, result.name);
+  }
+ 
   // functionalEdit(result.total_rows_count);
   // functionalDelete(result.name); // Pass the table name to the delete function
 }
@@ -163,23 +194,30 @@ function createButtonsTable(table,result,tableRow) {
   // console.log(tableRow);
   const buttons = document.createElement('div');
   buttons.classList = 'table-buttons';
-  buttons.innerHTML=`<button class="insert">добавить</button>`
-  buttons.innerHTML += `<button class="edit">редактировать</button>`;
-  buttons.innerHTML += `<button class="delete">удалить</button>`;
-
+  buttons.innerHTML=`<button class="insert">Добавить</button>`;
+  buttons.innerHTML += `<button class="copy">Добавить с копированием</button>`;
+  buttons.innerHTML += `<button class="edit">Редактировать</button>`;
+  buttons.innerHTML += `<button class="delete">Удалить</button>`;
+  
   table.append(buttons);
   // console.log(result.rows[0].length);
-  functionalEdit(result.rows[0].length,tableRow,result);
+  if (tableRow) {
+    functionalEdit(result.rows[0].length,tableRow,result);
   functionalDelete(result.name,tableRow);
   functionalBtnInsert(result);
+  functionalBtnCopyEnd(result,tableRow);
+  }
+  
   // console.log(tableRow.parentElement.children[1])
 }
+
+
 function functionalBtnInsert(table){
   const buttonInsert=document.querySelector('.insert');
   const rows=document.querySelectorAll('tr');
   buttonInsert.addEventListener('click',()=>{
     const primaryKeys = {};
-    console.log(rows);
+    // console.log(rows);
     rows.forEach(row=>{
       row.querySelectorAll('td[data-key]').forEach((td) => {
         const key = td.getAttribute('data-key');
@@ -189,11 +227,11 @@ function functionalBtnInsert(table){
       });
 
     });
-    console.log(primaryKeys);
+    // console.log(primaryKeys);
     const modal = document.querySelector('.confirmation-modal-add');
     const modalContent = document.querySelector('.confirmation-modal__content-add');
     for (let i = 1; i < table.columns_count; i++) {
-      console.log(modal);
+      // console.log(modal);
       modalContent.innerHTML+=`<input required placeholder=${table.columns[i]} type="text" class="modal__input">`;
     }
     openModal(modal);
@@ -201,24 +239,29 @@ function functionalBtnInsert(table){
     btnAdd.addEventListener('click',()=>{
       const inputs=document.querySelectorAll('.modal__input');
       const arrData=[];
-      arrData.push(String(primaryKeys.ID));
+      const columns=[];
+      // arrData.push(String(primaryKeys.ID));
         inputs.forEach((input,index)=>{
           if(input.value){
             arrData.push(input.value);
+            
+              columns.push(String(table.columns[++index]));
+            
+            
           }
 
         });
         const data={
           "table_name": `${table.name}`,
-          "columns":table.columns,
-          "values":arrData,
-          primary_keys: primaryKeys
-
+          "columns":columns,
+          "values":arrData
         };
-        console.log(data);
-        console.log(arrData);
+        // console.log(data);
+        // console.log(arrData);
         insertRow(data);
-        acceptChanges();
+        acceptChanges({
+          message: "Изменения применены"
+        });
         modalContent.innerHTML=`<div class="confirmation-modal__title-add">Добавление строки</div>
         <div class="confirmation-modal__buttons-add">
           <button class="btn btn_confirm-add">Соханить</button>
@@ -226,11 +269,13 @@ function functionalBtnInsert(table){
         </div>`;
         closeModal(modal);
         const timeoutCreate =createTable(table.name);
-        setTimeout(timeoutCreate,3000);
+        setTimeout(timeoutCreate,4000);
     });
     const cancelButton = modal.querySelector('.btn_cancel');
     cancelButton.onclick = () => {
-      rollbackChanges().then(() => {
+      rollbackChanges({
+        message: "Изменения отменены"
+      }).then(() => {
         closeModal(modal);
       }).catch(error => {
         console.error("Error rolling back changes:", error);
@@ -239,6 +284,8 @@ function functionalBtnInsert(table){
     };
   });
 }
+
+
 function functionalEdit(totalRowsCount,rowTable,result) {
   const buttonsEdit = document.querySelectorAll('.edit');
   buttonsEdit.forEach(buttonEdit => {
@@ -300,7 +347,9 @@ function functionalEdit(totalRowsCount,rowTable,result) {
           //   // console.log('пусто');
           // }
         })
-        acceptChanges();
+        acceptChanges({
+          message: "Изменения применены"
+        });
 
 
         modalContent.innerHTML = `<form action="#">
@@ -344,6 +393,44 @@ function functionalDelete(tableName,row) {
   });
 }
 
+function functionalBtnCopyEnd(table,row){
+  const buttonCopy=document.querySelector('.copy');
+  const rows=document.querySelectorAll('tr');
+  const primaryKeys = {};
+  buttonCopy.addEventListener('click',()=>{
+    rows.forEach(row=>{
+      row.querySelectorAll('td[data-key]').forEach((td) => {
+        const key = td.getAttribute('data-key');
+        const value = td.innerText;
+        primaryKeys[key] = value;
+        primaryKeys[key]++;
+      });
+    });
+      const arrData=[];
+      // arrData.push(String(primaryKeys.ID));
+      const columns=[];
+      for (let i = 1; i < row.cells.length; i++) {
+        arrData.push(String(row.cells[i].innerHTML));
+        columns.push(String(table.columns[i]));
+      }
+      // console.log(table.columns);
+      // console.log(arrData);
+
+        const data={
+          "table_name": `${table.name}`,
+          "columns":columns,
+          "values":arrData,  
+        }; 
+        // console.log(data);
+        insertRow(data);
+        acceptChanges({
+          message: "Изменения применены"
+        });
+        const timeoutCreate =createTable(table.name);
+        setTimeout(timeoutCreate,4000);
+  });
+}
+
 function showConfirmationModal(data, row) {
   const modal = document.querySelector('.confirmation-modal');
   openModal(modal);
@@ -353,28 +440,33 @@ function showConfirmationModal(data, row) {
 
   confirmButton.onclick = () => {
     deleteRow(data).then(() => {
-      acceptChanges().then(() => {
+      acceptChanges({
+        message: "Изменения применены"
+      }).then(() => {
         row.remove();
         closeModal(modal);
       }).catch(error => {
-        console.error("Error accepting changes:", error);
+        // console.error("Error accepting changes:", error);
         closeModal(modal);
       });
     }).catch(error => {
-      console.error("Error deleting row:", error);
+      // console.error("Error deleting row:", error);
       closeModal(modal);
     });
   };
 
   cancelButton.onclick = () => {
-    rollbackChanges().then(() => {
+    rollbackChanges({
+      message: "Изменения отменены"
+    }).then(() => {
       closeModal(modal);
     }).catch(error => {
-      console.error("Error rolling back changes:", error);
+      // console.error("Error rolling back changes:", error);
       closeModal(modal);
     });
   };
 }
+
 async function editRow(data) {
   try {
     const response = await fetch('http://185.192.247.60:7130/Database/UpdateRow', {
@@ -423,35 +515,38 @@ async function insertRow(data) {
     console.error("Error insert row:", error);
   }
 }
-async function acceptChanges() {
+async function acceptChanges(data) {
   try {
     const response = await fetch("http://185.192.247.60:7130/Database/AcceptChanges", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-      }
+        
+      },
+      body: JSON.stringify(data)
     });
     const result = await response.json();
-    console.log("Changes accepted successfully:", result);
-    return result;
+    // console.log("Changes accepted successfully:", result);
+    // return result; 
   } catch (error) {
-    console.error("Error accepting changes:", error);
+    // console.error("Error accepting changes:", error);
   }
 }
 
-async function rollbackChanges() {
+async function rollbackChanges(data) {
   try {
     const response = await fetch("http://185.192.247.60:7130/Database/RollbackChanges", {
-      method: "POST",
+      method: "GEt",
       headers: {
         "Content-Type": "application/json",
-      }
+      },
+      body: JSON.stringify(data)
     });
     const result = await response.json();
-    console.log("Changes rolled back successfully:", result);
+    // console.log("Changes rolled back successfully:", result);
     return result;
   } catch (error) {
-    console.error("Error rolling back changes:", error);
+    // console.error("Error rolling back changes:", error);
   }
 }
 
@@ -515,6 +610,21 @@ const hideLoading = () => {
 };
 
 let url = 'http://185.192.247.60:7130/Database/DBTables';
+let isColorChanged = false; // Переменная для отслеживания смены цвета
+
+document.addEventListener('DOMContentLoaded', function() {
+  const navEl = document.querySelector('.container__nav__el');
+
+  navEl.addEventListener('click', function() {
+    if (!isColorChanged) {
+      navEl.style.backgroundColor = 'red'; // Изменить цвет на красный
+      isColorChanged = true;
+    } else {
+      navEl.style.backgroundColor = ''; // Вернуть исходный цвет
+      isColorChanged = false;
+    }
+  });
+});
 let response = fetch(url)
   .then(response => response.json())
   .then(json => {
@@ -529,3 +639,4 @@ let response = fetch(url)
       document.querySelector('.container__nav').append(elem);
     });
   });
+
