@@ -220,7 +220,7 @@
 }
 
 .column2_vi {
-    display: flex;
+
     flex-direction: column;
     justify-content: flex-start;
     line-height: 1.5;
@@ -363,14 +363,9 @@ td{
 }
 
 .table-buttons{
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-
-        margin-bottom: 100px;
-        margin-top: 20px;
-
+    position: absolute; /* Позиционирование абсолютное */
+    left: 20; /* Выравнивание слева */
+    bottom: 20; /* Выравнивание снизу */
 }
 
 .container{
@@ -540,4 +535,10 @@ td{
 }
 tr:hover{
     background-color: #C0C0C0;
+}
+tr{
+    border: 1px solid black; /* Линия-обрамление ячеек */
+    padding: 5px; /* Отступ внутренний для содержимого ячеек */
+}
+.container_content {
 }

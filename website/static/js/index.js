@@ -87,9 +87,6 @@ function communication_availability() {
       });
    }
 
-
-'use strict';
-
 function closeModal(modal) {
   modal.classList.add('hide');
   modal.classList.remove('show');
@@ -103,7 +100,7 @@ function openModal(modal) {
 }
 
 function checkVoidTable(result,tableName, totalRowsCount) {
-  
+
   if (totalRowsCount == 0) {
     const containerContent=document.querySelector('div .container_content');
     containerContent.innerHTML='';
@@ -116,14 +113,14 @@ function checkVoidTable(result,tableName, totalRowsCount) {
     const tr = document.createElement('tr');
     result.columns.forEach(column=>{
       const th =document.createElement('th');
-      th.innerHTML=`${column}`;
+      th.innerHTML=`${column.column_description}`;
       tr.append(th);
     })
-    
+
     containerContent.append(tr);
-    createButtonsTable(containerContent,result,tr)
+    createButtonsTable(tr,result,tr)
   }
-  
+
 }
 
 function createTableContent(result,rows, tableName) {
@@ -142,13 +139,13 @@ function createTableContent(result,rows, tableName) {
       result.columns.forEach(column=>{
         const th =document.createElement('th');
         th.scope="col";
-        th.innerHTML=`${column}`;
+        th.innerHTML=`${column.column_description}`;
         tableRow.append(th);
       });
       table.append(tableRow);
     }
     const tableRow = document.createElement('tr');
-    
+
     element.forEach((el, colIndex) => {
       const cell = document.createElement('td');
       cell.innerText = el;
@@ -161,14 +158,14 @@ function createTableContent(result,rows, tableName) {
 
     const table=document.querySelector('table')
     table.append(tableRow);
-   
+
     tableRow.addEventListener('click',(e)=>{
     //  console.log(e.target.parentElement);
     let r = document.createRange();
     r.selectNode(e.target.parentElement);
     document.getSelection().addRange(r);
      createButtonsTable(table,result,e.target.parentElement);
-    
+
 
     })
   });
@@ -178,10 +175,10 @@ function generateTable(result) {
   if (result.total_rows_count==0) {
     checkVoidTable(result,result.name, result.total_rows_count);
   }
-  else {  
+  else {
     createTableContent(result,result.rows, result.name);
   }
- 
+
   // functionalEdit(result.total_rows_count);
   // functionalDelete(result.name); // Pass the table name to the delete function
 }
@@ -194,20 +191,20 @@ function createButtonsTable(table,result,tableRow) {
   // console.log(tableRow);
   const buttons = document.createElement('div');
   buttons.classList = 'table-buttons';
-  buttons.innerHTML=`<button class="insert">Добавить</button>`;
-  buttons.innerHTML += `<button class="copy">Добавить с копированием</button>`;
-  buttons.innerHTML += `<button class="edit">Редактировать</button>`;
-  buttons.innerHTML += `<button class="delete">Удалить</button>`;
-  
-  table.append(buttons);
+  buttons.innerHTML=`<button class="insert">добавить</button>`
+  buttons.innerHTML += `<button class="edit">редактировать</button>`;
+  buttons.innerHTML += `<button class="copy">копировать строчку в конец</button>`;
+  buttons.innerHTML += `<button class="delete">удалить</button>`;
+  console.log(table.parentElement);
+  table.parentElement.append(buttons);
   // console.log(result.rows[0].length);
   if (tableRow) {
     functionalEdit(result.rows[0].length,tableRow,result);
-  functionalDelete(result.name,tableRow);
-  functionalBtnInsert(result);
-  functionalBtnCopyEnd(result,tableRow);
+    functionalDelete(result.name,tableRow);
+    functionalBtnInsert(result);
+    functionalBtnCopyEnd(result,tableRow);
   }
-  
+
   // console.log(tableRow.parentElement.children[1])
 }
 
@@ -232,7 +229,7 @@ function functionalBtnInsert(table){
     const modalContent = document.querySelector('.confirmation-modal__content-add');
     for (let i = 1; i < table.columns_count; i++) {
       // console.log(modal);
-      modalContent.innerHTML+=`<input required placeholder=${table.columns[i]} type="text" class="modal__input">`;
+      modalContent.innerHTML+=`<input required placeholder=${table.columns[i].column_description} type="text" class="modal__input">`;
     }
     openModal(modal);
     const btnAdd=document.querySelector('.btn_confirm-add');
@@ -244,19 +241,26 @@ function functionalBtnInsert(table){
         inputs.forEach((input,index)=>{
           if(input.value){
             arrData.push(input.value);
-            
-              columns.push(String(table.columns[++index]));
-            
-            
           }
 
         });
+        for (let index = 1; index < table.columns_count; index++) {
+          const dataColumns={};
+          // dataColumns.column_name=table.columns[index].column_name;
+          dataColumns.column_description=table.columns[index].column_description;
+          //  dataColumns.is_primary_key=(table.columns[index].is_primary_key);
+          //  dataColumns.is_editable=(table.columns[index].is_editable);
+          console.log((table.columns[index].name));
+          columns.push(String(table.columns[index].column_name));
+
+        }
+
         const data={
           "table_name": `${table.name}`,
           "columns":columns,
           "values":arrData
         };
-        // console.log(data);
+         console.log(columns);
         // console.log(arrData);
         insertRow(data);
         acceptChanges({
@@ -277,6 +281,11 @@ function functionalBtnInsert(table){
         message: "Изменения отменены"
       }).then(() => {
         closeModal(modal);
+        modalContent.innerHTML=`<div class="confirmation-modal__title-add">Добавление строки</div>
+        <div class="confirmation-modal__buttons-add">
+          <button class="btn btn_confirm-add">Соханить</button>
+          <button class="btn btn_cancel">Отмена</button>
+        </div>`;
       }).catch(error => {
         console.error("Error rolling back changes:", error);
         closeModal(modal);
@@ -315,12 +324,21 @@ function functionalEdit(totalRowsCount,rowTable,result) {
 
       }
       openModal(modal);
+      const btnClose=document.querySelector('.modal__close');
+      btnClose.addEventListener('click',()=>{
+        closeModal(modal);
+        modalContent.innerHTML = `<form action="#">
+        <div data-close class="modal__close">&times;</div>
+        <div class="modal__title">Редактирование таблицы</div>
+        <button class="btn btn_dark btn_min">Сохранить</button>
+      </form>`;
+      })
       const btnSave = document.querySelector('.btn');
       btnSave.addEventListener('click', () => {
         const inputs=document.querySelectorAll('.modal__input');
         inputs.forEach((input,index)=>{
           if (input.value) {
-              const fieldName=result.columns[index];
+              const fieldName=result.columns[index].column_name;
               // console.log(fieldName);
               const primaryKeys = {};
               rowTable.querySelectorAll('td[data-key]').forEach((td) => {
@@ -328,11 +346,12 @@ function functionalEdit(totalRowsCount,rowTable,result) {
                 const value = td.innerText;
                 primaryKeys[key] = value;
               });
+              const updateValues={};
+              updateValues[fieldName]=String(input.value);
               //  console.log(primaryKeys);
             const data={
               "table_name": `${result.name}`,
-              "field_name": `${fieldName}`,
-              "new_value": String(input.value),
+              "updated_values":updateValues,
               primary_keys: primaryKeys
 
             };
@@ -360,7 +379,7 @@ function functionalEdit(totalRowsCount,rowTable,result) {
 
         closeModal(modal);
         const timeoutCreate =createTable(result.name);
-        setTimeout(timeoutCreate,2000);
+        setTimeout(timeoutCreate,4000);
         // createTable(result.name);
         //  showConfirmationModal(data, row);
       });
@@ -375,59 +394,128 @@ function functionalDelete(tableName,row) {
     buttonDelete.addEventListener('click', (e) => {
       // const row = e.target.parentElement.parentElement;
       const primaryKeys = {};
-      console.log(row);
+      // console.log(row);
       row.querySelectorAll('td[data-key]').forEach((td) => {
         const key = td.getAttribute('data-key');
         const value = td.innerText;
         primaryKeys[key] = value;
       });
-       console.log(primaryKeys);
+      //  console.log(row);
       const data = {
         table_name: tableName,
         primary_keys: primaryKeys
       };
       // row.remove();
-      console.log(data);
+      // console.log(data);
       showConfirmationModal(data, row);
     });
   });
 }
 
 function functionalBtnCopyEnd(table,row){
+  const modal=document.querySelector('.confirmation-modal-copy');
+  const modalContent = document.querySelector('.confirmation-modal__content-copy');
   const buttonCopy=document.querySelector('.copy');
   const rows=document.querySelectorAll('tr');
   const primaryKeys = {};
-  buttonCopy.addEventListener('click',()=>{
-    rows.forEach(row=>{
-      row.querySelectorAll('td[data-key]').forEach((td) => {
-        const key = td.getAttribute('data-key');
-        const value = td.innerText;
-        primaryKeys[key] = value;
-        primaryKeys[key]++;
-      });
-    });
-      const arrData=[];
-      // arrData.push(String(primaryKeys.ID));
-      const columns=[];
-      for (let i = 1; i < row.cells.length; i++) {
-        arrData.push(String(row.cells[i].innerHTML));
-        columns.push(String(table.columns[i]));
-      }
-      // console.log(table.columns);
-      // console.log(arrData);
 
-        const data={
-          "table_name": `${table.name}`,
-          "columns":columns,
-          "values":arrData,  
-        }; 
-        // console.log(data);
-        insertRow(data);
-        acceptChanges({
-          message: "Изменения применены"
-        });
-        const timeoutCreate =createTable(table.name);
-        setTimeout(timeoutCreate,4000);
+
+  buttonCopy.addEventListener('click',()=>{
+    for (let i = 1; i < table.rows[0].length; i++) {
+      if (i==1) {
+        modalContent.innerHTML+=`<div class="ID-Copy-Row">Копируется строка ${row.children[0].innerHTML}</div>`
+      }
+      if (row.children[i].innerHTML=='Не в сети') {
+        // console.log(rowTablee[i].innerHTML);
+        const input=document.createElement('input');
+        input.value=row.children[i].innerHTML;
+        input.classList.add('modal__input');
+        modalContent.append(input);
+        // modalContent.innerHTML+=`<input required placeholder="Не в сети" type="text" class="modal__input">`;
+        // const input=document.querySelector('.modal__input');
+        // input.value=row.children[i].innerHTML;
+      }
+      else if (row.children[i].innerHTML=='В сети') {
+        // console.log(rowTablee[i].innerHTML);
+        const input=document.createElement('input');
+        input.value=row.children[i].innerHTML;
+        input.classList.add('modal__input');
+        modalContent.append(input);
+        // modalContent.innerHTML+=`<input required placeholder="В сети" type="text" class="modal__input">`;
+        // const input=document.querySelector('.modal__input');
+        // input.value=row.children[i].innerHTML;
+      }
+      else if (row.children[i].innerHTML=='Не подключен') {
+        const input=document.createElement('input');
+        input.value=row.children[i].innerHTML;
+        input.classList.add('modal__input');
+        modalContent.append(input);
+        // modalContent.innerHTML+=`<input required placeholder="Не подключен" type="text" class="modal__input">`;
+        // const input=document.querySelector('.modal__input');
+        // input.value=row.children[i].innerHTML;
+      }
+      else{
+        console.log(modalContent);
+        const input=document.createElement('input');
+        input.value=row.children[i].innerHTML;
+        input.classList.add('modal__input');
+        modalContent.append(input);
+        // `<input required placeholder=${row.children[i].innerHTML} type="text" class="modal__input">`
+        // input.value=row.children[i].innerHTML;
+        // console.log(rowTablee[i]);
+      }
+
+    }
+    openModal(modal);
+    const btnClose=document.querySelector('.btn_cancel-copy');
+        btnClose.addEventListener('click',()=>{
+          closeModal(modal);
+          modalContent.innerHTML = `<div class="confirmation-modal__title-copy">Копирование строки в конец</div>
+                          <div class="confirmation-modal__buttons-copy">
+                              <button class="btn btn_confirm-copy">Добавить</button>
+                              <button class="btn btn_cancel-copy">Отмена</button>
+                          </div>`;
+        })
+        const btnAddEnd=document.querySelector('.btn_confirm-copy');
+        btnAddEnd.addEventListener('click',()=>{
+          rows.forEach(row=>{
+            row.querySelectorAll('td[data-key]').forEach((td) => {
+              const key = td.getAttribute('data-key');
+              const value = td.innerText;
+              primaryKeys[key] = value;
+              primaryKeys[key]++;
+            });
+          });
+            const arrData=[];
+            // arrData.push(String(primaryKeys.ID));
+            const columns=[];
+            for (let i = 1; i < row.cells.length; i++) {
+              arrData.push(String(row.cells[i].innerHTML));
+              columns.push(String(table.columns[i].column_name));
+            }
+            // console.log(table.columns);
+            // console.log(arrData);
+
+              const data={
+                "table_name": `${table.name}`,
+                "columns":columns,
+                "values":arrData,
+              };
+              // console.log(data);
+              insertRow(data);
+              modalContent.innerHTML = `<div class="confirmation-modal__title-copy">Копирование строки в конец</div>
+              <div class="confirmation-modal__buttons-copy">
+                  <button class="btn btn_confirm-copy">Добавить</button>
+                  <button class="btn btn_cancel-copy">Отмена</button>
+              </div>`;
+              closeModal(modal);
+              acceptChanges({
+                message: "Изменения применены"
+              });
+              const timeoutCreate =createTable(table.name);
+              setTimeout(timeoutCreate,4000);
+        })
+
   });
 }
 
