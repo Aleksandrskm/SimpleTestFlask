@@ -346,6 +346,7 @@ td{
   font-weight: normal;
   font-family: Arial, sans-serif;
   padding: 15px;
+  overflow-y: auto;
 
 }
 
@@ -448,7 +449,13 @@ td{
 .confirmation-modal__title-add{
 	text-align:center;
 	font-size:22px;
-	text-transform:uppercase}
+	text-transform:uppercase
+}
+
+.data-column{
+    display: flex;
+    flex-direction: row;
+}
 
 .edit{
  font-size: 20px; /* Устанавливаем размер текста кнопки */

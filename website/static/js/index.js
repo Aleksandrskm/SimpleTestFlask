@@ -153,17 +153,20 @@ function createTableContent(result,rows, tableName) {
         cell.setAttribute('data-key', 'ID');
       }
       tableRow.appendChild(cell);
-    });
+    }
+
+    );
 
 
     const table=document.querySelector('table')
     table.append(tableRow);
-
+    createButtonsTable(table,result,tableRow);
     tableRow.addEventListener('click',(e)=>{
     //  console.log(e.target.parentElement);
     let r = document.createRange();
     r.selectNode(e.target.parentElement);
     document.getSelection().addRange(r);
+    console.log(e.target.parentElement);
      createButtonsTable(table,result,e.target.parentElement);
 
 
@@ -198,12 +201,15 @@ function createButtonsTable(table,result,tableRow) {
   console.log(table.parentElement);
   table.parentElement.append(buttons);
   // console.log(result.rows[0].length);
-  if (tableRow) {
-    functionalEdit(result.rows[0].length,tableRow,result);
+
+
     functionalDelete(result.name,tableRow);
     functionalBtnInsert(result);
     functionalBtnCopyEnd(result,tableRow);
-  }
+    if (result.rows) {
+      const rowsLenght=result.rows[0].length;
+      functionalEdit(rowsLenght,tableRow,result);
+    }
 
   // console.log(tableRow.parentElement.children[1])
 }
@@ -228,8 +234,15 @@ function functionalBtnInsert(table){
     const modal = document.querySelector('.confirmation-modal-add');
     const modalContent = document.querySelector('.confirmation-modal__content-add');
     for (let i = 1; i < table.columns_count; i++) {
-      // console.log(modal);
-      modalContent.innerHTML+=`<input required placeholder=${table.columns[i].column_description} type="text" class="modal__input">`;
+
+       const placeholder=String(table.columns[i].column_description);
+       console.log(placeholder);
+       const modalInput=document.createElement('input');
+       modalInput.placeholder=placeholder;
+       modalInput.type='text';
+       modalInput.classList.add('modal__input');
+       modalContent.append(modalInput);
+      // modalContent.innerHTML+=`<input required placeholder=${placeholder} type="text" class="modal__input">`;
     }
     openModal(modal);
     const btnAdd=document.querySelector('.btn_confirm-add');
@@ -301,27 +314,23 @@ function functionalEdit(totalRowsCount,rowTable,result) {
     buttonEdit.addEventListener('click', (e) => {
       const modal = document.querySelector('.modal');
       const modalContent = document.querySelector('.modal__content');
-      // let rowTablee = e.target.parentElement.parentElement.children;
-      // console.log(rowTable.children);
-      //  console.log(rowTable);
       for (let i = 0; i < totalRowsCount; i++) {
-        if (rowTable.children[i].innerHTML=='Не в сети') {
-          // console.log(rowTablee[i].innerHTML);
-          modalContent.innerHTML+=`<input required placeholder="Не в сети" type="text" class="modal__input">`;
-        }
-        else if (rowTable.children[i].innerHTML=='В сети') {
-          // console.log(rowTablee[i].innerHTML);
-          modalContent.innerHTML+=`<input required placeholder="В сети" type="text" class="modal__input">`;
-        }
-        else if (rowTable.children[i].innerHTML=='Не подключен') {
-
-          modalContent.innerHTML+=`<input required placeholder="Не подключен" type="text" class="modal__input">`;
-        }
-        else{
-          modalContent.innerHTML+=`<input required placeholder=${rowTable.children[i].innerHTML} type="text" class="modal__input">`;
-          // console.log(rowTablee[i]);
-        }
-
+        const placeholder=String(rowTable.children[i].innerHTML);
+        const nameColumns=String(result.columns[i].column_description);
+        console.log(placeholder);
+        console.log(nameColumns);
+        const dataColumn=document.createElement('div');
+        const namecolumn=document.createElement('div');
+        namecolumn.classList.add('name-column');
+        namecolumn.innerText=nameColumns;
+        dataColumn.classList.add('data-column');
+        dataColumn.append(namecolumn);
+        const modalInput=document.createElement('input');
+        modalInput.placeholder=placeholder;
+        modalInput.type='text';
+        modalInput.classList.add('modal__input');
+        dataColumn.append(modalInput);
+        modalContent.append(dataColumn);
       }
       openModal(modal);
       const btnClose=document.querySelector('.modal__close');
