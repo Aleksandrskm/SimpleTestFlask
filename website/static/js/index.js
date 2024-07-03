@@ -19,7 +19,7 @@ function azimuth_and_elevation_angle() {
       .catch(error => {
         console.error('Error:', error);
       });
-  }
+}
 
 function finding_coordinates() {
     const lat1 = document.getElementById('first_TLE_line').value;
@@ -37,7 +37,7 @@ function finding_coordinates() {
       .catch(error => {
         console.error('Error:', error);
       });
-  }
+}
 
 
 function get_coordinates() {
@@ -53,12 +53,11 @@ function get_coordinates() {
       .then(data => {
        console.log(data.response)
        document.getElementById('response').innerText = data.response;
-
       })
       .catch(error => {
         console.error('Error:', error);
       });
-  }
+}
 
 function communication_availability() {
     const acceptable_session_time_in_sec = document.getElementById('acceptable_session_time_in_sec').value;
@@ -71,7 +70,6 @@ function communication_availability() {
     const lon = document.getElementById('lon').value;
     const name = document.getElementById('name').value;
 
-
     fetch('/api/communication_availability?acceptable_session_time_in_sec=' + acceptable_session_time_in_sec +
      '&dates_delta_in_sec=' + dates_delta_in_sec + '&interval_in_sec=' + interval_in_sec + '&min_session_time_in_sec='
       + min_session_time_in_sec + '&start_datetime=' + start_datetime + '&lat=' + lat + '&lon=' + lon + '&name=' + name)
@@ -80,12 +78,11 @@ function communication_availability() {
       .then(data => {
        console.log(data.response)
        document.getElementById('response').innerText = data.response;
-
       })
       .catch(error => {
         console.error('Error:', error);
       });
-   }
+}
 
 function closeModal(modal) {
   modal.classList.add('hide');
@@ -107,20 +104,16 @@ function checkVoidTable(result,tableName, totalRowsCount) {
     const name = document.createElement('div');
      name.classList = 'table-name';
     name.innerHTML = `${list_Tables[tableName]}`;
-    // console.log(`${name}`);
     containerContent.append(name);
-    // console.log(`${list_Tables[tableName]}`);
     const tr = document.createElement('tr');
     result.columns.forEach(column=>{
       const th =document.createElement('th');
       th.innerHTML=`${column.column_description}`;
       tr.append(th);
     })
-
     containerContent.append(tr);
     createButtonsTable(tr,result,tr)
   }
-
 }
 
 function createTableContent(result,rows, tableName) {
@@ -149,18 +142,14 @@ function createTableContent(result,rows, tableName) {
     element.forEach((el, colIndex) => {
       const cell = document.createElement('td');
       cell.innerText = el;
-      if (colIndex === 0) { // Assume first column is primary key for simplicity
+      if (colIndex === 0) {
         cell.setAttribute('data-key', 'ID');
       }
       tableRow.appendChild(cell);
-    }
-
-    );
-
+    });
 
     const table=document.querySelector('table');
     tableRow.addEventListener('click',(e)=>{
-      //  console.log(e.target.parentElement);
       let r = document.createRange();
       r.selectNode(e.target.parentElement);
       document.getSelection().addRange(r);
@@ -174,26 +163,20 @@ function createTableContent(result,rows, tableName) {
         else{
           tr.style='';
         }
-
       })
        createButtonsTable(table,result,e.target.parentElement);
-
-
-      });
-
+    });
     table.append(tableRow);
     createButtonsTable(table,result,tableRow);
-
   });
-  const trs=document.querySelectorAll('table tr');
 
+  const trs=document.querySelectorAll('table tr');
       trs.forEach((tr,index)=>{
         console.log(trs.length);
         if (index==trs.length-1) {
-
         tr.style='background-color: #B5B8B1';
-      }
-    });
+        }
+      });
 }
 
 function generateTable(result) {
@@ -210,14 +193,16 @@ function createButtonsTable(table,result,tableRow) {
   if (btns) {
     btns.remove();
   }
+  // console.log(tableRow);
   const buttons = document.createElement('div');
   buttons.classList = 'table-buttons';
-  buttons.innerHTML=`<button class="insert">Добавить</button>`
-  buttons.innerHTML += `<button class="edit">Редактировать</button>`;
-  buttons.innerHTML += `<button class="copy">Добавить с копированием</button>`;
-  buttons.innerHTML += `<button class="delete">Удалить</button>`;
+  buttons.innerHTML=`<button class="insert">добавить</button>`
+  buttons.innerHTML += `<button class="edit">редактировать</button>`;
+  buttons.innerHTML += `<button class="copy">копировать строчку в конец</button>`;
+  buttons.innerHTML += `<button class="delete">удалить</button>`;
   console.log(table.parentElement);
   table.parentElement.append(buttons);
+  // console.log(result.rows[0].length);
 
     const btnEdit=document.querySelector('.edit');
     const btnCopy=document.querySelector('.copy');
@@ -228,7 +213,6 @@ function createButtonsTable(table,result,tableRow) {
       btnDelete.setAttribute('disabled', '');
     }
 
-
     functionalDelete(result.name,tableRow);
     functionalBtnInsert(result);
     functionalBtnCopyEnd(result,tableRow);
@@ -237,8 +221,6 @@ function createButtonsTable(table,result,tableRow) {
       const rowsLenght=result.rows[0].length;
       functionalEdit(rowsLenght,tableRow,result);
     }
-
-  // console.log(tableRow.parentElement.children[1])
 }
 
 
@@ -264,11 +246,11 @@ function functionalBtnInsert(table){
 
        const placeholder=String(table.columns[i].column_description);
        const dataColumn=document.createElement('div');
-      const namecolumn=document.createElement('div');
-      namecolumn.classList.add('name-column');
-      namecolumn.innerText=placeholder;
-      dataColumn.classList.add('data-column');
-      dataColumn.append(namecolumn);
+       const namecolumn=document.createElement('div');
+       namecolumn.classList.add('name-column');
+       namecolumn.innerText=placeholder;
+       dataColumn.classList.add('data-column');
+       dataColumn.append(namecolumn);
        console.log(placeholder);
        const modalInput=document.createElement('input');
        modalInput.placeholder=placeholder;
@@ -276,6 +258,7 @@ function functionalBtnInsert(table){
        modalInput.classList.add('modal__input');
        dataColumn.append(modalInput);
        modalContent.append(dataColumn);
+      // modalContent.innerHTML+=`<input required placeholder=${placeholder} type="text" class="modal__input">`;
     }
     openModal(modal);
     const btnAdd=document.querySelector('.btn_confirm-add');
@@ -288,8 +271,8 @@ function functionalBtnInsert(table){
           if(input.value){
             arrData.push(input.value);
           }
-
         });
+
         for (let index = 1; index < table.columns_count; index++) {
           const dataColumns={};
           // dataColumns.column_name=table.columns[index].column_name;
@@ -298,7 +281,6 @@ function functionalBtnInsert(table){
           //  dataColumns.is_editable=(table.columns[index].is_editable);
           console.log((table.columns[index].name));
           columns.push(String(table.columns[index].column_name));
-
         }
 
         const data={
@@ -306,11 +288,10 @@ function functionalBtnInsert(table){
           "columns":columns,
           "values":arrData
         };
-         console.log(columns);
-        // console.log(arrData);
+        console.log(columns);
         insertRow(data);
         acceptChanges({
-          message: "Изменения применены"
+            message: "Изменения применены"
         });
         modalContent.innerHTML=`<div class="confirmation-modal__title-add">Добавление строки</div>
         <div class="confirmation-modal__buttons-add">
@@ -398,32 +379,21 @@ function functionalEdit(totalRowsCount,rowTable,result) {
 
             };
             editRow(data);
-            // console.log(input.value);
-            // console.log(rowTable);
-
-
           }
-
-          // else{
-          //   // console.log('пусто');
-          // }
         })
         acceptChanges({
           message: "Изменения применены"
         });
 
-
         modalContent.innerHTML = `<form action="#">
         <div data-close class="modal__close">&times;</div>
         <div class="modal__title">Редактирование таблицы</div>
         <button class="btn btn_dark btn_min">Сохранить</button>
-      </form>`;
+        </form>`;
 
         closeModal(modal);
         const timeoutCreate =createTable(result.name);
         setTimeout(timeoutCreate,4000);
-        // createTable(result.name);
-        //  showConfirmationModal(data, row);
       });
     });
   });
@@ -461,42 +431,39 @@ function functionalBtnCopyEnd(table,row){
   const rows=document.querySelectorAll('tr');
   const primaryKeys = {};
 
-
   buttonCopy.addEventListener('click',()=>{
     for (let i = 1; i < table.rows[0].length; i++) {
       if (i==1) {
         modalContent.innerHTML+=`<div class="ID-Copy-Row">Копируется строка ${row.children[0].innerHTML}</div>`
       }
 
-
       const placeholder=String(table.columns[i].column_description);
       const dataColumn=document.createElement('div');
-     const namecolumn=document.createElement('div');
-     namecolumn.classList.add('name-column');
-     namecolumn.innerText=placeholder;
-     dataColumn.classList.add('data-column');
-     dataColumn.append(namecolumn);
+      const namecolumn=document.createElement('div');
+      namecolumn.classList.add('name-column');
+      namecolumn.innerText=placeholder;
+      dataColumn.classList.add('data-column');
+      dataColumn.append(namecolumn);
 
-
-        console.log(modalContent);
-        const input=document.createElement('input');
-        input.value=row.children[i].innerHTML;
-        input.classList.add('modal__input');
-        dataColumn.append(input);
-        modalContent.append(dataColumn);
+      console.log(modalContent);
+      const input=document.createElement('input');
+      input.value=row.children[i].innerHTML;
+      input.classList.add('modal__input');
+      dataColumn.append(input);
+      modalContent.append(dataColumn);
     }
     openModal(modal);
     const btnClose=document.querySelector('.btn_cancel-copy');
-        btnClose.addEventListener('click',()=>{
+       btnClose.addEventListener('click',()=>{
           closeModal(modal);
           modalContent.innerHTML = `<div class="confirmation-modal__title-copy">Копирование строки</div>
-                          <div class="confirmation-modal__buttons-copy">
-                              <button class="btn btn_confirm-copy">Добавить</button>
-                              <button class="btn btn_cancel-copy">Отмена</button>
-                          </div>`;
-        })
-        const btnAddEnd=document.querySelector('.btn_confirm-copy');
-        btnAddEnd.addEventListener('click',()=>{
+             <div class="confirmation-modal__buttons-copy">
+                <button class="btn btn_confirm-copy">Добавить</button>
+                <button class="btn btn_cancel-copy">Отмена</button>
+             </div>`;
+       })
+       const btnAddEnd=document.querySelector('.btn_confirm-copy');
+       btnAddEnd.addEventListener('click',()=>{
           rows.forEach(row=>{
             row.querySelectorAll('td[data-key]').forEach((td) => {
               const key = td.getAttribute('data-key');
@@ -528,13 +495,12 @@ function functionalBtnCopyEnd(table,row){
                   <button class="btn btn_cancel-copy">Отмена</button>
               </div>`;
               closeModal(modal);
-              acceptChanges({
-                message: "Изменения применены"
-              });
+              // acceptChanges({
+              //   message: "Изменения применены"
+              // });
               const timeoutCreate =createTable(table.name);
               setTimeout(timeoutCreate,4000);
-        })
-
+       })
   });
 }
 
@@ -578,7 +544,7 @@ function showConfirmationModal(data, row) {
 async function editRow(data) {
   try {
     const response = await fetch('http://185.192.247.60:7130/Database/UpdateRow', {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
@@ -587,7 +553,8 @@ async function editRow(data) {
     const result = await response.json();
     console.log("Row edit successfully:", result);
     return result;
-  } catch (error) {
+  }
+  catch (error) {
     console.error("Error edit row:", error);
   }
 }
@@ -603,7 +570,8 @@ async function deleteRow(data) {
     const result = await response.json();
     console.log("Row deleted successfully:", result);
     return result;
-  } catch (error) {
+  }
+  catch (error) {
     console.error("Error deleting row:", error);
   }
 }
@@ -619,7 +587,8 @@ async function insertRow(data) {
     const result = await response.json();
     console.log("Row insert successfully:", result);
     return result;
-  } catch (error) {
+  }
+  catch (error) {
     console.error("Error insert row:", error);
   }
 }
@@ -631,12 +600,14 @@ async function acceptChanges(data) {
         "Content-Type": "application/json",
 
       },
+
       body: JSON.stringify(data)
     });
     const result = await response.json();
     // console.log("Changes accepted successfully:", result);
     // return result;
-  } catch (error) {
+  }
+  catch (error) {
     // console.error("Error accepting changes:", error);
   }
 }
@@ -669,12 +640,12 @@ function createTable(element) {
 
 async function postJSON(data) {
   try {
-    const response = await fetch("http://185.192.247.60:7130/Database/TableInfo", {
-      method: "POST",
+    const response = await fetch(`http://185.192.247.60:7130/Database/TableInfo/${data.name}`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      // body: JSON.stringify(data),
     });
     const result = await response.json();
     console.log("Success:", result);
@@ -718,12 +689,12 @@ const hideLoading = () => {
 };
 
 let url = 'http://185.192.247.60:7130/Database/DBTables';
-let isColorChanged = false; // Переменная для отслеживания смены цвета
+let isColorChanged = false;
 
 document.addEventListener('DOMContentLoaded', function() {
   const navEl = document.querySelector('.container__nav__el');
-
 });
+
 let response = fetch(url)
   .then(response => response.json())
   .then(json => {
@@ -748,4 +719,3 @@ let response = fetch(url)
       document.querySelector('.container__nav').append(elem);
     });
   });
-

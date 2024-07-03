@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from ..utils.utils  import calculate_distance, calculate_azimuth, elevation_eagle, get_coordinates, communication_availability
+from ..utils.utils import calculate_distance, calculate_azimuth, elevation_eagle, get_coordinates, communication_availability
 
 api = Blueprint("api", __name__)
 
@@ -51,12 +51,10 @@ def index4():
     lon = str((request.args.get('lon')))
     name = str((request.args.get('name')))
 
-
     response = communication_availability(acceptable_session_time_in_sec, dates_delta_in_sec, interval_in_sec, min_session_time_in_sec, start_datetime, lat, lon, name)
     import pprint
     pprint.pprint(response.json())
     return jsonify({
         "response": str(response.json())
-
     })
 

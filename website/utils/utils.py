@@ -1,10 +1,6 @@
 import math
 import requests
-from datetime import datetime, timedelta, timezone
-from skyfield.api import load
-from skyfield.sgp4lib import EarthSatellite
-from skyfield.toposlib import wgs84
-
+from datetime import datetime
 
 def calculate_azimuth(lat1, lon1, lat2, lon2):
     lat1 = math.radians(lat1)
@@ -35,10 +31,7 @@ def elevation_eagle(lat1, lon1, alt1, lat2, lon2, alt2):
 
     a = math.sin(dlat / 2) * math.sin(dlat / 2) + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2) * math.sin(dlon / 2)
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-
     distance = 6371 * c  # расчет расстояния между точками
-    dx = lon2 - lon1
-    dy = lat2 - lat1
     dalt = alt2 - alt1
     h = math.atan2(dalt, distance)  # расчет угла места
     elevation_angle = math.degrees(h)
@@ -70,11 +63,9 @@ def get_coordinates(first_TLE_line: str, second_TLE_line: str, name: str):
         },
         'datetime_utc': current_datetime
     }
-    import pprint
-    pprint.pprint(data)
-
+    # import pprint
+    # pprint.pprint(data)
     url = 'http://185.192.247.60:7128/Geography/PositionTLE'
-
     response = requests.post(url, json=data)
 
     return response
@@ -88,7 +79,6 @@ def communication_availability(acceptable_session_time_in_sec: str, dates_delta_
     lat2 = lat
     lon2 = lon
     name2 = name
-
 
     data = {
         "params": {
@@ -107,12 +97,7 @@ def communication_availability(acceptable_session_time_in_sec: str, dates_delta_
         ]
     }
 
-
-    import pprint
-    pprint.pprint(data)
-
     url = 'http://185.192.247.60:7128/CommunicationAvailability/CalculateCommunicationAvailability'
-
     response = requests.post(url, json=data)
 
     return response
