@@ -158,20 +158,42 @@ function createTableContent(result,rows, tableName) {
     );
 
 
-    const table=document.querySelector('table')
+    const table=document.querySelector('table');
+    tableRow.addEventListener('click',(e)=>{
+      //  console.log(e.target.parentElement);
+      let r = document.createRange();
+      r.selectNode(e.target.parentElement);
+      document.getSelection().addRange(r);
+      console.log(e.target.parentElement);
+      const trs=document.querySelectorAll('table tr');
+      trs.forEach((tr,index)=>{
+
+        if (tr==e.target.parentElement) {
+          tr.style='background-color: #B5B8B1';
+        }
+        else{
+          tr.style='';
+        }
+
+      })
+       createButtonsTable(table,result,e.target.parentElement);
+
+
+      });
+
     table.append(tableRow);
     createButtonsTable(table,result,tableRow);
-    tableRow.addEventListener('click',(e)=>{
-    //  console.log(e.target.parentElement);
-    let r = document.createRange();
-    r.selectNode(e.target.parentElement);
-    document.getSelection().addRange(r);
-    console.log(e.target.parentElement);
-     createButtonsTable(table,result,e.target.parentElement);
 
-
-    })
   });
+  const trs=document.querySelectorAll('table tr');
+
+      trs.forEach((tr,index)=>{
+        console.log(trs.length);
+        if (index==trs.length-1) {
+
+        tr.style='background-color: #B5B8B1';
+      }
+    });
 }
 
 function generateTable(result) {
@@ -181,9 +203,6 @@ function generateTable(result) {
   else {
     createTableContent(result,result.rows, result.name);
   }
-
-  // functionalEdit(result.total_rows_count);
-  // functionalDelete(result.name); // Pass the table name to the delete function
 }
 
 function createButtonsTable(table,result,tableRow) {
@@ -191,22 +210,30 @@ function createButtonsTable(table,result,tableRow) {
   if (btns) {
     btns.remove();
   }
-  // console.log(tableRow);
   const buttons = document.createElement('div');
   buttons.classList = 'table-buttons';
-  buttons.innerHTML=`<button class="insert">добавить</button>`
-  buttons.innerHTML += `<button class="edit">редактировать</button>`;
-  buttons.innerHTML += `<button class="copy">копировать строчку в конец</button>`;
-  buttons.innerHTML += `<button class="delete">удалить</button>`;
+  buttons.innerHTML=`<button class="insert">Добавить</button>`
+  buttons.innerHTML += `<button class="edit">Редактировать</button>`;
+  buttons.innerHTML += `<button class="copy">Добавить с копированием</button>`;
+  buttons.innerHTML += `<button class="delete">Удалить</button>`;
   console.log(table.parentElement);
   table.parentElement.append(buttons);
-  // console.log(result.rows[0].length);
+
+    const btnEdit=document.querySelector('.edit');
+    const btnCopy=document.querySelector('.copy');
+    const btnDelete=document.querySelector('.delete');
+    if (!result.total_rows_count) {
+      btnEdit.setAttribute('disabled', '');
+      btnCopy.setAttribute('disabled', '');
+      btnDelete.setAttribute('disabled', '');
+    }
 
 
     functionalDelete(result.name,tableRow);
     functionalBtnInsert(result);
     functionalBtnCopyEnd(result,tableRow);
     if (result.rows) {
+      console.log(result);
       const rowsLenght=result.rows[0].length;
       functionalEdit(rowsLenght,tableRow,result);
     }
@@ -236,13 +263,19 @@ function functionalBtnInsert(table){
     for (let i = 1; i < table.columns_count; i++) {
 
        const placeholder=String(table.columns[i].column_description);
+       const dataColumn=document.createElement('div');
+      const namecolumn=document.createElement('div');
+      namecolumn.classList.add('name-column');
+      namecolumn.innerText=placeholder;
+      dataColumn.classList.add('data-column');
+      dataColumn.append(namecolumn);
        console.log(placeholder);
        const modalInput=document.createElement('input');
        modalInput.placeholder=placeholder;
        modalInput.type='text';
        modalInput.classList.add('modal__input');
-       modalContent.append(modalInput);
-      // modalContent.innerHTML+=`<input required placeholder=${placeholder} type="text" class="modal__input">`;
+       dataColumn.append(modalInput);
+       modalContent.append(dataColumn);
     }
     openModal(modal);
     const btnAdd=document.querySelector('.btn_confirm-add');
@@ -434,52 +467,29 @@ function functionalBtnCopyEnd(table,row){
       if (i==1) {
         modalContent.innerHTML+=`<div class="ID-Copy-Row">Копируется строка ${row.children[0].innerHTML}</div>`
       }
-      if (row.children[i].innerHTML=='Не в сети') {
-        // console.log(rowTablee[i].innerHTML);
-        const input=document.createElement('input');
-        input.value=row.children[i].innerHTML;
-        input.classList.add('modal__input');
-        modalContent.append(input);
-        // modalContent.innerHTML+=`<input required placeholder="Не в сети" type="text" class="modal__input">`;
-        // const input=document.querySelector('.modal__input');
-        // input.value=row.children[i].innerHTML;
-      }
-      else if (row.children[i].innerHTML=='В сети') {
-        // console.log(rowTablee[i].innerHTML);
-        const input=document.createElement('input');
-        input.value=row.children[i].innerHTML;
-        input.classList.add('modal__input');
-        modalContent.append(input);
-        // modalContent.innerHTML+=`<input required placeholder="В сети" type="text" class="modal__input">`;
-        // const input=document.querySelector('.modal__input');
-        // input.value=row.children[i].innerHTML;
-      }
-      else if (row.children[i].innerHTML=='Не подключен') {
-        const input=document.createElement('input');
-        input.value=row.children[i].innerHTML;
-        input.classList.add('modal__input');
-        modalContent.append(input);
-        // modalContent.innerHTML+=`<input required placeholder="Не подключен" type="text" class="modal__input">`;
-        // const input=document.querySelector('.modal__input');
-        // input.value=row.children[i].innerHTML;
-      }
-      else{
+
+
+      const placeholder=String(table.columns[i].column_description);
+      const dataColumn=document.createElement('div');
+     const namecolumn=document.createElement('div');
+     namecolumn.classList.add('name-column');
+     namecolumn.innerText=placeholder;
+     dataColumn.classList.add('data-column');
+     dataColumn.append(namecolumn);
+
+
         console.log(modalContent);
         const input=document.createElement('input');
         input.value=row.children[i].innerHTML;
         input.classList.add('modal__input');
-        modalContent.append(input);
-        // `<input required placeholder=${row.children[i].innerHTML} type="text" class="modal__input">`
-        // input.value=row.children[i].innerHTML;
-        // console.log(rowTablee[i]);
-      }
-
+        dataColumn.append(input);
+        modalContent.append(dataColumn);
     }
     openModal(modal);
     const btnClose=document.querySelector('.btn_cancel-copy');
         btnClose.addEventListener('click',()=>{
           closeModal(modal);
-          modalContent.innerHTML = `<div class="confirmation-modal__title-copy">Копирование строки в конец</div>
+          modalContent.innerHTML = `<div class="confirmation-modal__title-copy">Копирование строки</div>
                           <div class="confirmation-modal__buttons-copy">
                               <button class="btn btn_confirm-copy">Добавить</button>
                               <button class="btn btn_cancel-copy">Отмена</button>
@@ -542,6 +552,7 @@ function showConfirmationModal(data, row) {
       }).then(() => {
         row.remove();
         closeModal(modal);
+        createTable(data.table_name);
       }).catch(error => {
         // console.error("Error accepting changes:", error);
         closeModal(modal);
@@ -618,13 +629,13 @@ async function acceptChanges(data) {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        
+
       },
       body: JSON.stringify(data)
     });
     const result = await response.json();
     // console.log("Changes accepted successfully:", result);
-    // return result; 
+    // return result;
   } catch (error) {
     // console.error("Error accepting changes:", error);
   }
@@ -712,15 +723,6 @@ let isColorChanged = false; // Переменная для отслеживан�
 document.addEventListener('DOMContentLoaded', function() {
   const navEl = document.querySelector('.container__nav__el');
 
-  navEl.addEventListener('click', function() {
-    if (!isColorChanged) {
-      navEl.style.backgroundColor = 'red'; // Изменить цвет на красный
-      isColorChanged = true;
-    } else {
-      navEl.style.backgroundColor = ''; // Вернуть исходный цвет
-      isColorChanged = false;
-    }
-  });
 });
 let response = fetch(url)
   .then(response => response.json())
@@ -732,7 +734,17 @@ let response = fetch(url)
           elem.innerHTML = `<div class="container__nav__el"> ${list_Tables[key]}</div>`;
         }
       }
-      elem.addEventListener('click', () => { createTable(element) });
+      elem.addEventListener('click', (e) => {
+        const trs=document.querySelectorAll('.container__nav__el');
+      trs.forEach((tr)=>{
+        if (tr==e.target) {
+          tr.style='background-color: #B5B8B1';
+        }
+        else{
+          tr.style='';
+        }
+      })
+        createTable(element) });
       document.querySelector('.container__nav').append(elem);
     });
   });

@@ -217,10 +217,10 @@
     text-indent: 30px;
     box-sizing: border-box;
 
+
 }
 
 .column2_vi {
-
     flex-direction: column;
     justify-content: flex-start;
     line-height: 1.5;
@@ -232,6 +232,7 @@
     padding: 20px;
     padding-left: 30px;
     box-sizing: border-box;
+
 }
 
 
@@ -241,23 +242,14 @@ header {
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 33rem 1fr;
-  /*flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;*/
-
-
-
 }
 
 h1 {
-
   color: #000000;
   line-height: 1;
   font-size: calc(1.1rem + 1vw);
   font-weight: bold;
   font-family: Arial, sans-serif;
-
   text-align: center; /* Центрируем текст заголовка */
   margin: auto ; /* Убираем внешние отступы */
 }
@@ -293,6 +285,27 @@ body {
   padding: 0;
 }
 
+td{
+    white-space: pre;
+    border: 1px solid black; /* Линия-обрамление ячеек */
+    padding: 5px; /* Отступ внутренний для содержимого ячеек */
+    cursor: pointer; /* Изменение вида курсора */
+}
+
+tr:hover{
+    background-color: #C0C0C0;
+}
+tr{
+    border: 1px solid black; /* Линия-обрамление ячеек */
+    padding: 5px; /* Отступ внутренний для содержимого ячеек */
+}
+
+img {
+    margin-right: 90%;
+    height: 40px;
+    width: 44px;
+}
+
 .btn {
   font-size: 20px; /* Устанавливаем размер текста кнопки */
   padding: 10px 20px; /* Устанавливаем отступы внутри кнопки */
@@ -301,7 +314,7 @@ body {
   height: 55px;
   border-radius: 10px;
   text-align: center;
-
+  cursor: pointer; /* Изменение вида курсора */
 }
 
 .butt button:hover {
@@ -309,12 +322,12 @@ body {
 }
 
 .butt {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 80vh;
-        margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  margin: 0;
 }
 
 .btn2 {
@@ -324,20 +337,24 @@ body {
     align-items: center;
 }
 
-
-
-
 .modal{position:fixed;top:0;left:0;z-index:1050;width:100%;height:100%;overflow:hidden;background-color:rgba(0,0,0,.5)}
 .modal__dialog{max-width:500px;margin:40px auto}
 .modal__content{position:relative;width:100%;padding:40px;background-color:#fff;border:1px solid rgba(0,0,0,.2);border-radius:4px;max-height:80vh;overflow-y:auto}
 .modal__close{position:absolute;top:8px;right:14px;font-size:30px;color:#000;opacity:.5;font-weight:700;border:none;background-color:transparent;cursor:pointer}
 .modal__title{text-align:center;font-size:22px;text-transform:uppercase}
-.modal__input{display:block;margin:20px auto 20px auto;width:280px;height:50px;background:#fff;box-shadow:0 4px 15px rgba(0,0,0,.2);border:none;font-size:18px;text-align:center;padding:0 20px;outline:0}
+.modal__input{
+    display:block;margin:20px 0 20px auto;
+    width:280px;
+    height:50px;
+    background:#fff;
+    box-shadow:0 4px 15px rgba(0,0,0,.2);
+    border:none;
+    font-size:18px;
+    text-align:center;
+    padding-right:0px;
+    outline:0}
 .modal .btn{display:block;width:280px;margin:0 auto}
 .fade{animation-name: fade;animation-duration: 1.5s;}@keyframes fade{from{opacity: 0.1;}to{opacity: 1;}}
-td{
-    white-space: pre;
-}
 
 .container__nav{
   color: #000000;
@@ -347,9 +364,8 @@ td{
   font-family: Arial, sans-serif;
   padding: 15px;
   overflow-y: auto;
-
+  cursor: pointer; /* Изменение вида курсора */
 }
-
 
 .table-name{
   color: #000000;
@@ -375,12 +391,15 @@ td{
     flex-direction: row;
     flex-wrap: nowrap;
 }
+
 .hide{
     display: none;
 }
+
 .show{
     display: block;
 }
+
 .loader-container {
     width: 100%;
     height: 100vh;
@@ -391,23 +410,24 @@ td{
     z-index: 1;
     display: none;
 }
+
 .table-buttons{
     display: flex;
 }
+
 .table-row.selected {
     background-color: #f0f0f0; /* Highlight selected row */
   }
+
 .modal{position:fixed;top:0;left:0;z-index:1050;width:100%;height:100%;overflow:hidden;background-color:rgba(0,0,0,.5)}
 .modal__dialog{max-width:500px;margin:40px auto}
 .modal__content{position:relative;width:100%;padding:40px;background-color:#fff;border:1px solid rgba(0,0,0,.2);border-radius:4px;max-height:80vh;overflow-y:auto}
 .modal__close{position:absolute;top:8px;right:14px;font-size:30px;color:#000;opacity:.5;font-weight:700;border:none;background-color:transparent;cursor:pointer}
 .modal__title{text-align:center;font-size:22px;text-transform:uppercase}
-.modal__input{display:block;margin:20px auto 20px auto;width:280px;height:50px;background:#fff;box-shadow:0 4px 15px rgba(0,0,0,.2);border:none;font-size:18px;text-align:center;padding:0 20px;outline:0}
+.modal__input{display:block;margin:20px 0 20px auto;width:280px;height:50px;background:#fff;box-shadow:0 4px 15px rgba(0,0,0,.2);border:none;font-size:18px;text-align:center;padding:0 20px;outline:0}
 .modal .btn{display:block;width:280px;margin:0 auto}
 .fade{animation-name: fade;animation-duration: 1.5s;}@keyframes fade{from{opacity: 0.1;}to{opacity: 1;}}
-td{
-    white-space: pre;
-}
+
 .confirmation-modal__content{    position: relative;
     width: 100%;
     padding: 40px;
@@ -425,7 +445,11 @@ td{
         max-height: 80vh;
         overflow-y: auto;}
 .btn_confirm{display:block;width:280px;margin:0 auto}
-.btn_confirm-add{display:block;width:280px;margin:0 auto}
+.btn_confirm-add{
+    display:block;
+    width:280px;
+    margin:0 auto 10px;
+}
 .btn_cancel{display:block;width:280px;margin:0 auto}
 .confirmation-modal__buttons{max-width:500px;margin:40px auto}
 .confirmation-modal__title{text-align:center;font-size:22px;text-transform:uppercase}
@@ -458,13 +482,13 @@ td{
 }
 
 .edit{
- font-size: 20px; /* Устанавливаем размер текста кнопки */
-
+  font-size: 20px; /* Устанавливаем размер текста кнопки */
   margin: 10px;
   width: 170px;
   height: 35px;
   border-radius: 7px;
   text-align: center;
+  cursor: pointer; /* Изменение вида курсора */
 }
 
 .delete{
@@ -474,6 +498,7 @@ td{
   height: 35px;
   border-radius: 7px;
   text-align: center;
+  cursor: pointer; /* Изменение вида курсора */
 }
 .insert{
  font-size: 20px; /* Устанавливаем размер текста кнопки */
@@ -482,6 +507,16 @@ td{
   height: 35px;
   border-radius: 7px;
   text-align: center;
+  cursor: pointer; /* Изменение вида курсора */
+}
+.copy{
+  font-size: 20px;
+  margin: 10px;
+  width: 300px;
+  height: 35px;
+  border-radius: 7px;
+  text-align: center;
+  cursor: pointer; /* Изменение вида курсора */
 }
 .insert:hover{
     background-color: #C0C0C0;
@@ -499,7 +534,6 @@ td{
 
 .container__nav__el:hover {
     background-color: #C0C0C0;
-
 }
 
 .container__nav__el {
@@ -508,46 +542,34 @@ td{
     padding-left: 20px;
 
 }
+
 .container__nav__el::before {
     content: "━"; /* Добавляем знак точки перед каждым параграфом */
-}
-.copy{
-  font-size: 20px;
-  margin: 10px;
-  width: 300px;
-  height: 35px;
-  border-radius: 7px;
-  text-align: center;
-
 }
 
 .home-ref {
     margin-right: auto;
     margin-right: 90%;
 }
+
 .ref{
     margin: 15px;
-}
-img {
-    margin-right: 90%;
-    height: 35px;
-    width: 40px;
 }
 
 .container__nav__el__active {
     background-color: #555555; /* Измененный цвет кнопки при нажатии */
 }
 
-td{
-    border: 1px solid black; /* Линия-обрамление ячеек */
-    padding: 5px; /* Отступ внутренний для содержимого ячеек */
-}
-tr:hover{
-    background-color: #C0C0C0;
-}
-tr{
-    border: 1px solid black; /* Линия-обрамление ячеек */
-    padding: 5px; /* Отступ внутренний для содержимого ячеек */
-}
 .container_content {
 }
+
+.name-column{
+    color: #000000;
+    line-height: 1;
+    font-size: 18;
+    font-weight: normal;
+    font-family: Arial, sans-serif;
+    display: flex;
+    align-items: center
+}
+
