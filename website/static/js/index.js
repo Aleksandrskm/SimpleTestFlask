@@ -1,6 +1,5 @@
 'use strict';
 
-
 function azimuth_and_elevation_angle() {
     const lat1 = document.getElementById('lat1').value;
     const lon1 = document.getElementById('lon1').value;
@@ -196,10 +195,10 @@ function createButtonsTable(table,result,tableRow) {
   // console.log(tableRow);
   const buttons = document.createElement('div');
   buttons.classList = 'table-buttons';
-  buttons.innerHTML=`<button class="insert">добавить</button>`
-  buttons.innerHTML += `<button class="edit">редактировать</button>`;
-  buttons.innerHTML += `<button class="copy">копировать строчку в конец</button>`;
-  buttons.innerHTML += `<button class="delete">удалить</button>`;
+  buttons.innerHTML=`<button class="insert">Добавить</button>`
+  buttons.innerHTML += `<button class="edit">Редактировать</button>`;
+  buttons.innerHTML += `<button class="copy">Добавить с копированием</button>`;
+  buttons.innerHTML += `<button class="delete">Удалить</button>`;
   console.log(table.parentElement);
   table.parentElement.append(buttons);
   // console.log(result.rows[0].length);
@@ -258,7 +257,6 @@ function functionalBtnInsert(table){
        modalInput.classList.add('modal__input');
        dataColumn.append(modalInput);
        modalContent.append(dataColumn);
-      // modalContent.innerHTML+=`<input required placeholder=${placeholder} type="text" class="modal__input">`;
     }
     openModal(modal);
     const btnAdd=document.querySelector('.btn_confirm-add');

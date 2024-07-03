@@ -6,29 +6,32 @@
 
     <div class="input_parameters_com">
         <div class="row_com">
+
             <div class="column1_com">
-        <span>Минимально доступное время первого сеанса связи, сек</span>
-        <input id="acceptable_session_time_in_sec" type="text" value="100">
-        <span>Шаг движения подспутниковой точки, сек</span>
-        <input id="dates_delta_in_sec" type="text" value="15">
-        <span>Прогнозируемый промежуток связи, сек</span>
-        <input id="interval_in_sec" type="text" value="1000">
-        <span>Минимально допустимое время сеанса связи, сек</span>
-        <input id="min_session_time_in_sec" type="text" value="10">
-        <span>Время начала сеанса связи</span>
-        <input id="start_datetime" type="text" value="2024-04-25T11:23:49.523Z">
+                <span>Минимально доступное время первого сеанса связи, сек</span>
+                <input id="acceptable_session_time_in_sec" type="text" value="100">
+                <span>Шаг движения подспутниковой точки, сек</span>
+                <input id="dates_delta_in_sec" type="text" value="15">
+                <span>Прогнозируемый промежуток связи, сек</span>
+                <input id="interval_in_sec" type="text" value="1000">
+                <span>Минимально допустимое время сеанса связи, сек</span>
+                <input id="min_session_time_in_sec" type="text" value="10">
+                <span>Время начала сеанса связи</span>
+                <input id="start_datetime" type="text" value="2024-04-25T11:23:49.523Z">
             </div>
+
             <div class="column2_com">
-        <span>Параметры абонента:</span>
-                <br>
-        <span>Широта , градусы</span>
-        <input id="lat" type="text" value="54.1">
-        <span>Долгота, градусы</span>
-        <input id="lon" type="text" value="48.3">
-        <span>Имя абонента</span>
-        <input id="name" type="text" value="Абонент 1">
+                <span>Параметры абонента:</span>
+                        <br>
+                <span>Широта , градусы</span>
+                <input id="lat" type="text" value="54.1">
+                <span>Долгота, градусы</span>
+                <input id="lon" type="text" value="48.3">
+                <span>Имя абонента</span>
+                <input id="name" type="text" value="Абонент 1">
             </div>
         </div>
+
         <div class="btn2">
             <button id="task-btn" onclick="communication_availability()">Отправить</button>
         </div>
@@ -38,4 +41,5 @@
         <span id="response"></span>
 
     </div>
+
 {% endblock %}
