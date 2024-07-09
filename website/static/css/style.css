@@ -540,6 +540,39 @@ img {
 	text-transform:uppercase
 }
 
+.confirmation-modal-copy{
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1050;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, .5);
+}
+
+.confirmation-modal__buttons-add{
+    max-width: 500px;
+    margin: 40px auto
+}
+
+.confirmation-modal__title-copy{
+    text-align:center;
+    font-size:22px;
+    text-transform:uppercase
+}
+
+.confirmation-modal__content-copy{
+    position: relative;
+    width: 100%;
+    padding: 40px;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, .2);
+    border-radius: 4px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
 .data-column{
     display: flex;
     flex-direction: row;

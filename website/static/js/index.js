@@ -245,11 +245,11 @@ function functionalBtnInsert(table){
 
        const placeholder=String(table.columns[i].column_description);
        const dataColumn=document.createElement('div');
-       const namecolumn=document.createElement('div');
-       namecolumn.classList.add('name-column');
-       namecolumn.innerText=placeholder;
+       const nameColumn=document.createElement('div');
+       nameColumn.classList.add('name-column');
+       nameColumn.innerText=placeholder;
        dataColumn.classList.add('data-column');
-       dataColumn.append(namecolumn);
+       dataColumn.append(nameColumn);
        console.log(placeholder);
        const modalInput=document.createElement('input');
        modalInput.placeholder=placeholder;
@@ -288,33 +288,31 @@ function functionalBtnInsert(table){
         };
         console.log(columns);
         insertRow(data);
-        acceptChanges({
-            message: "Изменения применены"
-        });
+        // acceptChanges({
+        //     message: "Изменения применены"
+        // });
         modalContent.innerHTML=`<div class="confirmation-modal__title-add">Добавление строки</div>
         <div class="confirmation-modal__buttons-add">
           <button class="btn btn_confirm-add">Соханить</button>
           <button class="btn btn_cancel">Отмена</button>
         </div>`;
         closeModal(modal);
-        const timeoutCreate =createTable(table.name);
-        setTimeout(timeoutCreate,4000);
+        createTable(table.name);
     });
     const cancelButton = modal.querySelector('.btn_cancel');
     cancelButton.onclick = () => {
-      rollbackChanges({
-        message: "Изменения отменены"
-      }).then(() => {
+
         closeModal(modal);
         modalContent.innerHTML=`<div class="confirmation-modal__title-add">Добавление строки</div>
         <div class="confirmation-modal__buttons-add">
           <button class="btn btn_confirm-add">Соханить</button>
           <button class="btn btn_cancel">Отмена</button>
         </div>`;
-      }).catch(error => {
-        console.error("Error rolling back changes:", error);
-        closeModal(modal);
-      });
+
+
+
+        // closeModal(modal);
+
     };
   });
 }
@@ -379,9 +377,9 @@ function functionalEdit(totalRowsCount,rowTable,result) {
             editRow(data);
           }
         })
-        acceptChanges({
-          message: "Изменения применены"
-        });
+        // acceptChanges({
+        //   message: "Изменения применены"
+        // });
 
         modalContent.innerHTML = `<form action="#">
         <div data-close class="modal__close">&times;</div>
@@ -496,8 +494,8 @@ function functionalBtnCopyEnd(table,row){
               // acceptChanges({
               //   message: "Изменения применены"
               // });
-              const timeoutCreate =createTable(table.name);
-              setTimeout(timeoutCreate,4000);
+              createTable(table.name);
+
        })
   });
 }
@@ -511,31 +509,27 @@ function showConfirmationModal(data, row) {
 
   confirmButton.onclick = () => {
     deleteRow(data).then(() => {
-      acceptChanges({
-        message: "Изменения применены"
-      }).then(() => {
+
         row.remove();
         closeModal(modal);
         createTable(data.table_name);
-      }).catch(error => {
-        // console.error("Error accepting changes:", error);
+
+
         closeModal(modal);
-      });
-    }).catch(error => {
-      // console.error("Error deleting row:", error);
-      closeModal(modal);
-    });
-  };
+
+
+  })
+};
 
   cancelButton.onclick = () => {
-    rollbackChanges({
-      message: "Изменения отменены"
-    }).then(() => {
+    // rollbackChanges({
+    //   message: "Изменения отменены"
+    // }).then(() => {
       closeModal(modal);
-    }).catch(error => {
-      // console.error("Error rolling back changes:", error);
-      closeModal(modal);
-    });
+    // }).catch(error => {
+    //   // console.error("Error rolling back changes:", error);
+    //   closeModal(modal);
+    // });
   };
 }
 
@@ -590,42 +584,42 @@ async function insertRow(data) {
     console.error("Error insert row:", error);
   }
 }
-async function acceptChanges(data) {
-  try {
-    const response = await fetch("http://185.192.247.60:7130/Database/AcceptChanges", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
+// async function acceptChanges(data) {
+//   try {
+//     const response = await fetch("http://185.192.247.60:7130/Database/AcceptChanges", {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json",
 
-      },
+//       },
 
-      body: JSON.stringify(data)
-    });
-    const result = await response.json();
-    // console.log("Changes accepted successfully:", result);
-    // return result;
-  }
-  catch (error) {
-    // console.error("Error accepting changes:", error);
-  }
-}
+//       body: JSON.stringify(data)
+//     });
+//     const result = await response.json();
+//     // console.log("Changes accepted successfully:", result);
+//     // return result;
+//   }
+//   catch (error) {
+//     // console.error("Error accepting changes:", error);
+//   }
+// }
 
-async function rollbackChanges(data) {
-  try {
-    const response = await fetch("http://185.192.247.60:7130/Database/RollbackChanges", {
-      method: "GEt",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data)
-    });
-    const result = await response.json();
-    // console.log("Changes rolled back successfully:", result);
-    return result;
-  } catch (error) {
-    // console.error("Error rolling back changes:", error);
-  }
-}
+// async function rollbackChanges(data) {
+//   try {
+//     const response = await fetch("http://185.192.247.60:7130/Database/RollbackChanges", {
+//       method: "GEt",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify(data)
+//     });
+//     const result = await response.json();
+//     // console.log("Changes rolled back successfully:", result);
+//     return result;
+//   } catch (error) {
+//     // console.error("Error rolling back changes:", error);
+//   }
+// }
 
 function createTable(element) {
   let data = { name: element };
