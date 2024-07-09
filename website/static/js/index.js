@@ -220,6 +220,7 @@ function createButtonsTable(table,result,tableRow) {
       const rowsLenght=result.rows[0].length;
       functionalEdit(rowsLenght,tableRow,result);
     }
+    
 }
 
 
@@ -277,7 +278,7 @@ function functionalBtnInsert(table){
           dataColumns.column_description=table.columns[index].column_description;
           //  dataColumns.is_primary_key=(table.columns[index].is_primary_key);
           //  dataColumns.is_editable=(table.columns[index].is_editable);
-          console.log((table.columns[index].name));
+          console.log((table.columns[index].column_name));
           columns.push(String(table.columns[index].column_name));
         }
 
@@ -287,6 +288,7 @@ function functionalBtnInsert(table){
           "values":arrData
         };
         console.log(columns);
+        console.log(data);
         insertRow(data);
         // acceptChanges({
         //     message: "Изменения применены"
@@ -297,8 +299,8 @@ function functionalBtnInsert(table){
           <button class="btn btn_cancel">Отмена</button>
         </div>`;
         closeModal(modal);
-        const timeoutCreate =createTable(table.name);
-        setTimeout(timeoutCreate,4000);
+        createTable(table.name);
+        
     });
     const cancelButton = modal.querySelector('.btn_cancel');
     cancelButton.onclick = () => {
@@ -523,14 +525,14 @@ function showConfirmationModal(data, row) {
 };
 
   cancelButton.onclick = () => {
-    rollbackChanges({
-      message: "Изменения отменены"
-    }).then(() => {
+    // rollbackChanges({
+    //   message: "Изменения отменены"
+    // }).then(() => {
       closeModal(modal);
-    }).catch(error => {
-      // console.error("Error rolling back changes:", error);
-      closeModal(modal);
-    });
+    // }).catch(error => {
+    //   // console.error("Error rolling back changes:", error);
+    //   closeModal(modal);
+    // });
   };
 }
 
@@ -686,9 +688,7 @@ let isColorChanged = false;
 
 document.addEventListener('DOMContentLoaded', function() {
   const navEl = document.querySelector('.container__nav__el');
-});
-
-let response = fetch(url)
+  let response = fetch(url)
   .then(response => response.json())
   .then(json => {
     json.forEach(element => {
@@ -712,3 +712,6 @@ let response = fetch(url)
       document.querySelector('.container__nav').append(elem);
     });
   });
+});
+
+
