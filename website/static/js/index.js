@@ -20,25 +20,6 @@ function azimuth_and_elevation_angle() {
       });
 }
 
-function finding_coordinates() {
-    const lat1 = document.getElementById('first_TLE_line').value;
-    const lon1 = document.getElementById('second_TLE_line').value;
-    console.log(first_TLE_line)
-    console.log(second_TLE_line)
-
-    fetch('/api/finding_coordinates?first_TLE_line=' + first_TLE_line + '&second_TLE_line=' + second_TLE_line)
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('lat.degrees').innerText = data.lat;
-        document.getElementById('lon.degrees').innerText = data.lon;
-        document.getElementById('height.km').innerText = data.height;
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-}
-
-
 function get_coordinates() {
     const first_TLE_line = document.getElementById('first_TLE_line').value;
     const second_TLE_line = document.getElementById('second_TLE_line').value;

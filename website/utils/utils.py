@@ -49,6 +49,7 @@ def calculate_distance(lat1, lon1, lat2, lon2):
 
 
 def get_coordinates(first_TLE_line: str, second_TLE_line: str, name: str):
+    import pprint
     lat1 = first_TLE_line
     lon1 = second_TLE_line
     name = name
@@ -56,16 +57,16 @@ def get_coordinates(first_TLE_line: str, second_TLE_line: str, name: str):
     current_datetime = datetime.utcnow().isoformat()
 
     data = {
-        'satellite': {
+        'satellite_model': {
             'first_tle_line': lat1,
             'name': name,
             'second_tle_line': lon1
         },
         'datetime_utc': current_datetime
     }
-    # import pprint
-    # pprint.pprint(data)
-    url = 'http://185.192.247.60:7128/Geography/PositionTLE'
+
+    pprint.pprint(data)
+    url = ('http://185.192.247.60:7128/Geography/PositionTLE')
     response = requests.post(url, json=data)
 
     return response
