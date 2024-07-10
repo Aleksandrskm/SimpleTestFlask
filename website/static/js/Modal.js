@@ -142,10 +142,18 @@ export class Modal{
                 primaryKeys[key]++;
               });
             });
-            const arrData=[];
+          const inputs=document.querySelectorAll('.modal__input');
+           const arrData=[];
             const columns=[];
+              inputs.forEach((input,index)=>{
+                if(input.value){
+                  arrData.push(String(input.value));
+                  console.log(arrData);
+                }
+              });
+            
             for (let i = 1; i < this.tableRow.cells.length; i++) {
-                arrData.push(String(this.tableRow.cells[i].innerHTML));
+                // arrData.push(String(this.tableRow.cells[i].innerHTML));
                 columns.push(String(this.table.columns[i].column_name));
             }
             const data={
