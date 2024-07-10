@@ -195,6 +195,7 @@ export class Modal{
               };
             this.funcRow(data).then(this.tableRow.remove());
             modal.remove();
+            callback(this.table.name);
             } 
           });
            // добавление прослушивателя событий кнопки отмены
