@@ -1,5 +1,5 @@
 'use strict';
-
+import { Modal } from "./Modal.js";
 function azimuth_and_elevation_angle() {
     const lat1 = document.getElementById('lat1').value;
     const lon1 = document.getElementById('lon1').value;
@@ -202,339 +202,354 @@ function createButtonsTable(table,result,tableRow) {
   console.log(table.parentElement);
   table.parentElement.append(buttons);
   // console.log(result.rows[0].length);
-
-    const btnEdit=document.querySelector('.edit');
-    const btnCopy=document.querySelector('.copy');
-    const btnDelete=document.querySelector('.delete');
+  const btnInsert=document.querySelector('.insert');
+  const btnEdit=document.querySelector('.edit');
+  const btnCopy=document.querySelector('.copy');
+  const btnDelete=document.querySelector('.delete');
     if (!result.total_rows_count) {
       btnEdit.setAttribute('disabled', '');
       btnCopy.setAttribute('disabled', '');
       btnDelete.setAttribute('disabled', '');
     }
-
-    functionalDelete(result.name,tableRow);
-    functionalBtnInsert(result);
-    functionalBtnCopyEnd(result,tableRow);
-    if (result.rows) {
-      console.log(result);
-      const rowsLenght=result.rows[0].length;
-      functionalEdit(rowsLenght,tableRow,result);
-    }
+  const modalParent=document.querySelector('.column2_vi');
+  const modalDelete= new Modal(modalParent,'delete',0,result.columns,tableRow,deleteRow,result);
+  const modalInser= new Modal(modalParent,'insert',result.columns_count,result.columns,tableRow,insertRow,result);
+  const modalCopy= new Modal(modalParent,'copy',result.columns_count,result.columns,tableRow,insertRow,result);
+  const modalEdit= new Modal(modalParent,'edit',result.columns_count,result.columns,tableRow,editRow,result);
+  btnDelete.addEventListener('click',()=>{
+    modalDelete.createModal()});
+  btnCopy.addEventListener('click',()=>{
+    modalCopy.createModal(createTable)});
+  btnEdit.addEventListener('click',()=>{
+    modalEdit.createModal(createTable)});
+  btnInsert.addEventListener('click',()=>{
+    modalInser.createModal(createTable);
+    
+  });
+   
+    // functionalDelete(result.name,tableRow);
+    // functionalBtnInsert(result);
+    // functionalBtnCopyEnd(result,tableRow);
+    // if (result.rows) {
+    //   console.log(result);
+    //   const rowsLenght=result.rows[0].length;
+    //   functionalEdit(rowsLenght,tableRow,result);
+    // }
     
 }
 
 
-function functionalBtnInsert(table){
-  const buttonInsert=document.querySelector('.insert');
-  const rows=document.querySelectorAll('tr');
-  buttonInsert.addEventListener('click',()=>{
-    const primaryKeys = {};
-    // console.log(rows);
-    rows.forEach(row=>{
-      row.querySelectorAll('td[data-key]').forEach((td) => {
-        const key = td.getAttribute('data-key');
-        const value = td.innerText;
-        primaryKeys[key] = value;
-        primaryKeys[key]++;
-      });
+// function functionalBtnInsert(table){
+//   const buttonInsert=document.querySelector('.insert');
+//   const rows=document.querySelectorAll('tr');
+//   buttonInsert.addEventListener('click',()=>{
+//     const primaryKeys = {};
+//     // console.log(rows);
+//     rows.forEach(row=>{
+//       row.querySelectorAll('td[data-key]').forEach((td) => {
+//         const key = td.getAttribute('data-key');
+//         const value = td.innerText;
+//         primaryKeys[key] = value;
+//         primaryKeys[key]++;
+//       });
 
-    });
-    // console.log(primaryKeys);
-    const modal = document.querySelector('.confirmation-modal-add');
-    const modalContent = document.querySelector('.confirmation-modal__content-add');
-    for (let i = 1; i < table.columns_count; i++) {
+//     });
+//     // console.log(primaryKeys);
+//     const modal = document.querySelector('.confirmation-modal-add');
+//     const modalContent = document.querySelector('.confirmation-modal__content-add');
+//     for (let i = 1; i < table.columns_count; i++) {
 
-       const placeholder=String(table.columns[i].column_description);
-       const dataColumn=document.createElement('div');
-       const nameColumn=document.createElement('div');
-       nameColumn.classList.add('name-column');
-       nameColumn.innerText=placeholder;
-       dataColumn.classList.add('data-column');
-       dataColumn.append(nameColumn);
-       console.log(placeholder);
-       const modalInput=document.createElement('input');
-       modalInput.placeholder=placeholder;
-       modalInput.type='text';
-       modalInput.classList.add('modal__input');
-       dataColumn.append(modalInput);
-       modalContent.append(dataColumn);
-    }
-    openModal(modal);
-    const btnAdd=document.querySelector('.btn_confirm-add');
-    btnAdd.addEventListener('click',()=>{
-      const inputs=document.querySelectorAll('.modal__input');
-      const arrData=[];
-      const columns=[];
-      // arrData.push(String(primaryKeys.ID));
-        inputs.forEach((input,index)=>{
-          if(input.value){
-            arrData.push(input.value);
-          }
-        });
+//        const placeholder=String(table.columns[i].column_description);
+//        const dataColumn=document.createElement('div');
+//        const nameColumn=document.createElement('div');
+//        nameColumn.classList.add('name-column');
+//        nameColumn.innerText=placeholder;
+//        dataColumn.classList.add('data-column');
+//        dataColumn.append(nameColumn);
+//        console.log(placeholder);
+//        const modalInput=document.createElement('input');
+//        modalInput.placeholder=placeholder;
+//        modalInput.type='text';
+//        modalInput.classList.add('modal__input');
+//        dataColumn.append(modalInput);
+//        modalContent.append(dataColumn);
+//     }
+//     openModal(modal);
+//     const btnAdd=document.querySelector('.btn_confirm-add');
+//     btnAdd.addEventListener('click',()=>{
+//       const inputs=document.querySelectorAll('.modal__input');
+//       const arrData=[];
+//       const columns=[];
+//       // arrData.push(String(primaryKeys.ID));
+//         inputs.forEach((input,index)=>{
+//           if(input.value){
+//             arrData.push(input.value);
+//           }
+//         });
 
-        for (let index = 1; index < table.columns_count; index++) {
-          const dataColumns={};
-          // dataColumns.column_name=table.columns[index].column_name;
-          dataColumns.column_description=table.columns[index].column_description;
-          //  dataColumns.is_primary_key=(table.columns[index].is_primary_key);
-          //  dataColumns.is_editable=(table.columns[index].is_editable);
-          console.log((table.columns[index].column_name));
-          columns.push(String(table.columns[index].column_name));
-        }
+//         for (let index = 1; index < table.columns_count; index++) {
+//           const dataColumns={};
+//           // dataColumns.column_name=table.columns[index].column_name;
+//           dataColumns.column_description=table.columns[index].column_description;
+//           //  dataColumns.is_primary_key=(table.columns[index].is_primary_key);
+//           //  dataColumns.is_editable=(table.columns[index].is_editable);
+//           console.log((table.columns[index].column_name));
+//           columns.push(String(table.columns[index].column_name));
+//         }
 
-        const data={
-          "table_name": `${table.name}`,
-          "columns":columns,
-          "values":arrData
-        };
-        console.log(columns);
-        console.log(data);
-        insertRow(data);
-        // acceptChanges({
-        //     message: "Изменения применены"
-        // });
-        modalContent.innerHTML=`<div class="confirmation-modal__title-add">Добавление строки</div>
-        <div class="confirmation-modal__buttons-add">
-          <button class="btn btn_confirm-add">Соханить</button>
-          <button class="btn btn_cancel">Отмена</button>
-        </div>`;
-        closeModal(modal);
-        createTable(table.name);
+//         const data={
+//           "table_name": `${table.name}`,
+//           "columns":columns,
+//           "values":arrData
+//         };
+//         console.log(columns);
+//         console.log(data);
+//         insertRow(data);
+//         // acceptChanges({
+//         //     message: "Изменения применены"
+//         // });
+//         modalContent.innerHTML=`<div class="confirmation-modal__title-add">Добавление строки</div>
+//         <div class="confirmation-modal__buttons-add">
+//           <button class="btn btn_confirm-add">Соханить</button>
+//           <button class="btn btn_cancel">Отмена</button>
+//         </div>`;
+//         closeModal(modal);
+//         createTable(table.name);
         
-    });
-    const cancelButton = modal.querySelector('.btn_cancel');
-    cancelButton.onclick = () => {
+//     });
+//     const cancelButton = modal.querySelector('.btn_cancel');
+//     cancelButton.onclick = () => {
       
-        closeModal(modal);
-        modalContent.innerHTML=`<div class="confirmation-modal__title-add">Добавление строки</div>
-        <div class="confirmation-modal__buttons-add">
-          <button class="btn btn_confirm-add">Соханить</button>
-          <button class="btn btn_cancel">Отмена</button>
-        </div>`;
+//         closeModal(modal);
+//         modalContent.innerHTML=`<div class="confirmation-modal__title-add">Добавление строки</div>
+//         <div class="confirmation-modal__buttons-add">
+//           <button class="btn btn_confirm-add">Соханить</button>
+//           <button class="btn btn_cancel">Отмена</button>
+//         </div>`;
       
       
        
-        // closeModal(modal);
+//         // closeModal(modal);
       
-    };
-  });
-}
+//     };
+//   });
+// }
 
 
-function functionalEdit(totalRowsCount,rowTable,result) {
-  const buttonsEdit = document.querySelectorAll('.edit');
-  buttonsEdit.forEach(buttonEdit => {
-    buttonEdit.addEventListener('click', (e) => {
-      const modal = document.querySelector('.modal');
-      const modalContent = document.querySelector('.modal__content');
-      for (let i = 0; i < totalRowsCount; i++) {
-        const placeholder=String(rowTable.children[i].innerHTML);
-        const nameColumns=String(result.columns[i].column_description);
-        console.log(placeholder);
-        console.log(nameColumns);
-        const dataColumn=document.createElement('div');
-        const namecolumn=document.createElement('div');
-        namecolumn.classList.add('name-column');
-        namecolumn.innerText=nameColumns;
-        dataColumn.classList.add('data-column');
-        dataColumn.append(namecolumn);
-        const modalInput=document.createElement('input');
-        modalInput.placeholder=placeholder;
-        modalInput.type='text';
-        modalInput.classList.add('modal__input');
-        dataColumn.append(modalInput);
-        modalContent.append(dataColumn);
-      }
-      openModal(modal);
-      const btnClose=document.querySelector('.modal__close');
-      btnClose.addEventListener('click',()=>{
-        closeModal(modal);
-        modalContent.innerHTML = `<form action="#">
-        <div data-close class="modal__close">&times;</div>
-        <div class="modal__title">Редактирование таблицы</div>
-        <button class="btn btn_dark btn_min">Сохранить</button>
-      </form>`;
-      })
-      const btnSave = document.querySelector('.btn');
-      btnSave.addEventListener('click', () => {
-        const inputs=document.querySelectorAll('.modal__input');
-        inputs.forEach((input,index)=>{
-          if (input.value) {
-              const fieldName=result.columns[index].column_name;
-              // console.log(fieldName);
-              const primaryKeys = {};
-              rowTable.querySelectorAll('td[data-key]').forEach((td) => {
-                const key = td.getAttribute('data-key');
-                const value = td.innerText;
-                primaryKeys[key] = value;
-              });
-              const updateValues={};
-              updateValues[fieldName]=String(input.value);
-              //  console.log(primaryKeys);
-            const data={
-              "table_name": `${result.name}`,
-              "updated_values":updateValues,
-              primary_keys: primaryKeys
+// function functionalEdit(totalRowsCount,rowTable,result) {
+//   const buttonsEdit = document.querySelectorAll('.edit');
+//   buttonsEdit.forEach(buttonEdit => {
+//     buttonEdit.addEventListener('click', (e) => {
+//       const modal = document.querySelector('.modal');
+//       const modalContent = document.querySelector('.modal__content');
+//       for (let i = 0; i < totalRowsCount; i++) {
+//         const placeholder=String(rowTable.children[i].innerHTML);
+//         const nameColumns=String(result.columns[i].column_description);
+//         console.log(placeholder);
+//         console.log(nameColumns);
+//         const dataColumn=document.createElement('div');
+//         const namecolumn=document.createElement('div');
+//         namecolumn.classList.add('name-column');
+//         namecolumn.innerText=nameColumns;
+//         dataColumn.classList.add('data-column');
+//         dataColumn.append(namecolumn);
+//         const modalInput=document.createElement('input');
+//         modalInput.placeholder=placeholder;
+//         modalInput.type='text';
+//         modalInput.classList.add('modal__input');
+//         dataColumn.append(modalInput);
+//         modalContent.append(dataColumn);
+//       }
+//       openModal(modal);
+//       const btnClose=document.querySelector('.modal__close');
+//       btnClose.addEventListener('click',()=>{
+//         closeModal(modal);
+//         modalContent.innerHTML = `<form action="#">
+//         <div data-close class="modal__close">&times;</div>
+//         <div class="modal__title">Редактирование таблицы</div>
+//         <button class="btn btn_dark btn_min">Сохранить</button>
+//       </form>`;
+//       })
+//       const btnSave = document.querySelector('.btn');
+//       btnSave.addEventListener('click', () => {
+//         const inputs=document.querySelectorAll('.modal__input');
+//         inputs.forEach((input,index)=>{
+//           if (input.value) {
+//               const fieldName=result.columns[index].column_name;
+//               // console.log(fieldName);
+//               const primaryKeys = {};
+//               rowTable.querySelectorAll('td[data-key]').forEach((td) => {
+//                 const key = td.getAttribute('data-key');
+//                 const value = td.innerText;
+//                 primaryKeys[key] = value;
+//               });
+//               const updateValues={};
+//               updateValues[fieldName]=String(input.value);
+//               //  console.log(primaryKeys);
+//             const data={
+//               "table_name": `${result.name}`,
+//               "updated_values":updateValues,
+//               primary_keys: primaryKeys
 
-            };
-            editRow(data);
-          }
-        })
-        // acceptChanges({
-        //   message: "Изменения применены"
-        // });
+//             };
+//             editRow(data);
+//           }
+//         })
+//         // acceptChanges({
+//         //   message: "Изменения применены"
+//         // });
 
-        modalContent.innerHTML = `<form action="#">
-        <div data-close class="modal__close">&times;</div>
-        <div class="modal__title">Редактирование таблицы</div>
-        <button class="btn btn_dark btn_min">Сохранить</button>
-        </form>`;
+//         modalContent.innerHTML = `<form action="#">
+//         <div data-close class="modal__close">&times;</div>
+//         <div class="modal__title">Редактирование таблицы</div>
+//         <button class="btn btn_dark btn_min">Сохранить</button>
+//         </form>`;
 
-        closeModal(modal);
-        const timeoutCreate =createTable(result.name);
-        setTimeout(timeoutCreate,4000);
-      });
-    });
-  });
-}
+//         closeModal(modal);
+//         const timeoutCreate =createTable(result.name);
+//         setTimeout(timeoutCreate,4000);
+//       });
+//     });
+//   });
+// }
 
-function functionalDelete(tableName,row) {
-  const buttonsDelete = document.querySelectorAll('.delete');
-  // console.log(buttonsDelete);
-  buttonsDelete.forEach(buttonDelete => {
-    buttonDelete.addEventListener('click', (e) => {
-      // const row = e.target.parentElement.parentElement;
-      const primaryKeys = {};
-      // console.log(row);
-      row.querySelectorAll('td[data-key]').forEach((td) => {
-        const key = td.getAttribute('data-key');
-        const value = td.innerText;
-        primaryKeys[key] = value;
-      });
-      //  console.log(row);
-      const data = {
-        table_name: tableName,
-        primary_keys: primaryKeys
-      };
-      // row.remove();
-      // console.log(data);
-      showConfirmationModal(data, row);
-    });
-  });
-}
+// function functionalDelete(tableName,row) {
+//   const buttonsDelete = document.querySelectorAll('.delete');
+//   // console.log(buttonsDelete);
+//   buttonsDelete.forEach(buttonDelete => {
+//     buttonDelete.addEventListener('click', (e) => {
+//       // const row = e.target.parentElement.parentElement;
+//       const primaryKeys = {};
+//       // console.log(row);
+//       row.querySelectorAll('td[data-key]').forEach((td) => {
+//         const key = td.getAttribute('data-key');
+//         const value = td.innerText;
+//         primaryKeys[key] = value;
+//       });
+//       //  console.log(row);
+//       const data = {
+//         table_name: tableName,
+//         primary_keys: primaryKeys
+//       };
+//       // row.remove();
+//       // console.log(data);
+//       showConfirmationModal(data, row);
+//     });
+//   });
+// }
 
-function functionalBtnCopyEnd(table,row){
-  const modal=document.querySelector('.confirmation-modal-copy');
-  const modalContent = document.querySelector('.confirmation-modal__content-copy');
-  const buttonCopy=document.querySelector('.copy');
-  const rows=document.querySelectorAll('tr');
-  const primaryKeys = {};
+// function functionalBtnCopyEnd(table,row){
+//   const modal=document.querySelector('.confirmation-modal-copy');
+//   const modalContent = document.querySelector('.confirmation-modal__content-copy');
+//   const buttonCopy=document.querySelector('.copy');
+//   const rows=document.querySelectorAll('tr');
+//   const primaryKeys = {};
 
-  buttonCopy.addEventListener('click',()=>{
-    for (let i = 1; i < table.rows[0].length; i++) {
-      if (i==1) {
-        modalContent.innerHTML+=`<div class="ID-Copy-Row">Копируется строка ${row.children[0].innerHTML}</div>`
-      }
+//   buttonCopy.addEventListener('click',()=>{
+//     for (let i = 1; i < table.rows[0].length; i++) {
+//       if (i==1) {
+//         modalContent.innerHTML+=`<div class="ID-Copy-Row">Копируется строка ${row.children[0].innerHTML}</div>`
+//       }
 
-      const placeholder=String(table.columns[i].column_description);
-      const dataColumn=document.createElement('div');
-      const namecolumn=document.createElement('div');
-      namecolumn.classList.add('name-column');
-      namecolumn.innerText=placeholder;
-      dataColumn.classList.add('data-column');
-      dataColumn.append(namecolumn);
+//       const placeholder=String(table.columns[i].column_description);
+//       const dataColumn=document.createElement('div');
+//       const namecolumn=document.createElement('div');
+//       namecolumn.classList.add('name-column');
+//       namecolumn.innerText=placeholder;
+//       dataColumn.classList.add('data-column');
+//       dataColumn.append(namecolumn);
 
-      console.log(modalContent);
-      const input=document.createElement('input');
-      input.value=row.children[i].innerHTML;
-      input.classList.add('modal__input');
-      dataColumn.append(input);
-      modalContent.append(dataColumn);
-    }
-    openModal(modal);
-    const btnClose=document.querySelector('.btn_cancel-copy');
-       btnClose.addEventListener('click',()=>{
-          closeModal(modal);
-          modalContent.innerHTML = `<div class="confirmation-modal__title-copy">Копирование строки</div>
-             <div class="confirmation-modal__buttons-copy">
-                <button class="btn btn_confirm-copy">Добавить</button>
-                <button class="btn btn_cancel-copy">Отмена</button>
-             </div>`;
-       })
-       const btnAddEnd=document.querySelector('.btn_confirm-copy');
-       btnAddEnd.addEventListener('click',()=>{
-          rows.forEach(row=>{
-            row.querySelectorAll('td[data-key]').forEach((td) => {
-              const key = td.getAttribute('data-key');
-              const value = td.innerText;
-              primaryKeys[key] = value;
-              primaryKeys[key]++;
-            });
-          });
-            const arrData=[];
-            // arrData.push(String(primaryKeys.ID));
-            const columns=[];
-            for (let i = 1; i < row.cells.length; i++) {
-              arrData.push(String(row.cells[i].innerHTML));
-              columns.push(String(table.columns[i].column_name));
-            }
-            // console.log(table.columns);
-            // console.log(arrData);
+//       console.log(modalContent);
+//       const input=document.createElement('input');
+//       input.value=row.children[i].innerHTML;
+//       input.classList.add('modal__input');
+//       dataColumn.append(input);
+//       modalContent.append(dataColumn);
+//     }
+//     openModal(modal);
+//     const btnClose=document.querySelector('.btn_cancel-copy');
+//        btnClose.addEventListener('click',()=>{
+//           closeModal(modal);
+//           modalContent.innerHTML = `<div class="confirmation-modal__title-copy">Копирование строки</div>
+//              <div class="confirmation-modal__buttons-copy">
+//                 <button class="btn btn_confirm-copy">Добавить</button>
+//                 <button class="btn btn_cancel-copy">Отмена</button>
+//              </div>`;
+//        })
+//        const btnAddEnd=document.querySelector('.btn_confirm-copy');
+//        btnAddEnd.addEventListener('click',()=>{
+//           rows.forEach(row=>{
+//             row.querySelectorAll('td[data-key]').forEach((td) => {
+//               const key = td.getAttribute('data-key');
+//               const value = td.innerText;
+//               primaryKeys[key] = value;
+//               primaryKeys[key]++;
+//             });
+//           });
+//             const arrData=[];
+//             // arrData.push(String(primaryKeys.ID));
+//             const columns=[];
+//             for (let i = 1; i < row.cells.length; i++) {
+//               arrData.push(String(row.cells[i].innerHTML));
+//               columns.push(String(table.columns[i].column_name));
+//             }
+//             // console.log(table.columns);
+//             // console.log(arrData);
 
-              const data={
-                "table_name": `${table.name}`,
-                "columns":columns,
-                "values":arrData,
-              };
-              // console.log(data);
-              insertRow(data);
-              modalContent.innerHTML = `<div class="confirmation-modal__title-copy">Копирование строки в конец</div>
-              <div class="confirmation-modal__buttons-copy">
-                  <button class="btn btn_confirm-copy">Добавить</button>
-                  <button class="btn btn_cancel-copy">Отмена</button>
-              </div>`;
-              closeModal(modal);
-              // acceptChanges({
-              //   message: "Изменения применены"
-              // });
-              createTable(table.name);
+//               const data={
+//                 "table_name": `${table.name}`,
+//                 "columns":columns,
+//                 "values":arrData,
+//               };
+//               // console.log(data);
+//               insertRow(data);
+//               modalContent.innerHTML = `<div class="confirmation-modal__title-copy">Копирование строки в конец</div>
+//               <div class="confirmation-modal__buttons-copy">
+//                   <button class="btn btn_confirm-copy">Добавить</button>
+//                   <button class="btn btn_cancel-copy">Отмена</button>
+//               </div>`;
+//               closeModal(modal);
+//               // acceptChanges({
+//               //   message: "Изменения применены"
+//               // });
+//               createTable(table.name);
               
-       })
-  });
-}
+//        })
+//   });
+// }
 
-function showConfirmationModal(data, row) {
-  const modal = document.querySelector('.confirmation-modal');
-  openModal(modal);
+// function showConfirmationModal(data, row) {
+//   const modal = document.querySelector('.confirmation-modal');
+//   openModal(modal);
 
-  const confirmButton = modal.querySelector('.btn_confirm');
-  const cancelButton = modal.querySelector('.btn_cancel');
+//   const confirmButton = modal.querySelector('.btn_confirm');
+//   const cancelButton = modal.querySelector('.btn_cancel');
 
-  confirmButton.onclick = () => {
-    deleteRow(data).then(() => {
+//   confirmButton.onclick = () => {
+//     deleteRow(data).then(() => {
      
-        row.remove();
-        closeModal(modal);
-        createTable(data.table_name);
+//         row.remove();
+//         closeModal(modal);
+//         createTable(data.table_name);
      
         
-        closeModal(modal);
+//         closeModal(modal);
       
    
-  })
-};
+//   })
+// };
 
-  cancelButton.onclick = () => {
-    // rollbackChanges({
-    //   message: "Изменения отменены"
-    // }).then(() => {
-      closeModal(modal);
-    // }).catch(error => {
-    //   // console.error("Error rolling back changes:", error);
-    //   closeModal(modal);
-    // });
-  };
-}
+//   cancelButton.onclick = () => {
+//     // rollbackChanges({
+//     //   message: "Изменения отменены"
+//     // }).then(() => {
+//       closeModal(modal);
+//     // }).catch(error => {
+//     //   // console.error("Error rolling back changes:", error);
+//     //   closeModal(modal);
+//     // });
+//   };
+// }
 
 async function editRow(data) {
   try {
