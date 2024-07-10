@@ -372,7 +372,7 @@ img {
     overflow-y:auto
 }
 
-.modal__close{
+/* .modal__close{
     position:absolute;
     top:8px;
     right:14px;
@@ -384,7 +384,7 @@ img {
     background-color:
     transparent;
     cursor:pointer
-}
+} */
 
 .modal__title{
     text-align:center;
