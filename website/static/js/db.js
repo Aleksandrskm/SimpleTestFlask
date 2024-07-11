@@ -1,3 +1,4 @@
+// функция  изменения строки в API
 async function editRow(data) {
         try {
           const response = await fetch('http://185.192.247.60:7130/Database/UpdateRow', {
@@ -15,6 +16,7 @@ async function editRow(data) {
           console.error("Error edit row:", error);
         }
 }
+// функция  удаления строки в API
 async function deleteRow(data) {
         try {
           const response = await fetch("http://185.192.247.60:7130/Database/DeleteRow", {
@@ -32,6 +34,7 @@ async function deleteRow(data) {
           console.error("Error deleting row:", error);
         }
 }
+// функция  добавления строки в API
 async function insertRow(data) {
         try {
           const response = await fetch("http://185.192.247.60:7130/Database/InsertRow", {
@@ -49,6 +52,7 @@ async function insertRow(data) {
           console.error("Error insert row:", error);
         }
 }
+// функция  получения первых 20 значений таблицы в API
 async function postJSON(data) {
         try {
           const response = await fetch(`http://185.192.247.60:7130/Database/TableInfo/${data.name}`, {

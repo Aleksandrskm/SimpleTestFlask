@@ -1,8 +1,8 @@
 import {editRow,deleteRow,insertRow,postJSON} from './db.js';
 import { Modal } from "./Modal.js";
 export function table(url){
-
-    function createTable(element) {
+      // функция  в которую  передается название выбранной таблицы и на его основе создается таблица
+      function createTable(element) {
         let data = { name: element };
         postJSON(data).then(result => {
           generateTable(result);
@@ -10,6 +10,7 @@ export function table(url){
       
         document.querySelector('.container_content').innerHTML = '';
       }
+      // функция которая получает названия таблиц из API и генерирует их на странице
       function getNameTables(url){
         const list_Tables = {
           KA: "Учетные данные о КА",
@@ -63,6 +64,7 @@ export function table(url){
           });
         });
       }
+      /* функция  которая проверяет  пустая таблица или нет и если она пустая строит её структуру  */
       function checkVoidTable(result,tableName, totalRowsCount) {
 
         if (totalRowsCount == 0) {
@@ -105,7 +107,8 @@ export function table(url){
           createButtonsTable(tr,result,tr)
         }
       }
-      
+      /* функция  в которую  передается вся информация о таблице 
+      строки  в таблице  название выбранной таблицы  на  основе этих параметров строится структура таблицы таблица*/
       function createTableContent(result,rows, tableName) {
         const list_Tables = {
           KA: "Учетные данные о КА",
@@ -188,7 +191,7 @@ export function table(url){
               }
             });
       }
-      
+      /* функция  которая   создает таблицу на сайте  */
       function generateTable(result) {
         if (result.total_rows_count==0) {
           checkVoidTable(result,result.name, result.total_rows_count);
@@ -197,7 +200,7 @@ export function table(url){
           createTableContent(result,result.rows, result.name);
         }
       }
-      
+      /* функция  которая  создает  кнопки для работы с  таблицей на сайте  */
       function createButtonsTable(table,result,tableRow) {
         const btns=document.querySelector('.table-buttons');
         if (btns) {
