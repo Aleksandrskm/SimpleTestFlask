@@ -372,20 +372,6 @@ img {
     overflow-y:auto
 }
 
-/* .modal__close{
-    position:absolute;
-    top:8px;
-    right:14px;
-    font-size:30px;
-    color:#000;
-    opacity:.5;
-    font-weight:700;
-    border:none;
-    background-color:
-    transparent;
-    cursor:pointer
-} */
-
 .modal__title{
     text-align:center;
     font-size:22px;
