@@ -3,6 +3,10 @@ from ..utils.utils import calculate_distance, calculate_azimuth, elevation_eagle
 
 api = Blueprint("api", __name__)
 
+
+# Функции для передачи данных из строк ввода в utils-файл для выполнения требуемых функций
+
+# Данные для вычисления азимута, угла места и расстояния мужду точками
 @api.route("/ade")
 def index():
     lat1 = float(request.args.get('lat1'))
@@ -22,7 +26,7 @@ def index():
         "elevation": elevation
     })
 
-
+# Данные для получения координат по ТЛЕ-строкам
 @api.route("/get_coordinates")
 def index3():
     first_TLE_line = str((request.args.get('first_TLE_line')))
@@ -40,6 +44,8 @@ def index3():
 
     })
 
+
+# Данные для вычисления доступности связи
 @api.route("/communication_availability")
 def index4():
     acceptable_session_time_in_sec = str((request.args.get('acceptable_session_time_in_sec')))

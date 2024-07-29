@@ -2,6 +2,8 @@ import math
 import requests
 from datetime import datetime
 
+# Функция расчета азимута между двумя точками по координатам
+# Входные параметры: широта, долгота
 def calculate_azimuth(lat1, lon1, lat2, lon2):
     lat1 = math.radians(lat1)
     lon1 = math.radians(lon1)
@@ -18,6 +20,8 @@ def calculate_azimuth(lat1, lon1, lat2, lon2):
 
     return azimuth
 
+# Функция расчета угла места между двумя точками по координатам
+# Входные параметры: широта, долгота, высота
 def elevation_eagle(lat1, lon1, alt1, lat2, lon2, alt2):
     lat1 = math.radians(lat1)
     lon1 = math.radians(lon1)
@@ -38,6 +42,8 @@ def elevation_eagle(lat1, lon1, alt1, lat2, lon2, alt2):
 
     return elevation_angle
 
+# Функция расчета расстояния между двумя точками на поверхности планеты
+# Входные параметры: широта, долгота
 def calculate_distance(lat1, lon1, lat2, lon2):
     radius = 6371
     dlat = math.radians(lat2 - lat1)
@@ -47,7 +53,8 @@ def calculate_distance(lat1, lon1, lat2, lon2):
     distance = radius * c
     return distance
 
-
+# Функция получения координат спутника по TLE-строкам через сервер
+# Входные параметры: первая ТЛЕ-строка, вторая ТЛЕ-строка, название спутника
 def get_coordinates(first_TLE_line: str, second_TLE_line: str, name: str):
     lat1 = first_TLE_line
     lon1 = second_TLE_line
@@ -63,13 +70,15 @@ def get_coordinates(first_TLE_line: str, second_TLE_line: str, name: str):
         },
         'datetime_utc': current_datetime
     }
-    # import pprint
-    # pprint.pprint(data)
     url = 'http://185.192.247.60:7128/Geography/PositionTLE'
     response = requests.post(url, json=data)
 
     return response
 
+# Функция вычисления доступности связи через сервер
+# Входные параметры: минимально доступное время первого сеанса связи, шаг движения подспутниковой точки,
+# прогнозируемый промежуток связи, минимально допустимое время сеанса связи,
+# время начала сеанса связи, широта, долгота, имя абонента
 def communication_availability(acceptable_session_time_in_sec: str, dates_delta_in_sec: str, interval_in_sec: str, min_session_time_in_sec: str, start_datetime: str, lat: str, lon: str, name: str):
     accept = acceptable_session_time_in_sec
     dat = dates_delta_in_sec
