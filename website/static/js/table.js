@@ -97,10 +97,13 @@ export function table(url){
            name.classList = 'table-name';
           name.innerHTML = `${list_Tables[tableName]}`;
           containerContent.append(name);
-          const tr = document.createElement('tr');
+          const tr = document.createElement('table');
+          tr.classList.add('mainTable');
           result.columns.forEach(column=>{
             const th =document.createElement('th');
+            
             th.innerHTML=`${column.column_description}`;
+    
             tr.append(th);
           })
           containerContent.append(tr);
@@ -142,6 +145,7 @@ export function table(url){
             name.innerHTML = `${list_Tables[tableName]}`;
             document.querySelector('.container_content').append(name);
             const table=document.createElement('table');
+            table.classList.add('mainTable');
             document.querySelector('.container_content').append(table);
             const tableRow = document.createElement('tr');
             result.columns.forEach(column=>{

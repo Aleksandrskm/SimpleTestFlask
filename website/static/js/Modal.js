@@ -39,11 +39,14 @@ export class Modal{
         else if (this.typeModal=='delete') {
           modalContent.innerHTML=` <div class="modal__title"> Удаление строки из таблицы</div>`;  
         }
+        const Columns=document.createElement('div');
+        Columns.classList.add('modalColumns');
         for (let i = 1; i < this.colInputs; i++) {
           const modalInput=document.createElement('input');
             const value=String(this.tableRow.children[i].innerHTML);
             const dataColumn=document.createElement('div');
             const nameColumn=document.createElement('div');
+            
             nameColumn.classList.add('name-column');
             nameColumn.innerText=this.columns[i].column_description;
             dataColumn.classList.add('data-column');
@@ -64,28 +67,36 @@ export class Modal{
             }
            
             dataColumn.append(modalInput);
-            modalContent.append(dataColumn); 
+            Columns.append(dataColumn);
+            if (i+1==this.colInputs) {
+              modalContent.append(Columns);
+            }
+            
          }
         if (this.typeModal=='insert') {
           modalContent.innerHTML+=` 
+          <div class='btnsModal'>
           <button class="btn modal__confirm btn_dark btn_min">Добавить</button>
-          <button class="btn modal__close btn_dark btn_min">Отмена</button>`; ;  
+          <button class="btn modal__close btn_dark btn_min">Отмена</button></div>`;   
         }
         else if (this.typeModal=='edit') {
           modalContent.innerHTML+=` 
+          <div class='btnsModal'>
           <button class="btn modal__confirm btn_dark btn_min">Сохранить</button>
-          <button class="btn modal__close btn_dark btn_min">Отмена</button>`; ;  
+          <button class="btn modal__close btn_dark btn_min">Отмена</button></div>`;   
         }
         else if (this.typeModal=='copy') {
           modalContent.innerHTML+=` 
+          <div class='btnsModal'>
           <button class="btn modal__confirm btn_dark btn_min">Копировать</button>
-          <button class="btn modal__close btn_dark btn_min">Отмена</button>`; ;  
+          <button class="btn modal__close btn_dark btn_min">Отмена</button></div>`;   
         }
         else if (this.typeModal=='delete') { 
           modalContent.innerHTML+=` <div class="copy__row">Удаляется строка ${this.tableRow.children[0].innerHTML}</div>`; 
           modalContent.innerHTML+=` 
+          <div class='btnsModal'>
           <button class="btn modal__confirm btn_dark btn_min">Удалить</button>
-          <button class="btn modal__close btn_dark btn_min">Отмена</button>`; ;  
+          <button class="btn modal__close btn_dark btn_min">Отмена</button></div>`;   
         }
          const modalParent=document.querySelector('.column2_vi');
         
