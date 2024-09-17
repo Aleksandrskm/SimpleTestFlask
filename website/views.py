@@ -23,3 +23,6 @@ def function_com():
 @views.route('/viewing_tables')
 def function_view():
     return render_template('viewing_tables.html')
+@views.route('/pars_TLE')
+def function_parse():
+    return render_template('pars_TLE.html')

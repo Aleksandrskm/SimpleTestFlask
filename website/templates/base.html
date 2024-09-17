@@ -21,6 +21,7 @@
     {% block content %}
 
     <main class="butt">
+        <a href="/pars_TLE"><button class="btn">Преобразователь TLE</button></a>
         <a href="/viewing_tables"><button class="btn">Редактор данных</button></a>
         <a href="/azimuth_and_elevation_angle"><button class="btn">Определение азимута и угла места</button></a>
         <a href="/get_coordinates"><button class="btn">Нахождение координат через API</button></a>
@@ -28,7 +29,9 @@
     </main>
 
     {% endblock %}
-
-    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/Modal.js') }}" type="module"></script>
+    <script src="{{ url_for('static', filename='js/db.js') }}" type="module"></script>
+    <script src="{{ url_for('static', filename='js/table.js') }}" type="module"></script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"type="module"></script>
 </body>
 </html>
