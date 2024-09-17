@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h2>Преобразователь TLE</h2>
+
+
+    <div class="input_parameters_TLE">
+        <div class="row_TLE">
+
+            <div class="column1_TLE">
+                <div class="descr-TLE">Выберите txt файл содержащий данные TLE</div>
+                <input id="get_TLE" accept=".txt" type="file">
+            </div>
+
+            <div class="column2_TLE">
+                <div class="descr-TLE">Выберите txt файл содержащий данные TLE</div> 
+            </div>
+
+        </div>
+
+        <div class="btn2">
+            <button id="task-btn-TLE" >Преобразовать</button>
+        </div>
+
+       
+    </div>
+{% endblock %}

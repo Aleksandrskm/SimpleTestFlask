@@ -282,7 +282,7 @@ body {
 }
 
 td{
-    white-space: pre;
+   
     border: 1px solid black; /* Линия-обрамление ячеек */
     padding: 5px; /* Отступ внутренний для содержимого ячеек */
     cursor: pointer; /* Изменение вида курсора */
@@ -291,19 +291,28 @@ td{
 tr:hover{
     background-color: #C0C0C0;
 }
-
-tr{
-    border: 1px solid black; /* Линия-обрамление ячеек */
+.mainTable{
+    overflow-wrap: anywhere; 
+}
+table table{
+  
+    
     padding: 5px; /* Отступ внутренний для содержимого ячеек */
 }
-
+/* th{
+    min-width: 60px;
+} */
 img {
     margin-right: 90%;
     height: 40px;
     width: 44px;
 }
-
-
+.btnsModal{
+    padding-top: 20px;
+}
+.modalColumns{
+    overflow-y: scroll;
+}
 .btn {
     font-size: 20px; /* Устанавливаем размер текста кнопки */
     padding: 10px 20px; /* Устанавливаем отступы внутри кнопки */
@@ -357,11 +366,13 @@ img {
 }
 
 .modal__dialog{
-    max-width:500px;
+    max-width:800px;
     margin:40px auto
 }
 
 .modal__content{
+    display: flex;
+    flex-direction: column;
     position:relative;
     width:100%;
     padding:40px;
@@ -389,7 +400,8 @@ img {
 .modal__title{
     text-align:center;
     font-size:22px;
-    text-transform:uppercase
+    text-transform:uppercase;
+    padding-bottom: 20px;
 }
 
 .modal__input{
