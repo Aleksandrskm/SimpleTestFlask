@@ -46,7 +46,6 @@ export class Modal{
             const value=String(this.tableRow.children[i].innerHTML);
             const dataColumn=document.createElement('div');
             const nameColumn=document.createElement('div');
-            
             nameColumn.classList.add('name-column');
             nameColumn.innerText=this.columns[i].column_description;
             dataColumn.classList.add('data-column');

@@ -222,12 +222,13 @@
     justify-content: flex-start;
     line-height: 1.5;
     width: 77%; /* Ограничение ширины контейнера */
-    height: 75vh;
+    /* height: 75vh; */
     margin: 10px auto; /* Центрирование контейнера */
     background-color: #f1f1f1;
     border-radius: 20px;
     padding: 20px;
     padding-left: 30px;
+    padding-bottom: 0px;
     box-sizing: border-box;
 }
 
@@ -462,7 +463,8 @@ img {
 }
 
 .table-buttons{
-    display: flex;
+    /* display: flex; */
+    padding-top: 20px;
 }
 
 .table-row.selected {
@@ -689,3 +691,25 @@ text-transform:uppercase}
     max-height: 80vh;
     overflow-y: auto;
 }
+.table-wrapper {
+    position:relative;
+  }
+  .table-scroll {
+    
+    height:50vh;
+  overflow:auto;  
+  margin-top:20px;
+  }
+  .table-wrapper table {
+    width:100%;
+  
+  }
+ 
+  .table-wrapper table thead th .text {
+    position:absolute;   
+    top:-20px;
+    z-index:2;
+    height:20px;
+    width:35%;
+    border:1px solid red;
+  }
