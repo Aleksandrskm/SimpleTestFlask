@@ -309,10 +309,12 @@ img {
     width: 44px;
 }
 .btnsModal{
+    display: flex;
     padding-top: 20px;
+    justify-content: center;
 }
 .modalColumns{
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 .btn {
     font-size: 20px; /* Устанавливаем размер текста кнопки */
@@ -399,6 +401,16 @@ img {
 } */
 
 .modal__title{
+    color: #000000;
+    line-height: 1;
+    font-size: calc(0.7rem + 0.8vw);
+    font-weight: normal;
+    font-family: Arial, sans-serif;
+    margin-top: 0px;
+    margin-bottom: 20px;
+    text-align: center; /* Центрируем текст заголовка */
+    padding-bottom: 15px; /* Отступ снизу */
+    border-bottom: 6px solid #999999; /* Темная полоса снизу */
     text-align:center;
     font-size:22px;
     text-transform:uppercase;
@@ -406,7 +418,7 @@ img {
 }
 
 .modal__input{
-    display:block;margin:20px 0 20px auto;
+    display:block;margin:20px 20px 20px auto;
     width:280px;
     height:50px;
     background:#fff;
@@ -421,7 +433,7 @@ img {
 .modal .btn{
     display:block;
     width:280px;
-    margin:0 auto
+    /* margin:0 auto */
 }
 
 .container__nav{
