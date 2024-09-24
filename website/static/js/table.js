@@ -94,20 +94,32 @@ export function table(url){
           const containerContent=document.querySelector('div .container_content');
           containerContent.innerHTML='';
           const name = document.createElement('div');
-           name.classList = 'table-name';
+          const tableWrapper = document.createElement('div');
+          const tableScroll = document.createElement('div');
+          const tableHead = document.createElement('thead');
+          const tableBody = document.createElement('tbody');
+          tableWrapper.classList.add('table-wrapper');
+          tableScroll.classList.add('table-scroll');
+
+          name.classList = 'table-name';
           name.innerHTML = `${list_Tables[tableName]}`;
           containerContent.append(name);
           const tr = document.createElement('table');
           tr.classList.add('mainTable');
+         
           result.columns.forEach(column=>{
             const th =document.createElement('th');
             
             th.innerHTML=`${column.column_description}`;
     
-            tr.append(th);
+            tableHead.append(th);
           })
-          containerContent.append(tr);
-          createButtonsTable(tr,result,tr)
+          tr.append(tableHead);
+          tableScroll.append(tr);
+
+          tableWrapper.append(tableScroll);
+          containerContent.append(tableWrapper);
+          createButtonsTable(tableScroll,result,tableHead);
         }
       }
       /* функция  в которую  передается вся информация о таблице 
@@ -138,9 +150,15 @@ export function table(url){
         };
         const containerContent=document.querySelector('.container_content');
         containerContent.innerHTML='';
+        const tableBody = document.createElement('tbody');
         rows.forEach((element, rowIndex) => {
           if (rowIndex === 0) {
             const name = document.createElement('div');
+            const tableWrapper = document.createElement('div');
+            const tableScroll = document.createElement('div');
+            const tableHead = document.createElement('thead');
+            tableWrapper.classList.add('table-wrapper');
+            tableScroll.classList.add('table-scroll');
             name.classList = 'table-name';
             name.innerHTML = `${list_Tables[tableName]}`;
             document.querySelector('.container_content').append(name);
@@ -152,9 +170,14 @@ export function table(url){
               const th =document.createElement('th');
               th.scope="col";
               th.innerHTML=`${column.column_description}`;
+
               tableRow.append(th);
             });
-            table.append(tableRow);
+            tableHead.append(tableRow);
+            table.append(tableHead);
+            tableScroll.append(table)
+            tableWrapper.append(tableScroll);
+            containerContent.append(tableWrapper);
           }
           const tableRow = document.createElement('tr');
       
@@ -166,8 +189,9 @@ export function table(url){
             }
             tableRow.appendChild(cell);
           });
-      
+          
           const table=document.querySelector('table');
+          const tableScroll = document.querySelector('.table-scroll');
           tableRow.addEventListener('click',(e)=>{
             let r = document.createRange();
             r.selectNode(e.target.parentElement);
@@ -182,10 +206,11 @@ export function table(url){
                 tr.style='';
               }
             })
-             createButtonsTable(table,result,e.target.parentElement);
+             createButtonsTable(tableScroll,result,e.target.parentElement);
           });
-          table.append(tableRow);
-          createButtonsTable(table,result,tableRow);
+          tableBody.append(tableRow);
+          table.append(tableBody);  
+          createButtonsTable(tableScroll,result,tableRow);
         });
       
         const trs=document.querySelectorAll('table tr');
