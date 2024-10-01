@@ -59,30 +59,29 @@ function readLinesValue(fileReader) {
 }
 function processLine(line,count_line,jsonTLE) {
   let dataTLE;
-  const arrTLENames=['Номер строки','Номер спутника в базе данных NORAD',
-    'Классификация','Международное обозначение (последние две цифры года запуска)'
-    ,'Международное обозначение (номер запуска в этом году)',
-    'Международное обозначение (часть запуска)',
-    'Год эпохи (последние две цифры)','Время эпохи',
-    'Первая производная от среднего движения','Вторая производная от среднего движения'
-  ,'Коэффициент торможения B',
+  const arrTLENames=['Номер строки_1','Номер спутника в базе данных NORAD_1',
+    'TLE_Classification','TLE_International_class1',
+    'TLE_International_class2',
+    'TLE_Epoch_year','TLE_Epoch_Time',
+    'TLE_Perv_Proizv','TLE_Vtor_Proizv'
+  ,'TLE_Koef_torm',
   'Изначально — типы эфемерид',
-  'Номер (версия) элемента',
-  'Контрольная сумма по модулю 10'];
-  const arrTLENames_two=['Номер строки','Номер спутника в базе данных NORAD',
-    'Наклонение в градусах','Долгота восходящего узла в градусах'
-    ,'Эксцентриситет',
-    'Аргумент перицентра в градусах',
-    'Средняя аномалия в градусах',
-    'Частота обращения'
-  ,'Номер витка на момент эпохи',
-  'Контрольная сумма по модулю 10'];
+  'TLE_Element_Version',
+  'TLE_Control_sum_line1'];
+  const arrTLENames_two=['Номер строки_2','Номер спутника в базе данных NORAD_2',
+    'TLE_Naklon','TLE_Dolgota_uzla'
+    ,'TLE_Ecscentr',
+    'TLE_Pericentr',
+    'TLE_Mean_Anomaly',
+    'TLE_Mean_Motion'
+  ,'TLE_Nomer_vitka',
+  'TLE_Control_sum_line2'];
   
   dataTLE=line;
   let element='';
   let counter=0;
   if (count_line==0) {
-    jsonTLE['name']=dataTLE;
+    jsonTLE['TLE_Name']=dataTLE;
   }
   else if (count_line==1) {
     for (let i = 0; i < dataTLE.length; i++) {
@@ -124,19 +123,19 @@ function processLine(line,count_line,jsonTLE) {
           element+=dataTLE[i];
         }
       }
-      else if (i>10 && i<14) {
-        if (i==13) {
-          element+=dataTLE[i];
-        const nameField=arrTLENames[counter];
-        jsonTLE[nameField]=element;
-        element='';
-        counter+=1;
-        }
-        else{
-          element+=dataTLE[i];
-        }
-      }
-      else if (i>13 && i<17) {
+      // else if (i>10 && i<14) {
+      //   if (i==13) {
+      //     element+=dataTLE[i];
+      //   const nameField=arrTLENames[counter];
+      //   jsonTLE[nameField]=element;
+      //   element='';
+      //   counter+=1;
+      //   }
+      //   else{
+      //     element+=dataTLE[i];
+      //   }
+      // }
+      else if (i>10 && i<17) {
         if (i==16) {
           element+=dataTLE[i];
         const nameField=arrTLENames[counter];
