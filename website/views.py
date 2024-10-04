@@ -26,3 +26,7 @@ def function_view():
 @views.route('/pars_TLE')
 def function_parse():
     return render_template('pars_TLE.html')
+
+@views.route('/monotonous_time_service')
+def function_mon_time():
+    return render_template('monotonous_time_service.html')
