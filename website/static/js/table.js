@@ -13,27 +13,18 @@ export function table(url){
       // функция которая получает названия таблиц из API и генерирует их на странице
       function getNameTables(url){
         const list_Tables = {
-          KA: "Учетные данные о КА",
-          ORBITA_KA: "Орбиты КА",
-          ZONA_KA: "Зоны покрытия КА",
-          CHANNEL_BEAM: "Частотно-поляризационный план КА",
-          POLARIZATION: "Виды поляризации",
-          GROUP_ABONENT: "Группы абонентов",
-          VID_SV: "Виды связи",
-          OPERATOR_SV: "Операторы связи",
-          COUNTRY: "Страны",
-          ABONENT: "Абонент",
-          PRIVILEGES: "Статус абонента",
-          SOST: "Состояние системы",
-          SP_SOB: "Справочник событий",
-          TEK_KA_SOST: "Срез положения группировки КА в момент события",
-          TEK_KA_CHANNEL_SOST: "Срез занятости группировки КА в момент события",
-          ZAPR: "Запрос связи",
-          TEK_KA_ZAPR: "Срез положения группировки КА в момент запроса связи",
-          TEK_KA_CHANNEL_ZAPR: "Срез занятости группировки КА в момент запроса связи",
-          NAZN_KA: "Назначение КА на связь",
-          SEANS_KA: "Сеансы связи КА",
-          BEAM_KA: "Лучи КА"
+            "RSS":'РСС',
+            "RSS_ANT":'РСС Антены',
+            "ISPR":'Исправность',
+            "RSS_ARH":'РСС Архив',
+            "RSS_ANT_ARH":'РСС Антены Архив',
+            "RSS_KA":'РСС КА',
+            "RSS_KA_VOZM":'РСС КА Возможные',
+            "RSS_KA_KOLLIZ":'РСС КА Коллизии',
+            "ERR":'Ошибки',
+            "RSS_KA_ARH":'РСС КА Архив',
+            "RSS_KA_VOZM_ARH":'РСС КА Возможные Архив',
+            "RSS_KA_KOLLIZ_ARH":'РСС КА Коллизии Архив',
         };
         let response = fetch(url)
         .then(response => response.json())
@@ -69,27 +60,18 @@ export function table(url){
 
         if (totalRowsCount == 0) {
           const list_Tables = {
-            KA: "Учетные данные о КА",
-            ORBITA_KA: "Орбиты КА",
-            ZONA_KA: "Зоны покрытия КА",
-            CHANNEL_BEAM: "Частотно-поляризационный план КА",
-            POLARIZATION: "Виды поляризации",
-            GROUP_ABONENT: "Группы абонентов",
-            VID_SV: "Виды связи",
-            OPERATOR_SV: "Операторы связи",
-            COUNTRY: "Страны",
-            ABONENT: "Абонент",
-            PRIVILEGES: "Статус абонента",
-            SOST: "Состояние системы",
-            SP_SOB: "Справочник событий",
-            TEK_KA_SOST: "Срез положения группировки КА в момент события",
-            TEK_KA_CHANNEL_SOST: "Срез занятости группировки КА в момент события",
-            ZAPR: "Запрос связи",
-            TEK_KA_ZAPR: "Срез положения группировки КА в момент запроса связи",
-            TEK_KA_CHANNEL_ZAPR: "Срез занятости группировки КА в момент запроса связи",
-            NAZN_KA: "Назначение КА на связь",
-            SEANS_KA: "Сеансы связи КА",
-            BEAM_KA: "Лучи КА"
+           "RSS":'РСС',
+            "RSS_ANT":'РСС Антены',
+            "ISPR":'Исправность',
+            "RSS_ARH":'РСС Архив',
+            "RSS_ANT_ARH":'РСС Антены Архив',
+            "RSS_KA":'РСС КА',
+            "RSS_KA_VOZM":'РСС КА Возможные',
+            "RSS_KA_KOLLIZ":'РСС КА Коллизии',
+            "ERR":'Ошибки',
+            "RSS_KA_ARH":'РСС КА Архив',
+            "RSS_KA_VOZM_ARH":'РСС КА Возможные Архив',
+            "RSS_KA_KOLLIZ_ARH":'РСС КА Коллизии Архив',
           };
           const containerContent=document.querySelector('div .container_content');
           containerContent.innerHTML='';
@@ -126,27 +108,18 @@ export function table(url){
       строки  в таблице  название выбранной таблицы  на  основе этих параметров строится структура таблицы*/
       function createTableContent(result,rows, tableName) {
         const list_Tables = {
-          KA: "Учетные данные о КА",
-          ORBITA_KA: "Орбиты КА",
-          ZONA_KA: "Зоны покрытия КА",
-          CHANNEL_BEAM: "Частотно-поляризационный план КА",
-          POLARIZATION: "Виды поляризации",
-          GROUP_ABONENT: "Группы абонентов",
-          VID_SV: "Виды связи",
-          OPERATOR_SV: "Операторы связи",
-          COUNTRY: "Страны",
-          ABONENT: "Абонент",
-          PRIVILEGES: "Статус абонента",
-          SOST: "Состояние системы",
-          SP_SOB: "Справочник событий",
-          TEK_KA_SOST: "Срез положения группировки КА в момент события",
-          TEK_KA_CHANNEL_SOST: "Срез занятости группировки КА в момент события",
-          ZAPR: "Запрос связи",
-          TEK_KA_ZAPR: "Срез положения группировки КА в момент запроса связи",
-          TEK_KA_CHANNEL_ZAPR: "Срез занятости группировки КА в момент запроса связи",
-          NAZN_KA: "Назначение КА на связь",
-          SEANS_KA: "Сеансы связи КА",
-          BEAM_KA: "Лучи КА"
+         "RSS":'РСС',
+            "RSS_ANT":'РСС Антены',
+            "ISPR":'Исправность',
+            "RSS_ARH":'РСС Архив',
+            "RSS_ANT_ARH":'РСС Антены Архив',
+            "RSS_KA":'РСС КА',
+            "RSS_KA_VOZM":'РСС КА Возможные',
+            "RSS_KA_KOLLIZ":'РСС КА Коллизии',
+            "ERR":'Ошибки',
+            "RSS_KA_ARH":'РСС КА Архив',
+            "RSS_KA_VOZM_ARH":'РСС КА Возможные Архив',
+            "RSS_KA_KOLLIZ_ARH":'РСС КА Коллизии Архив',
         };
         const containerContent=document.querySelector('.container_content');
         containerContent.innerHTML='';
@@ -180,15 +153,16 @@ export function table(url){
             containerContent.append(tableWrapper);
           }
           const tableRow = document.createElement('tr');
-      
-          element.forEach((el, colIndex) => {
+          console.log(element)
+          for(let field in element) {
+            console.log(element[field])
             const cell = document.createElement('td');
-            cell.innerText = el;
-            if (colIndex === 0) {
+            cell.innerText = element[field];
+            if (rowIndex === 0) {
               cell.setAttribute('data-key', 'ID');
             }
             tableRow.appendChild(cell);
-          });
+          };
           
           const table=document.querySelector('table');
           const tableScroll = document.querySelector('.table-scroll');
