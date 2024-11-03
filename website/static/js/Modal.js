@@ -137,9 +137,10 @@ export class Modal{
                 "columns":columns,
                 "values":arrData
               };
-              this.funcRow(data);
-              modal.remove();
-              callback(this.table.name);
+              this.funcRow(data).then( ()=>{modal.remove();
+                callback(this.table.name);}
+              );
+             
             }
             else if (this.typeModal=='copy') {
             const rows=document.querySelectorAll('tr');
@@ -171,9 +172,9 @@ export class Modal{
               "columns":columns,
               "values":arrData,
             };   
-            this.funcRow(data);
-            modal.remove();
-            callback(this.table.name); 
+            this.funcRow(data).then( ()=>{modal.remove();
+              callback(this.table.name);}
+            );
             }
             else if (this.typeModal=='edit') {
             const inputs=document.querySelectorAll('.modal__input');
@@ -211,9 +212,10 @@ export class Modal{
                 table_name: `${this.table.name}`,
                 primary_keys: primaryKeys
               };
-            this.funcRow(data).then(this.tableRow.remove());
-            modal.remove();
-            callback(this.table.name);
+              this.funcRow(data).then( ()=>{
+                callback(this.table.name);
+                modal.remove();}
+              );
             } 
           });
            // добавление прослушивателя событий кнопки отмены

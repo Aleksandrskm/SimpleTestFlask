@@ -153,13 +153,16 @@ export function table(url){
             containerContent.append(tableWrapper);
           }
           const tableRow = document.createElement('tr');
-          console.log(element)
+          console.log(element);
+          let rowsIndex=0;
           for(let field in element) {
             console.log(element[field])
             const cell = document.createElement('td');
+            
             cell.innerText = element[field];
-            if (rowIndex === 0) {
+            if (rowsIndex === 0) {
               cell.setAttribute('data-key', 'ID');
+              ++rowsIndex;
             }
             tableRow.appendChild(cell);
           };
