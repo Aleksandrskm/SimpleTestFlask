@@ -69,4 +69,21 @@ async function postJSON(data) {
           console.error("Error:", error);
         }
 }
-export {editRow,deleteRow,insertRow,postJSON}
+async function getRowsTable(tableName,skipRows,rowsCount) {
+  try {
+    const response = await fetch(`http://185.192.247.60:7130/Database/GetRows${tableName}/${skipRows}/${rowsCount}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // body: JSON.stringify(data),
+    });
+    const result = await response.json();
+    console.log("Success:", result);
+    return result;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+export {editRow,deleteRow,insertRow,postJSON,getRowsTable}

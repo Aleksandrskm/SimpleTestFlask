@@ -1,4 +1,4 @@
-import {editRow,deleteRow,insertRow,postJSON} from './db.js';
+import {editRow,deleteRow,insertRow,postJSON,getRowsTable} from './db.js';
 import { Modal } from "./Modal.js";
 export function table(url){
       // функция  в которую  передается название выбранной таблицы и на его основе создается таблица
@@ -13,28 +13,30 @@ export function table(url){
       // функция которая получает названия таблиц из API и генерирует их на странице
       function getNameTables(url){
         const list_Tables = {
-          KA: "Учетные данные о КА",
-          ORBITA_KA: "Орбиты КА",
-          ZONA_KA: "Зоны покрытия КА",
-          CHANNEL_BEAM: "Частотно-поляризационный план КА",
-          POLARIZATION: "Виды поляризации",
-          GROUP_ABONENT: "Группы абонентов",
-          VID_SV: "Виды связи",
-          OPERATOR_SV: "Операторы связи",
-          COUNTRY: "Страны",
-          ABONENT: "Абонент",
-          PRIVILEGES: "Статус абонента",
-          SOST: "Состояние системы",
-          SP_SOB: "Справочник событий",
-          TEK_KA_SOST: "Срез положения группировки КА в момент события",
-          TEK_KA_CHANNEL_SOST: "Срез занятости группировки КА в момент события",
-          ZAPR: "Запрос связи",
-          TEK_KA_ZAPR: "Срез положения группировки КА в момент запроса связи",
-          TEK_KA_CHANNEL_ZAPR: "Срез занятости группировки КА в момент запроса связи",
-          NAZN_KA: "Назначение КА на связь",
-          SEANS_KA: "Сеансы связи КА",
-          BEAM_KA: "Лучи КА"
-        };
+          "RSS":'РСС',
+          "RSS_ANT":'РСС Антены',
+          "ISPR":'Исправность',
+          "RSS_ARH":'РСС Архив',
+          "RSS_ANT_ARH":'РСС Антены Архив',
+          "RSS_KA":'РСС КА',
+          "RSS_KA_VOZM":'РСС КА Возможные',
+          "RSS_KA_KOLLIZ":'РСС КА Коллизии',
+          "ERR":'Ошибки',
+          "RSS_KA_ARH":'РСС КА Архив',
+          "RSS_KA_VOZM_ARH":'РСС КА Возможные Архив',
+          "RSS_KA_KOLLIZ_ARH":'РСС КА Коллизии Архив',
+          "KA":'Данные по КА',
+          "KA_ZONA_BEAM_ARH":'Зоны покрытия лучей КА архивные ',
+          "KA_ZONA_BEAM":"Зоны покрытия лучей КА ",
+          "KA_ZONA_ARH":'Зоны покрытия КА архивные ',
+          "KA_ZONA":'Зоны покрытия КА ',
+          "KA_SP_SOST":'Справочник состояний КА и лучей КА',
+          "KA_SOST_ARH":"Состояние КА архивные ",
+          "KA_SOST":'Справочник стран ',
+          "KA_BEAM_ARH":'Лучи КА архивные ',
+          "KA_BEAM":'Лучи КА ',
+          "KA_ARH":'Учетные данные о КА архивные '
+      };
         let response = fetch(url)
         .then(response => response.json())
         .then(json => {
@@ -69,28 +71,30 @@ export function table(url){
 
         if (totalRowsCount == 0) {
           const list_Tables = {
-            KA: "Учетные данные о КА",
-            ORBITA_KA: "Орбиты КА",
-            ZONA_KA: "Зоны покрытия КА",
-            CHANNEL_BEAM: "Частотно-поляризационный план КА",
-            POLARIZATION: "Виды поляризации",
-            GROUP_ABONENT: "Группы абонентов",
-            VID_SV: "Виды связи",
-            OPERATOR_SV: "Операторы связи",
-            COUNTRY: "Страны",
-            ABONENT: "Абонент",
-            PRIVILEGES: "Статус абонента",
-            SOST: "Состояние системы",
-            SP_SOB: "Справочник событий",
-            TEK_KA_SOST: "Срез положения группировки КА в момент события",
-            TEK_KA_CHANNEL_SOST: "Срез занятости группировки КА в момент события",
-            ZAPR: "Запрос связи",
-            TEK_KA_ZAPR: "Срез положения группировки КА в момент запроса связи",
-            TEK_KA_CHANNEL_ZAPR: "Срез занятости группировки КА в момент запроса связи",
-            NAZN_KA: "Назначение КА на связь",
-            SEANS_KA: "Сеансы связи КА",
-            BEAM_KA: "Лучи КА"
-          };
+            "RSS":'РСС',
+            "RSS_ANT":'РСС Антены',
+            "ISPR":'Исправность',
+            "RSS_ARH":'РСС Архив',
+            "RSS_ANT_ARH":'РСС Антены Архив',
+            "RSS_KA":'РСС КА',
+            "RSS_KA_VOZM":'РСС КА Возможные',
+            "RSS_KA_KOLLIZ":'РСС КА Коллизии',
+            "ERR":'Ошибки',
+            "RSS_KA_ARH":'РСС КА Архив',
+            "RSS_KA_VOZM_ARH":'РСС КА Возможные Архив',
+            "RSS_KA_KOLLIZ_ARH":'РСС КА Коллизии Архив',
+            "KA":'Данные по КА',
+            "KA_ZONA_BEAM_ARH":'Зоны покрытия лучей КА архивные ',
+            "KA_ZONA_BEAM":"Зоны покрытия лучей КА ",
+            "KA_ZONA_ARH":'Зоны покрытия КА архивные ',
+            "KA_ZONA":'Зоны покрытия КА ',
+            "KA_SP_SOST":'Справочник состояний КА и лучей КА',
+            "KA_SOST_ARH":"Состояние КА архивные ",
+            "KA_SOST":'Справочник стран ',
+            "KA_BEAM_ARH":'Лучи КА архивные ',
+            "KA_BEAM":'Лучи КА ',
+            "KA_ARH":'Учетные данные о КА архивные '
+        };
           const containerContent=document.querySelector('div .container_content');
           containerContent.innerHTML='';
           const name = document.createElement('div');
@@ -124,29 +128,31 @@ export function table(url){
       }
       /* функция  в которую  передается вся информация о таблице 
       строки  в таблице  название выбранной таблицы  на  основе этих параметров строится структура таблицы*/
-      function createTableContent(result,rows, tableName) {
+      function createTableContent(result,rows,tableName) {
         const list_Tables = {
-          KA: "Учетные данные о КА",
-          ORBITA_KA: "Орбиты КА",
-          ZONA_KA: "Зоны покрытия КА",
-          CHANNEL_BEAM: "Частотно-поляризационный план КА",
-          POLARIZATION: "Виды поляризации",
-          GROUP_ABONENT: "Группы абонентов",
-          VID_SV: "Виды связи",
-          OPERATOR_SV: "Операторы связи",
-          COUNTRY: "Страны",
-          ABONENT: "Абонент",
-          PRIVILEGES: "Статус абонента",
-          SOST: "Состояние системы",
-          SP_SOB: "Справочник событий",
-          TEK_KA_SOST: "Срез положения группировки КА в момент события",
-          TEK_KA_CHANNEL_SOST: "Срез занятости группировки КА в момент события",
-          ZAPR: "Запрос связи",
-          TEK_KA_ZAPR: "Срез положения группировки КА в момент запроса связи",
-          TEK_KA_CHANNEL_ZAPR: "Срез занятости группировки КА в момент запроса связи",
-          NAZN_KA: "Назначение КА на связь",
-          SEANS_KA: "Сеансы связи КА",
-          BEAM_KA: "Лучи КА"
+            "RSS":'РСС',
+            "RSS_ANT":'РСС Антены',
+            "ISPR":'Исправность',
+            "RSS_ARH":'РСС Архив',
+            "RSS_ANT_ARH":'РСС Антены Архив',
+            "RSS_KA":'РСС КА',
+            "RSS_KA_VOZM":'РСС КА Возможные',
+            "RSS_KA_KOLLIZ":'РСС КА Коллизии',
+            "ERR":'Ошибки',
+            "RSS_KA_ARH":'РСС КА Архив',
+            "RSS_KA_VOZM_ARH":'РСС КА Возможные Архив',
+            "RSS_KA_KOLLIZ_ARH":'РСС КА Коллизии Архив',
+            "KA":'Данные по КА',
+            "KA_ZONA_BEAM_ARH":'Зоны покрытия лучей КА архивные ',
+            "KA_ZONA_BEAM":"Зоны покрытия лучей КА ",
+            "KA_ZONA_ARH":'Зоны покрытия КА архивные ',
+            "KA_ZONA":'Зоны покрытия КА ',
+            "KA_SP_SOST":'Справочник состояний КА и лучей КА',
+            "KA_SOST_ARH":"Состояние КА архивные ",
+            "KA_SOST":'Справочник стран ',
+            "KA_BEAM_ARH":'Лучи КА архивные ',
+            "KA_BEAM":'Лучи КА ',
+            "KA_ARH":'Учетные данные о КА архивные '
         };
         const containerContent=document.querySelector('.container_content');
         containerContent.innerHTML='';
@@ -180,15 +186,19 @@ export function table(url){
             containerContent.append(tableWrapper);
           }
           const tableRow = document.createElement('tr');
-      
-          element.forEach((el, colIndex) => {
+          console.log(element);
+          let rowsIndex=0;
+          for(let field in element) {
+            // console.log(element[field])
             const cell = document.createElement('td');
-            cell.innerText = el;
-            if (colIndex === 0) {
+            
+            cell.innerText = element[field];
+            if (rowsIndex === 0) {
               cell.setAttribute('data-key', 'ID');
+              ++rowsIndex;
             }
             tableRow.appendChild(cell);
-          });
+          };
           
           const table=document.querySelector('table');
           const tableScroll = document.querySelector('.table-scroll');
@@ -209,10 +219,55 @@ export function table(url){
              createButtonsTable(tableScroll,result,e.target.parentElement);
           });
           tableBody.append(tableRow);
-          table.append(tableBody);  
-          createButtonsTable(tableScroll,result,tableRow);
+          table.append(tableBody);
+          if (result.columns_count<=20)
+            {
+              createButtonsTable(tableScroll,result,tableRow);
+            } 
+          
         });
-      
+        if (result.columns_count>20) {
+          getRowsTable(tableName,20,result.columns_count-20).then(response=>{
+          response.forEach(row=>{
+            console.log(row)
+            const tableRow = document.createElement('tr');
+            let rowsIndex=0;
+            for(let field in row) {
+              // console.log(element[field])
+              const cell = document.createElement('td');
+              
+              cell.innerText = row[field];
+              if (rowsIndex === 0) {
+                cell.setAttribute('data-key', 'ID');
+                ++rowsIndex;
+              }
+              tableRow.appendChild(cell);
+            };
+            const tableBody=document.querySelector('tbody');
+            tableRow.addEventListener('click',(e)=>{
+              let r = document.createRange();
+              r.selectNode(e.target.parentElement);
+              document.getSelection().addRange(r);
+              console.log(e.target.parentElement);
+              const trs=document.querySelectorAll('table tr');
+              trs.forEach((tr)=>{
+                if (tr==e.target.parentElement) {
+                  tr.style='background-color: #B5B8B1';
+                }
+                else{
+                  tr.style='';
+                }
+              })
+               createButtonsTable(tableScroll,result,e.target.parentElement);
+            });
+            tableBody.append(tableRow);
+            const tableScroll = document.querySelector('.table-scroll');
+            // createButtonsTable(tableScroll,result,e.target.parentElement);
+          })  
+          
+          });
+        }
+        
         const trs=document.querySelectorAll('table tr');
             trs.forEach((tr,index)=>{
               if (index==trs.length-1) {
