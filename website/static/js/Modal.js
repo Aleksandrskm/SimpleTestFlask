@@ -20,6 +20,7 @@ export class Modal{
     }
     // метод создания модельного окна где callback это функция для обновления страницы
     createModal(callback){
+      console.log(this.tableRow)
       // создание модального окна по полученным параметрам
         const modal=document.createElement('div');
         const modalDialog=document.createElement('div');
@@ -195,11 +196,13 @@ export class Modal{
                   primary_keys: primaryKeys
     
                 };
-                this.funcRow(data);
+                this.funcRow(data).then(()=>{
+                  callback(this.table.name);
+                });
               }
             });
             modal.remove(); 
-            callback(this.table.name); 
+             
             }
             else if (this.typeModal=='delete') {
               const primaryKeys = {};
