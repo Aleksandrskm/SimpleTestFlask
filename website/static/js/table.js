@@ -220,11 +220,11 @@ export function table(url){
           });
           tableBody.append(tableRow);
           table.append(tableBody);
-          if (result.columns_count<=20)
+          if (result.columns_count<=21)
             {
               createButtonsTable(tableScroll,result,tableRow);
             } 
-          
+          console.log(result.columns_count);
         });
         if (result.columns_count>20) {
           getRowsTable(tableName,20,result.columns_count-20).then(response=>{
@@ -258,13 +258,16 @@ export function table(url){
                   tr.style='';
                 }
               })
-               createButtonsTable(tableScroll,result,e.target.parentElement);
+               
             });
+            
             tableBody.append(tableRow);
             const tableScroll = document.querySelector('.table-scroll');
+            createButtonsTable(tableScroll,result,tableRow);
+            
             // createButtonsTable(tableScroll,result,e.target.parentElement);
           })  
-          
+         
           });
         }
         
