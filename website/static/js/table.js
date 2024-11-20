@@ -258,7 +258,7 @@ export function table(url){
                   tr.style='';
                 }
               })
-               
+              createButtonsTable(tableScroll,result,e.target.parentElement); 
             });
             
             tableBody.append(tableRow);
@@ -267,16 +267,16 @@ export function table(url){
             
             // createButtonsTable(tableScroll,result,e.target.parentElement);
           })  
-         
-          });
-        }
-        
-        const trs=document.querySelectorAll('table tr');
+          const trs=document.querySelectorAll('table tr');
             trs.forEach((tr,index)=>{
               if (index==trs.length-1) {
               tr.style='background-color: #B5B8B1';
               }
             });
+          });
+        }
+        
+       
       }
       /* функция  которая   создает таблицу на сайте  */
       function generateTable(result) {
