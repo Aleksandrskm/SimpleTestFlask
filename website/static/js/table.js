@@ -220,12 +220,26 @@ export function table(url){
           });
           tableBody.append(tableRow);
           table.append(tableBody);
+          
           if (result.columns_count<=21)
             {
               createButtonsTable(tableScroll,result,tableRow);
+              
+              
+              
+              
             } 
           console.log(result.columns_count);
         });
+        if (result.columns_count<21){
+          const trs=document.querySelectorAll('table tr');
+        trs.forEach((tr,index)=>{
+        if (index==trs.length-1) { 
+        tr.style='background-color: #B5B8B1';
+        }
+      });
+        }
+        
         if (result.columns_count>20) {
           getRowsTable(tableName,20,result.columns_count-20).then(response=>{
           response.forEach(row=>{
@@ -258,7 +272,7 @@ export function table(url){
                   tr.style='';
                 }
               })
-               
+              createButtonsTable(tableScroll,result,e.target.parentElement); 
             });
             
             tableBody.append(tableRow);
@@ -267,16 +281,16 @@ export function table(url){
             
             // createButtonsTable(tableScroll,result,e.target.parentElement);
           })  
-         
-          });
-        }
-        
-        const trs=document.querySelectorAll('table tr');
+          const trs=document.querySelectorAll('table tr');
             trs.forEach((tr,index)=>{
               if (index==trs.length-1) {
               tr.style='background-color: #B5B8B1';
               }
             });
+          });
+        }
+        
+       
       }
       /* функция  которая   создает таблицу на сайте  */
       function generateTable(result) {

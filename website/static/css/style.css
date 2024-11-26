@@ -576,7 +576,12 @@ img {
     overflow: hidden;
     background-color: rgba(0, 0, 0, .5);
 }
-
+thead th{
+    min-width: 200px;
+}
+tr td{
+    min-width: 200px;
+}
 .confirmation-modal__buttons-add{
     max-width: 500px;
     margin: 10px auto
