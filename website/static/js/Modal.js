@@ -225,7 +225,6 @@ export class Modal{
           const btnClose=document.querySelector('.modal__close');
           btnClose.addEventListener('click',()=>{  
             modal.remove(); 
-            
           });
     }
 }

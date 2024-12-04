@@ -2,99 +2,93 @@ import {editRow,deleteRow,insertRow,postJSON,getRowsTable} from './db.js';
 import { Modal } from "./Modal.js";
 export function table(url){
       // функция  в которую  передается название выбранной таблицы и на его основе создается таблица
-      function createTable(element) {
+      function createTable(element,rusName) {
         let data = { name: element };
         postJSON(data).then(result => {
-          generateTable(result);
+
+          if (result===undefined) {
+            document.querySelector('.container_content').innerHTML+=`<h3>В данный момент таблица не доступна</h3>`
+          }
+          else{  generateTable(result,rusName); console.log(result)}
+        
+          
         });
       
         document.querySelector('.container_content').innerHTML = '';
       }
       // функция которая получает названия таблиц из API и генерирует их на странице
       function getNameTables(url){
-        const list_Tables = {
-          "RSS":'РСС',
-          "RSS_ANT":'РСС Антены',
-          "ISPR":'Исправность',
-          "RSS_ARH":'РСС Архив',
-          "RSS_ANT_ARH":'РСС Антены Архив',
-          "RSS_KA":'РСС КА',
-          "RSS_KA_VOZM":'РСС КА Возможные',
-          "RSS_KA_KOLLIZ":'РСС КА Коллизии',
-          "ERR":'Ошибки',
-          "RSS_KA_ARH":'РСС КА Архив',
-          "RSS_KA_VOZM_ARH":'РСС КА Возможные Архив',
-          "RSS_KA_KOLLIZ_ARH":'РСС КА Коллизии Архив',
-          "KA":'Данные по КА',
-          "KA_ZONA_BEAM_ARH":'Зоны покрытия лучей КА архивные ',
-          "KA_ZONA_BEAM":"Зоны покрытия лучей КА ",
-          "KA_ZONA_ARH":'Зоны покрытия КА архивные ',
-          "KA_ZONA":'Зоны покрытия КА ',
-          "KA_SP_SOST":'Справочник состояний КА и лучей КА',
-          "KA_SOST_ARH":"Состояние КА архивные ",
-          "KA_SOST":'Справочник стран ',
-          "KA_BEAM_ARH":'Лучи КА архивные ',
-          "KA_BEAM":'Лучи КА ',
-          "KA_ARH":'Учетные данные о КА архивные '
-      };
         let response = fetch(url)
         .then(response => response.json())
         .then(json => {
-          
-          json.forEach(element => {
+          for (const key in json) {
             const elem = document.createElement('div');
-            for (let key in list_Tables) {
-              if (element == key) {
-                elem.innerHTML = `<div class="container__nav__el"> ${list_Tables[key]}</div>`;
-              }
+            
+            console.log(json[key])
+            const obj=json[key];
+            const nameSection=document.createElement('span');
+            nameSection.classList.add('menu-section');
+            nameSection.innerText=key;
+            elem.append(nameSection);
+            for(const field in obj)
+            {
+              // console.log(obj[field])
+              const nameTable=document.createElement('div');
+              nameTable.classList.add('container__nav__el');
+              nameTable.append(obj[field]) ;
+              nameTable.setAttribute("id", field);
+              elem.append(nameTable);
             }
-            elem.addEventListener('click', (e) => {
-              const trs=document.querySelectorAll('.container__nav__el');
-            trs.forEach((tr)=>{
-              if (tr==e.target) {
-                tr.style='background-color: #B5B8B1';
-              }
-              else{
-                tr.style='';
-              }
-            })
-              createTable(element) });
-              if (elem) {
-                document.querySelector('.container__nav').append(elem);
-              }
            
-          });
+            document.querySelector('.container__nav').append(elem);
+            const trs=document.querySelectorAll('.container__nav__el');
+            trs.forEach((tr)=>{
+              
+            })
+            console.log(elem)
+                elem.addEventListener('click', (e) => {
+                  
+                 
+                  const trs=document.querySelectorAll('.container__nav__el');
+                  trs.forEach((tr)=>{
+                    if (tr==e.target) {
+                      tr.style='background-color: #B5B8B1';
+                      console.log(e.target.id,e.target.innerHTML);
+                      createTable(e.target.id,e.target.innerHTML);
+
+                    }
+                    else{
+                      if (e.target.id) {
+                        tr.style='';
+                      }
+                     
+                    }
+                    
+                  })
+                  
+                  
+                });
+                
+              
+           
+           
+          }
+          // json.forEach(element => {
+          //   const elem = document.createElement('div');
+          //   for (let key in list_Tables) {
+          //     if (element == key) {
+          //       elem.innerHTML = `<div class="container__nav__el"> ${list_Tables[key]}</div>`;
+          //     }
+          //   }
+           
+           
+          // });
         });
       }
       /* функция  которая проверяет  пустая таблица или нет и если она пустая строит её структуру  */
-      function checkVoidTable(result,tableName, totalRowsCount) {
+      function checkVoidTable(result,tableName, totalRowsCount,rusName) {
 
         if (totalRowsCount == 0) {
-          const list_Tables = {
-            "RSS":'РСС',
-            "RSS_ANT":'РСС Антены',
-            "ISPR":'Исправность',
-            "RSS_ARH":'РСС Архив',
-            "RSS_ANT_ARH":'РСС Антены Архив',
-            "RSS_KA":'РСС КА',
-            "RSS_KA_VOZM":'РСС КА Возможные',
-            "RSS_KA_KOLLIZ":'РСС КА Коллизии',
-            "ERR":'Ошибки',
-            "RSS_KA_ARH":'РСС КА Архив',
-            "RSS_KA_VOZM_ARH":'РСС КА Возможные Архив',
-            "RSS_KA_KOLLIZ_ARH":'РСС КА Коллизии Архив',
-            "KA":'Данные по КА',
-            "KA_ZONA_BEAM_ARH":'Зоны покрытия лучей КА архивные ',
-            "KA_ZONA_BEAM":"Зоны покрытия лучей КА ",
-            "KA_ZONA_ARH":'Зоны покрытия КА архивные ',
-            "KA_ZONA":'Зоны покрытия КА ',
-            "KA_SP_SOST":'Справочник состояний КА и лучей КА',
-            "KA_SOST_ARH":"Состояние КА архивные ",
-            "KA_SOST":'Справочник стран ',
-            "KA_BEAM_ARH":'Лучи КА архивные ',
-            "KA_BEAM":'Лучи КА ',
-            "KA_ARH":'Учетные данные о КА архивные '
-        };
           const containerContent=document.querySelector('div .container_content');
           containerContent.innerHTML='';
           const name = document.createElement('div');
@@ -106,7 +100,7 @@ export function table(url){
           tableScroll.classList.add('table-scroll');
 
           name.classList = 'table-name';
-          name.innerHTML = `${list_Tables[tableName]}`;
+          name.innerHTML = `${rusName}`;
           containerContent.append(name);
           const tr = document.createElement('table');
           tr.classList.add('mainTable');
@@ -128,32 +122,7 @@ export function table(url){
       }
       /* функция  в которую  передается вся информация о таблице 
       строки  в таблице  название выбранной таблицы  на  основе этих параметров строится структура таблицы*/
-      function createTableContent(result,rows,tableName) {
-        const list_Tables = {
-            "RSS":'РСС',
-            "RSS_ANT":'РСС Антены',
-            "ISPR":'Исправность',
-            "RSS_ARH":'РСС Архив',
-            "RSS_ANT_ARH":'РСС Антены Архив',
-            "RSS_KA":'РСС КА',
-            "RSS_KA_VOZM":'РСС КА Возможные',
-            "RSS_KA_KOLLIZ":'РСС КА Коллизии',
-            "ERR":'Ошибки',
-            "RSS_KA_ARH":'РСС КА Архив',
-            "RSS_KA_VOZM_ARH":'РСС КА Возможные Архив',
-            "RSS_KA_KOLLIZ_ARH":'РСС КА Коллизии Архив',
-            "KA":'Данные по КА',
-            "KA_ZONA_BEAM_ARH":'Зоны покрытия лучей КА архивные ',
-            "KA_ZONA_BEAM":"Зоны покрытия лучей КА ",
-            "KA_ZONA_ARH":'Зоны покрытия КА архивные ',
-            "KA_ZONA":'Зоны покрытия КА ',
-            "KA_SP_SOST":'Справочник состояний КА и лучей КА',
-            "KA_SOST_ARH":"Состояние КА архивные ",
-            "KA_SOST":'Справочник стран ',
-            "KA_BEAM_ARH":'Лучи КА архивные ',
-            "KA_BEAM":'Лучи КА ',
-            "KA_ARH":'Учетные данные о КА архивные '
-        };
+      function createTableContent(result,rows,tableName,rusName) {
         const containerContent=document.querySelector('.container_content');
         containerContent.innerHTML='';
         const tableBody = document.createElement('tbody');
@@ -166,7 +135,7 @@ export function table(url){
             tableWrapper.classList.add('table-wrapper');
             tableScroll.classList.add('table-scroll');
             name.classList = 'table-name';
-            name.innerHTML = `${list_Tables[tableName]}`;
+            name.innerHTML = `${rusName}`;
             document.querySelector('.container_content').append(name);
             const table=document.createElement('table');
             table.classList.add('mainTable');
@@ -224,10 +193,6 @@ export function table(url){
           if (result.columns_count<=21)
             {
               createButtonsTable(tableScroll,result,tableRow);
-              
-              
-              
-              
             } 
           console.log(result.columns_count);
         });
@@ -239,7 +204,6 @@ export function table(url){
         }
       });
         }
-        
         if (result.columns_count>20) {
           getRowsTable(tableName,20,result.columns_count-20).then(response=>{
           response.forEach(row=>{
@@ -278,8 +242,6 @@ export function table(url){
             tableBody.append(tableRow);
             const tableScroll = document.querySelector('.table-scroll');
             createButtonsTable(tableScroll,result,tableRow);
-            
-            // createButtonsTable(tableScroll,result,e.target.parentElement);
           })  
           const trs=document.querySelectorAll('table tr');
             trs.forEach((tr,index)=>{
@@ -289,16 +251,14 @@ export function table(url){
             });
           });
         }
-        
-       
       }
       /* функция  которая   создает таблицу на сайте  */
-      function generateTable(result) {
+      function generateTable(result,rusName) {
         if (result.total_rows_count==0) {
-          checkVoidTable(result,result.name, result.total_rows_count);
+          checkVoidTable(result,result.name, result.total_rows_count,rusName);
         }
         else {
-          createTableContent(result,result.rows, result.name);
+          createTableContent(result,result.rows, result.name,rusName);
         }
       }
       /* функция  которая  создает  кнопки для работы с  таблицей на сайте  */
@@ -338,19 +298,7 @@ export function table(url){
           modalEdit.createModal(createTable)});
         btnInsert.addEventListener('click',()=>{
           modalInser.createModal(createTable);
-          
         });
-         
-          // functionalDelete(result.name,tableRow);
-          // functionalBtnInsert(result);
-          // functionalBtnCopyEnd(result,tableRow);
-          // if (result.rows) {
-          //   console.log(result);
-          //   const rowsLenght=result.rows[0].length;
-          //   functionalEdit(rowsLenght,tableRow,result);
-          // }
-          
       }
-      
       getNameTables(url);
 }

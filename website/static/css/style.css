@@ -722,6 +722,11 @@ text-transform:uppercase}
     max-height: 80vh;
     overflow-y: auto;
 }
+.menu-section{
+    font-size: 18px;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+}
 .table-wrapper {
     position:relative;
   }
