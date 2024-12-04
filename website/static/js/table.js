@@ -1,15 +1,15 @@
-import {editRow,deleteRow,insertRow,postJSON,getRowsTable,list_Tables} from './db.js';
+import {editRow,deleteRow,insertRow,postJSON,getRowsTable} from './db.js';
 import { Modal } from "./Modal.js";
 export function table(url){
       // функция  в которую  передается название выбранной таблицы и на его основе создается таблица
-      function createTable(element) {
+      function createTable(element,rusName) {
         let data = { name: element };
         postJSON(data).then(result => {
 
           if (result===undefined) {
             document.querySelector('.container_content').innerHTML+=`<h3>В данный момент таблица не доступна</h3>`
           }
-          else{  generateTable(result); console.log(1)}
+          else{  generateTable(result,rusName); console.log(result)}
         
           
         });
@@ -53,8 +53,8 @@ export function table(url){
                   trs.forEach((tr)=>{
                     if (tr==e.target) {
                       tr.style='background-color: #B5B8B1';
-                      console.log(e.target.id);
-                      createTable(e.target.id);
+                      console.log(e.target.id,e.target.innerHTML);
+                      createTable(e.target.id,e.target.innerHTML);
 
                     }
                     else{
@@ -86,7 +86,7 @@ export function table(url){
         });
       }
       /* функция  которая проверяет  пустая таблица или нет и если она пустая строит её структуру  */
-      function checkVoidTable(result,tableName, totalRowsCount) {
+      function checkVoidTable(result,tableName, totalRowsCount,rusName) {
 
         if (totalRowsCount == 0) {
           const containerContent=document.querySelector('div .container_content');
@@ -100,7 +100,7 @@ export function table(url){
           tableScroll.classList.add('table-scroll');
 
           name.classList = 'table-name';
-          name.innerHTML = `${list_Tables[tableName]}`;
+          name.innerHTML = `${rusName}`;
           containerContent.append(name);
           const tr = document.createElement('table');
           tr.classList.add('mainTable');
@@ -122,7 +122,7 @@ export function table(url){
       }
       /* функция  в которую  передается вся информация о таблице 
       строки  в таблице  название выбранной таблицы  на  основе этих параметров строится структура таблицы*/
-      function createTableContent(result,rows,tableName) {
+      function createTableContent(result,rows,tableName,rusName) {
         const containerContent=document.querySelector('.container_content');
         containerContent.innerHTML='';
         const tableBody = document.createElement('tbody');
@@ -135,7 +135,7 @@ export function table(url){
             tableWrapper.classList.add('table-wrapper');
             tableScroll.classList.add('table-scroll');
             name.classList = 'table-name';
-            name.innerHTML = `${list_Tables[tableName]}`;
+            name.innerHTML = `${rusName}`;
             document.querySelector('.container_content').append(name);
             const table=document.createElement('table');
             table.classList.add('mainTable');
@@ -253,12 +253,12 @@ export function table(url){
         }
       }
       /* функция  которая   создает таблицу на сайте  */
-      function generateTable(result) {
+      function generateTable(result,rusName) {
         if (result.total_rows_count==0) {
-          checkVoidTable(result,result.name, result.total_rows_count);
+          checkVoidTable(result,result.name, result.total_rows_count,rusName);
         }
         else {
-          createTableContent(result,result.rows, result.name);
+          createTableContent(result,result.rows, result.name,rusName);
         }
       }
       /* функция  которая  создает  кнопки для работы с  таблицей на сайте  */
