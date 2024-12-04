@@ -507,7 +507,7 @@ function communication_availability() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  const url = 'http://185.192.247.60:7130/Database/DBTables';
+  const url = 'http://185.192.247.60:7130/Database/db_structure';
   const h2=document.querySelector('h2');
   if (h2) {
     if (h2.innerText=='Редактор данных') {
