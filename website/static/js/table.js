@@ -2,16 +2,15 @@ import {editRow,deleteRow,insertRow,postJSON,getRowsTable} from './db.js';
 import { Modal } from "./Modal.js";
 export function table(url){
       // функция  в которую  передается название выбранной таблицы и на его основе создается таблица
-      function createTable(element,rusName) {
-        let data = { name: element };
+      function createTable(engName,rusName) {
+        let data = { name: engName };
         postJSON(data).then(result => {
-
           if (result===undefined) {
-            document.querySelector('.container_content').innerHTML+=`<h3>В данный момент таблица не доступна</h3>`
+            document.querySelector('.container_content').innerHTML+=`<h3>В данный момент таблица недоступна</h3>`
           }
-          else{  generateTable(result,rusName); console.log(result)}
-        
-          
+          else{  
+            generateTable(result,rusName);
+          }
         });
       
         document.querySelector('.container_content').innerHTML = '';
@@ -20,74 +19,45 @@ export function table(url){
       function getNameTables(url){
         let response = fetch(url)
         .then(response => response.json())
-        .then(json => {
-          for (const key in json) {
-            const elem = document.createElement('div');
-            
-            console.log(json[key])
-            const obj=json[key];
+        .then(jsonRsponse => {
+          for (const key in jsonRsponse) {
+            const elemSection = document.createElement('div');
+            const dateTablesName=jsonRsponse[key];
             const nameSection=document.createElement('span');
             nameSection.classList.add('menu-section');
             nameSection.innerText=key;
-            elem.append(nameSection);
-            for(const field in obj)
+            elemSection.append(nameSection);
+            for(const field in dateTablesName)
             {
-              // console.log(obj[field])
+              // console.log(dateTablesName[field])
               const nameTable=document.createElement('div');
               nameTable.classList.add('container__nav__el');
-              nameTable.append(obj[field]) ;
+              nameTable.append(dateTablesName[field]) ;
               nameTable.setAttribute("id", field);
-              elem.append(nameTable);
+              elemSection.append(nameTable);
             }
-           
-            document.querySelector('.container__nav').append(elem);
-            const trs=document.querySelectorAll('.container__nav__el');
-            trs.forEach((tr)=>{
-              
-            })
-            console.log(elem)
-                elem.addEventListener('click', (e) => {
-                  
-                 
-                  const trs=document.querySelectorAll('.container__nav__el');
-                  trs.forEach((tr)=>{
-                    if (tr==e.target) {
-                      tr.style='background-color: #B5B8B1';
+            document.querySelector('.container__nav').append(elemSection);
+            // console.log(elemSection)
+                elemSection.addEventListener('click', (e) => {
+                  const trsNavMenu=document.querySelectorAll('.container__nav__el');
+                  trsNavMenu.forEach((trMenu)=>{
+                    if (trMenu==e.target) {
+                      trMenu.style='background-color: #B5B8B1';
                       console.log(e.target.id,e.target.innerHTML);
                       createTable(e.target.id,e.target.innerHTML);
-
                     }
                     else{
                       if (e.target.id) {
-                        tr.style='';
+                        trMenu.style='';
                       }
-                     
                     }
-                    
-                  })
-                  
-                  
+                  }) 
                 });
-                
-              
-           
-           
           }
-          // json.forEach(element => {
-          //   const elem = document.createElement('div');
-          //   for (let key in list_Tables) {
-          //     if (element == key) {
-          //       elem.innerHTML = `<div class="container__nav__el"> ${list_Tables[key]}</div>`;
-          //     }
-          //   }
-           
-           
-          // });
         });
       }
       /* функция  которая проверяет  пустая таблица или нет и если она пустая строит её структуру  */
       function checkVoidTable(result,tableName, totalRowsCount,rusName) {
-
         if (totalRowsCount == 0) {
           const containerContent=document.querySelector('div .container_content');
           containerContent.innerHTML='';
@@ -98,23 +68,18 @@ export function table(url){
           const tableBody = document.createElement('tbody');
           tableWrapper.classList.add('table-wrapper');
           tableScroll.classList.add('table-scroll');
-
           name.classList = 'table-name';
           name.innerHTML = `${rusName}`;
           containerContent.append(name);
           const tr = document.createElement('table');
           tr.classList.add('mainTable');
-         
           result.columns.forEach(column=>{
             const th =document.createElement('th');
-            
             th.innerHTML=`${column.column_description}`;
-    
             tableHead.append(th);
           })
           tr.append(tableHead);
           tableScroll.append(tr);
-
           tableWrapper.append(tableScroll);
           containerContent.append(tableWrapper);
           createButtonsTable(tableScroll,result,tableHead);
@@ -145,7 +110,6 @@ export function table(url){
               const th =document.createElement('th');
               th.scope="col";
               th.innerHTML=`${column.column_description}`;
-
               tableRow.append(th);
             });
             tableHead.append(tableRow);
@@ -160,7 +124,6 @@ export function table(url){
           for(let field in element) {
             // console.log(element[field])
             const cell = document.createElement('td');
-            
             cell.innerText = element[field];
             if (rowsIndex === 0) {
               cell.setAttribute('data-key', 'ID');
@@ -168,7 +131,6 @@ export function table(url){
             }
             tableRow.appendChild(cell);
           };
-          
           const table=document.querySelector('table');
           const tableScroll = document.querySelector('.table-scroll');
           tableRow.addEventListener('click',(e)=>{
@@ -189,7 +151,6 @@ export function table(url){
           });
           tableBody.append(tableRow);
           table.append(tableBody);
-          
           if (result.columns_count<=21)
             {
               createButtonsTable(tableScroll,result,tableRow);
@@ -207,7 +168,7 @@ export function table(url){
         if (result.columns_count>20) {
           getRowsTable(tableName,20,result.columns_count-20).then(response=>{
           response.forEach(row=>{
-            console.log(row)
+            // console.log(row)
             const tableRow = document.createElement('tr');
             let rowsIndex=0;
             for(let field in row) {
