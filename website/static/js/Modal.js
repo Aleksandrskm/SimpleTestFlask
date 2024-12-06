@@ -9,7 +9,7 @@ export class Modal{
   funcRow функция которая будет использоваться для работы с таблицей
   table вся информация о таблице
   */ 
-    constructor(modalParent,typeModal,colInputs,columns,tableRow,funcRow,table){
+    constructor(modalParent,typeModal,colInputs,columns,tableRow,funcRow,table,rusName){
         this.modalParent=modalParent;
         this.typeModal=typeModal;
         this.colInputs=colInputs;
@@ -17,10 +17,12 @@ export class Modal{
         this.tableRow=tableRow;
         this.funcRow=funcRow;
         this.table=table;
+        this.rusName=rusName;
     }
     // метод создания модельного окна где callback это функция для обновления страницы
     createModal(callback){
       console.log(this.tableRow)
+      console.log(this.table)
       // создание модального окна по полученным параметрам
         const modal=document.createElement('div');
         const modalDialog=document.createElement('div');
@@ -118,6 +120,7 @@ export class Modal{
                 primaryKeys[key]++;
               });
             });
+           
             const inputs=document.querySelectorAll('.modal__input');
             const arrData=[];
             const columns=[];
@@ -139,7 +142,8 @@ export class Modal{
                 "values":arrData
               };
               this.funcRow(data).then( ()=>{modal.remove();
-                callback(this.table.name);}
+                
+                callback(this.table.name,this.rusName);}
               );
              
             }
@@ -174,7 +178,7 @@ export class Modal{
               "values":arrData,
             };   
             this.funcRow(data).then( ()=>{modal.remove();
-              callback(this.table.name);}
+              callback(this.table.name,this.rusName);}
             );
             }
             else if (this.typeModal=='edit') {
@@ -197,7 +201,7 @@ export class Modal{
     
                 };
                 this.funcRow(data).then(()=>{
-                  callback(this.table.name);
+                  callback(this.table.name,this.rusName);
                 });
               }
             });
@@ -216,7 +220,7 @@ export class Modal{
                 primary_keys: primaryKeys
               };
               this.funcRow(data).then( ()=>{
-                callback(this.table.name);
+                callback(this.table.name,this.rusName);
                 modal.remove();}
               );
             } 
