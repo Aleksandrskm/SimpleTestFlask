@@ -119,7 +119,7 @@ export function table(url){
             containerContent.append(tableWrapper);
           }
           const tableRow = document.createElement('tr');
-          console.log(element);
+          // console.log(element);
           let rowsIndex=0;
           for(let field in element) {
             // console.log(element[field])
@@ -147,15 +147,15 @@ export function table(url){
                 tr.style='';
               }
             })
-             createButtonsTable(tableScroll,result,e.target.parentElement);
+             createButtonsTable(tableScroll,result,e.target.parentElement,rusName);
           });
           tableBody.append(tableRow);
           table.append(tableBody);
           if (result.columns_count<=21)
             {
-              createButtonsTable(tableScroll,result,tableRow);
+              createButtonsTable(tableScroll,result,tableRow,rusName);
             } 
-          console.log(result.columns_count);
+          // console.log(result.columns_count);
         });
         if (result.columns_count<21){
           const trs=document.querySelectorAll('table tr');
@@ -197,12 +197,12 @@ export function table(url){
                   tr.style='';
                 }
               })
-              createButtonsTable(tableScroll,result,e.target.parentElement); 
+              createButtonsTable(tableScroll,result,e.target.parentElement,rusName); 
             });
             
             tableBody.append(tableRow);
             const tableScroll = document.querySelector('.table-scroll');
-            createButtonsTable(tableScroll,result,tableRow);
+            createButtonsTable(tableScroll,result,tableRow,rusName);
           })  
           const trs=document.querySelectorAll('table tr');
             trs.forEach((tr,index)=>{
@@ -223,7 +223,7 @@ export function table(url){
         }
       }
       /* функция  которая  создает  кнопки для работы с  таблицей на сайте  */
-      function createButtonsTable(table,result,tableRow) {
+      function createButtonsTable(table,result,tableRow,rusName) {
         const btns=document.querySelector('.table-buttons');
         if (btns) {
           btns.remove();
@@ -247,10 +247,10 @@ export function table(url){
             btnDelete.setAttribute('disabled', '');
           }
         const modalParent=document.querySelector('.container_content');
-        const modalDelete= new Modal(modalParent,'delete',0,result.columns,tableRow,deleteRow,result);
-        const modalInser= new Modal(modalParent,'insert',result.columns_count,result.columns,tableRow,insertRow,result);
-        const modalCopy= new Modal(modalParent,'copy',result.columns_count,result.columns,tableRow,insertRow,result);
-        const modalEdit= new Modal(modalParent,'edit',result.columns_count,result.columns,tableRow,editRow,result);
+        const modalDelete= new Modal(modalParent,'delete',0,result.columns,tableRow,deleteRow,result,rusName);
+        const modalInser= new Modal(modalParent,'insert',result.columns_count,result.columns,tableRow,insertRow,result,rusName);
+        const modalCopy= new Modal(modalParent,'copy',result.columns_count,result.columns,tableRow,insertRow,result,rusName);
+        const modalEdit= new Modal(modalParent,'edit',result.columns_count,result.columns,tableRow,editRow,result,rusName);
         btnDelete.addEventListener('click',()=>{
           modalDelete.createModal(createTable)});
         btnCopy.addEventListener('click',()=>{
