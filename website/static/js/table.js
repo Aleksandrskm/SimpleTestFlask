@@ -166,7 +166,7 @@ export function table(url){
       });
         }
         if (result.columns_count>20) {
-          getRowsTable(tableName,20,result.columns_count-20).then(response=>{
+          getRowsTable(tableName,20,result.total_rows_count).then(response=>{
           response.forEach(row=>{
             // console.log(row)
             const tableRow = document.createElement('tr');
