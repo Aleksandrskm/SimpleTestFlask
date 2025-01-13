@@ -1,4 +1,5 @@
 import { table } from "./table.js";
+import {completionAbonents} from "./abonents.js"
 'use strict';
 class dataTle
 {
@@ -512,6 +513,9 @@ document.addEventListener('DOMContentLoaded', function() {
   if (h2) {
     if (h2.innerText=='Редактор данных') {
       table(url);
+    }
+    if (h2.innerText=='Заполнение данных для Абонентов') {
+      completionAbonents(url);
     }
     if (h2.innerText=='Cервис монотонного времени') {
       function getDateTime() {
