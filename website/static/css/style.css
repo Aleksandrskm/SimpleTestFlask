@@ -116,7 +116,31 @@
     font-weight: bold;
     font-family: Arial, sans-serif;
 }
-
+.input_parameters_imitator {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    max-width: 900px;
+    margin: 15px 15px;
+    background-color: #f1f1f1;
+    border-radius: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+.information_request {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    /* max-width: 650px; */
+    margin: 15px 15px;
+    background-color: #f1f1f1;
+    border-radius: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    /* max-height: 800px; */
+}
 .input_parameters_az button:hover {
     background-color: #C0C0C0;
 }
@@ -461,9 +485,16 @@ img {
 }
 
 .container{
+    height: calc(76vh);
+    /* margin: 100px auto; */
+    padding: 7px;
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+    border-radius: 6px;
+    border-width: 1px;
+    font-size: calc(0.9rem);
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+    justify-content: center;
 }
 
 .hide{

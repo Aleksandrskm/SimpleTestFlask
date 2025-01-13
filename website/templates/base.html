@@ -22,6 +22,7 @@
 
     <main class="butt">
         <a href="/monotonous_time_service"><button class="btn">Cервис монотонного времени</button></a>
+        <a href="/abonents"><button class="btn">Заполнение данных для абонента</button></a>
         <!-- <a href="/pars_TLE"><button class="btn">Преобразователь TLE</button></a> -->
         <a href="/viewing_tables"><button class="btn">Редактор данных</button></a>
         <a href="/azimuth_and_elevation_angle"><button class="btn">Определение азимута и угла места</button></a>
@@ -30,6 +31,7 @@
     </main>
 
     {% endblock %}
+    <script src="{{ url_for('static', filename='js/abonents.js') }}"type="module"></script>
     <script src="{{ url_for('static', filename='js/Modal.js') }}" type="module"></script>
     <script src="{{ url_for('static', filename='js/db.js') }}" type="module"></script>
     <script src="{{ url_for('static', filename='js/table.js') }}" type="module"></script>

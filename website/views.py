@@ -30,3 +30,7 @@ def function_parse():
 @views.route('/monotonous_time_service')
 def function_mon_time():
     return render_template('monotonous_time_service.html')
+
+@views.route('/abonents')
+def function_abonents():
+    return render_template('abonents.html')
