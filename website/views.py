@@ -34,3 +34,7 @@ def function_mon_time():
 @views.route('/abonents')
 def function_abonents():
     return render_template('abonents.html')
+
+@views.route('/maps_territorial_districts')
+def function_maps():
+    return render_template('maps_territorial_districts.html')

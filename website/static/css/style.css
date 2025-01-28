@@ -128,6 +128,16 @@
     padding: 20px;
     box-sizing: border-box;
 }
+.map-container {
+    height: 100%;
+  }
+#map{
+    width: 80vw;
+    height: 60vh;
+}
+ .maps{
+    flex-grow: 1;
+ }
 .information_request {
     display: flex;
     flex-direction: column;
