@@ -1,4 +1,5 @@
 "use strict"
+
 export const map = new ol.Map({
     // Задание источника данных для карты
     layers: [
@@ -31,7 +32,7 @@ const pointLayer = new ol.layer.Vector({
 })
 
 // Установка видимости слоя
-pointLayer.setVisible(true);
+pointLayer.setVisible(false);
 
 // Создание стиля для точек
 const pointStyle = new ol.style.Style({
@@ -50,7 +51,7 @@ map.addLayer(pointLayer);
 
 // Создание точки
 const point = new ol.Feature({
-    geometry: new ol.geom.Point(ol.proj.fromLonLat([80, 0], 'EPSG:4326')), // Координаты долгота и широта
+    geometry: new ol.geom.Point(ol.proj.fromLonLat([80, 50], 'EPSG:4326')), // Координаты долгота и широта
 });
 
 // Добавление точки в слой
@@ -61,89 +62,169 @@ pointLayer.getSource().addFeature(point);
  *  
  */ 
 // Пример данных в формате GeoJSON
-const geojsonData = {
-    // Тип коллекции объектов
-    "type": "FeatureCollection",
-    
-    // Массив объектов "Feature" (каждый объект представляет собой географическую особенность)
-    "features": [
-        {
-            // Один объект типа "Feature" (географическая особенность)
-            "type": "Feature",
-            
-            // Геометрия объекта
-            "geometry": {
-                // Тип геометрии: точка
-                "type": "Point",
-                
-                // Координаты точки (долгота, широта)
-                "coordinates": [80, 0] // Долгота 80, широта 0
-            },
-            
-            // Свойства точки, которые могут быть полезны (например, имя)
-            "properties": { 
-                "name": "Точка 1" // Название этой точки
-            }
-        },
-        {
-            // Еще один объект "Feature"
-            "type": "Feature",
-            
-            // Геометрия этого объекта - точка
-            "geometry": {
-                "type": "Point",
-                
-                // Координаты второй точки (долгота, широта)
-                "coordinates": [90, 10] // Долгота 90, широта 10
-            },
-            
-            // Свойства второй точки
-            "properties": {
-                "name": "Точка 2" // Название второй точки
-            }
-        }
-    ]
-};
+
 
 // Создание источника для слоя
 // "EPSG:4326" - это проекция измеряет широту и долготу  в градусах (как на сайте)
 // "EPSG:3857" -  использует метры (как в Гугл картах)
-const geojsonSource = new ol.source.Vector({
-    features: new ol.format.GeoJSON().readFeatures(geojsonData, {
-        dataProjection: 'EPSG:4326', // Проекция данных GeoJSON  
-        featureProjection: 'EPSG:4326', // Проекция карты
-    }),
-});
+
 
 // Создание слоя с данными GeoJSON
 // Создание векторного слоя с данными из GeoJSON
-const geojsonLayer = new ol.layer.Vector({
-    // Указываем источник данных для слоя
-    source: geojsonSource, // Это объект источника данных (Vector), который содержит данные GeoJSON
+// const geojsonLayer = new ol.layer.Vector({
+//     // Указываем источник данных для слоя
+//     source: geojsonSource, // Это объект источника данных (Vector), который содержит данные GeoJSON
     
-    // Задание стиля для отображения объектов на слое
-    style: new ol.style.Style({
-        // Определение стиля для точек на слое
-        image: new ol.style.Circle({
-            // Радиус круга, который будет отображаться для каждой точки
-            radius: 5, // Радиус в пикселях
+//     // Задание стиля для отображения объектов на слое
+//     style: new ol.style.Style({
+//         // Определение стиля для точек на слое
+//         image: new ol.style.Circle({
+//             // Радиус круга, который будет отображаться для каждой точки
+//             radius: 5, // Радиус в пикселях
             
-            // Заливка круга
-            fill: new ol.style.Fill({
-                // Задаем цвет заливки круга
-                color: 'rgba(0, 0, 255, 0.8)' // Синий цвет с прозрачностью 0.8
-            }),
+//             // Заливка круга
+//             fill: new ol.style.Fill({
+//                 // Задаем цвет заливки круга
+//                 color: 'rgba(0, 0, 255, 0.8)' // Синий цвет с прозрачностью 0.8
+//             }),
             
-            // Обводка круга
+//             // Обводка круга
+//             stroke: new ol.style.Stroke({
+//                 // Задаем цвет обводки круга
+//                 color: 'rgba(255, 255, 255, 0.8)', // Белая обводка с прозрачностью 0.8
+//                 width: 2 // Ширина обводки
+//             }),
+//         }),
+//     }),
+// });
+
+let typeSelect = 'Box';
+
+let draw; // global so we can remove it later
+function addInteraction() {
+   
+    if (typeSelect !== 'None') {
+      let geometryFunction;
+      if (typeSelect === 'Square') {
+        typeSelect = 'Circle';
+        geometryFunction = ol.interaction.Draw.createRegularPolygon(4);
+      } else if (typeSelect === 'Box') {
+        typeSelect = 'Circle';
+        geometryFunction = ol.interaction.Draw.createBox();
+      } 
+      let drawSource = new ol.source.Vector();
+      
+      draw = new ol.interaction.Draw({
+        source: drawSource,
+        type: typeSelect,
+        geometryFunction: geometryFunction,
+        style: new ol.style.Style({
             stroke: new ol.style.Stroke({
-                // Задаем цвет обводки круга
-                color: 'rgba(255, 255, 255, 0.8)', // Белая обводка с прозрачностью 0.8
-                width: 2 // Ширина обводки
+                                // Задаем цвет обводки круга
+                                color: 'rgba(255, 0, 0, 0.8)', // Белая обводка с прозрачностью 0.8
+                                width: 2 // Ширина обводки
+                            }),
+        })
+      });
+      draw.on("drawend", (event) => {
+        const geometry = event.feature.getGeometry();
+        console.log({
+          type: geometry.getType(),
+          coordinates: geometry.getCoordinates(),
+        });
+        const geojsonData = {
+            // Тип коллекции объектов
+            "type": "FeatureCollection",
+            
+            // Массив объектов "Feature" (каждый объект представляет собой географическую особенность)
+            "features": [
+                {
+                    // Один объект типа "Feature" (географическая особенность)
+                    "type": "Feature",
+                    
+                    // Геометрия объекта
+                    "geometry": {
+                        // Тип геометрии: точка
+                        "type": geometry.getType(),
+                        
+                        // Координаты точки (долгота, широта)
+                        "coordinates": geometry.getCoordinates() // Долгота 80, широта 0
+                    },
+                    
+                    // Свойства точки, которые могут быть полезны (например, имя)
+                    "properties": { 
+                        "name": "Точка 1" // Название этой точки
+                    }
+                },
+                // {
+                //     "type": "Polygon",
+                //     "coordinates": [
+                //         [
+                //             // [
+                //             //     76.01151296608155,
+                //             //     -6.672207446808514
+                //             // ],
+                //             [
+                //                 110.79111990185059,
+                //                 -6.672207446808514
+                //             ],
+                //             [
+                //                 56.79111990185059,
+                //                 45.34906914893617
+                //             ],
+                //             [
+                //                 76.01151296608155,
+                //                 45.34906914893617
+                //             ],
+                //             [
+                //                 76.01151296608155,
+                //                 -6.672207446808514
+                //             ]
+                //         ]
+                //     ]
+                // }
+            ]
+        };
+        const geojsonSource = new ol.source.Vector({
+            features: new ol.format.GeoJSON().readFeatures(geojsonData, {
+                dataProjection: 'EPSG:4326', // Проекция данных GeoJSON  
+                featureProjection: 'EPSG:4326', // Проекция карты
             }),
-        }),
-    }),
-});
+        });
+      
+        const geojsonLayer = new ol.layer.Vector({
+            // Указываем источник данных для слоя
+            source: geojsonSource,
+            style: new ol.style.Style({
+                stroke: new ol.style.Stroke({
+                                    // Задаем цвет обводки круга
+                                    color: 'rgba(255, 0, 0, 0.8)', // Белая обводка с прозрачностью 0.8
+                                    width: 1 // Ширина обводки
+                                }),
+            })
+        });
+        const interaction = new ol.interaction.Modify({
+            // Мы можем передать VectorSource или список фич
+            source: geojsonSource,
+           });
+           map.addInteraction(interaction);
+           
+           
+           interaction.on('modifyend', (event) => {
+            console.log(event.features);
+           }); 
+        
+        map.addLayer(geojsonLayer);
+       });
+     
+      console.log(draw)
+      map.addInteraction(draw);
+      
+    }
+  }
+
 
 
 // Добавление слоя на карту
-map.addLayer(geojsonLayer);
+// map.addLayer(geojsonLayer);
+addInteraction();

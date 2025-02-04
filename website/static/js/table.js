@@ -235,16 +235,20 @@ export function table(url){
         buttons.innerHTML += `<button class="edit">Редактировать</button>`;
         buttons.innerHTML += `<button class="copy">Добавить с копированием</button>`;
         buttons.innerHTML += `<button class="delete">Удалить</button>`;
+        buttons.innerHTML += `<button class="maps">Показать карту</button>`;
         table.parentElement.append(buttons);
         // console.log(result.rows[0].length);
         const btnInsert=document.querySelector('.insert');
         const btnEdit=document.querySelector('.edit');
         const btnCopy=document.querySelector('.copy');
         const btnDelete=document.querySelector('.delete');
+        const btmMap=document.querySelector('.maps');
+        btmMap.setAttribute('disabled', '');
           if (!result.total_rows_count) {
             btnEdit.setAttribute('disabled', '');
             btnCopy.setAttribute('disabled', '');
             btnDelete.setAttribute('disabled', '');
+            btmMap.setAttribute('disabled', '');
           }
         const modalParent=document.querySelector('.container_content');
         const modalDelete= new Modal(modalParent,'delete',0,result.columns,tableRow,deleteRow,result,rusName);
