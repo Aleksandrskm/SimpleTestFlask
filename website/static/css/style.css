@@ -61,6 +61,17 @@
     padding: 20px;
     box-sizing: border-box;
 }
+.input_parameters_times_serv {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 550px; /* Ограничение ширины контейнера */
+    margin: 100px auto; /* Центрирование контейнера */
+    background-color: #f1f1f1;
+    border-radius: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+}
 
 .input_parameters_az input {
     margin: 7px;
@@ -88,7 +99,32 @@
     flex-direction: column;
     justify-content: center;
 }
-
+.times_loc {
+    flex: 1;
+    text-align: center;
+    /* padding: 10px; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.name_times{
+    width: 220px;
+    font-size: calc(1.0rem);
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+}
+#task-btn-time{
+    margin-bottom: 10px;
+    margin-top: 10px;
+    padding: 6px;
+    text-align: center;
+    width: 230px;
+    border-radius: 6px;
+    border-width: 2px;
+    font-size: calc(1rem);
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+}
 .row_az {
     display: flex;
     margin: 10px 10px;
@@ -133,7 +169,7 @@
   }
 #map{
     width: 80vw;
-    height: 60vh;
+    height: 80vh;
 }
  .maps{
     flex-grow: 1;
@@ -268,11 +304,12 @@
 
 /*Общие теги и главная страница - base.html*/
 header {
+    grid-template-columns: 1fr 2fr 1fr;
+    white-space: nowrap;
     background-color: #999999;
     height: 75px;
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 33rem 1fr;
 }
 
 h1 {
@@ -376,11 +413,13 @@ img {
 
 .home-ref {
     margin-right: auto;
-    margin-right: 90%;
+    /* margin-right: 90%; */
 }
 
 .ref{
     margin: 15px;
+    display: flex;
+    flex-direction: row;
 }
 
 /* Окно viewing_tables - Редактор данных*/
@@ -619,6 +658,29 @@ img {
 }
 thead th{
     min-width: 200px;
+    border: solid;
+    border-width: 1px;
+}
+#timer {
+    margin: auto;
+    color: black;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+    font-size: calc(0.4rem + 0.5vw);
+}
+#timer-loc {
+    margin: auto;
+    color: black;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+    font-size: calc(0.4rem + 0.5vw);
+}
+#timer-start {
+    margin: auto;
+    color: black;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+    font-size: calc(0.5rem + 0.5vw);
 }
 tr td{
     min-width: 200px;
@@ -674,6 +736,15 @@ tr td{
     cursor: pointer; /* Изменение вида курсора */
 }
 .delete{
+    font-size: 20px; /* Устанавливаем размер текста кнопки */
+    margin: 10px;
+    width: 170px;
+    height: 35px;
+    border-radius: 7px;
+    text-align: center;
+    cursor: pointer; /* Изменение вида курсора */
+}
+.maps{
     font-size: 20px; /* Устанавливаем размер текста кнопки */
     margin: 10px;
     width: 170px;
