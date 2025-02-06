@@ -222,9 +222,12 @@ function addInteraction() {
       
     }
   }
-
+document.getElementById('button-collapse-right').addEventListener('click',(e)=>{
+    document.querySelector('.right-panel').classList.toggle('collapsed');
+    document.querySelector('.right-panel .information_request').classList.toggle('hidden');
+})
 
 
 // Добавление слоя на карту
 // map.addLayer(geojsonLayer);
-addInteraction();
+// addInteraction();

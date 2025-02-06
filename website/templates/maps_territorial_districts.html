@@ -5,10 +5,29 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.3.1/ol.css">
     <h2>Редактор территориальных районов</h2>
         <div class="container">
-            <div class="map-container" id="map"></div>
             <div class="information_request">
-                <span class="csus">Панель управления </span>
+                <span class="csus">Территориальные районы </span>
             </div>
+            <div class="map-container" id="map"></div>
+            <div class="right-panel">
+                <button id="button-collapse-right"></button>
+                <div class="information_request">
+                    
+                   
+                    <div class="csus">Панель управления </div>
+                        
+                       
+                   
+                    <select class="select" name="districts" id="type-district">
+                        <option value="0">Выберите тип территориального района</option>
+                        <option value="1"> 1</option>
+                        <option value="2"> 2</option>
+                      </select>
+                    <button id="add-district">Добавить район </button>
+                        <button id="daelete-district">Удалить район</button>
+                </div>
+            </div>
+          
         </div>
         
       
