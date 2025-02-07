@@ -15,13 +15,28 @@
                     
                    
                     <div class="csus">Панель управления </div>
-                        
+                    <br>
+                    <div class="data-district">
+            
+                        <span>Широта левого нижнего угла, градусы:</span>
+                        <input id="lat_ln" type="text" value="">
+                        <br>
+                        <span>Долгота левого нижнего,угла градусы:</span>
+                        <input id="lon_ln" type="text" value=""> 
+                        <br>
+                        <span>Широта правого верхнего угла, градусы:</span>
+                        <input id="lat_pv" type="text" value="">
+                        <br>
+                        <span>Долгота правого верхнего,угла градусы:</span>
+                        <input id="lon_pv" type="text" value=""> 
+                    </div>   
                        
-                   
+                   <div>Выберите тип территориального района:</div>
                     <select class="select" name="districts" id="type-district">
-                        <option value="0">Выберите тип территориального района</option>
-                        <option value="1"> 1</option>
-                        <option value="2"> 2</option>
+                        <option value="0">Стандартный район</option>
+                        <option value="1">Большой район </option>
+                        <option value="2"> Малый район </option>
+                        <option value="3"> Запрещенный район </option>
                       </select>
                     <button id="add-district">Добавить район </button>
                         <button id="daelete-district">Удалить район</button>
@@ -30,7 +45,11 @@
           
         </div>
         
-      
+        
+        
+       
+        
+        
         
         <script src="{{ url_for('static', filename='js/maps.js') }}"type="module"></script>
         
