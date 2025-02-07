@@ -242,7 +242,7 @@
     margin-top: 10px;
     padding: 6px;
     text-align: center;
-    width: 364px;
+    width: 348px;
     border-radius: 6px;
     border-width: 2px;
     font-size: calc(1rem);
@@ -268,7 +268,21 @@ font-family: Arial, sans-serif;
 }
 .csus{
     text-align: center;
-    margin-bottom: 55vh;
+   
+}
+.data-district{
+    margin-bottom: 21vh;
+}
+.data-district input{
+    margin: 7px;
+    padding: 7px;
+    width: 338px;
+    border-radius: 6px;
+    border-width: 1px;
+    font-size: calc(0.9rem);
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+
 }
 .input_parameters_az button:hover {
     background-color: #C0C0C0;
