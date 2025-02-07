@@ -250,6 +250,9 @@
     font-family: Arial, sans-serif;
 
 }
+.data-district span{
+    padding: 7px;
+}
 .information_request button:hover{
     background-color: #C0C0C0;
 }
@@ -259,7 +262,7 @@ margin-top: 10px;
 margin-right: 20px;
 padding: 6px;
 /* text-align: center; */
-/* width: 210px; */
+width: 348px;
 border-radius: 6px;
 border-width: 2px;
 font-size: calc(1rem);
@@ -271,12 +274,12 @@ font-family: Arial, sans-serif;
    
 }
 .data-district{
-    margin-bottom: 21vh;
+    margin-bottom: auto;
 }
 .data-district input{
     margin: 7px;
     padding: 7px;
-    width: 338px;
+    width: 332px;
     border-radius: 6px;
     border-width: 1px;
     font-size: calc(0.9rem);
