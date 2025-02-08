@@ -5,13 +5,15 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.3.1/ol.css">
     <h2>Редактор территориальных районов</h2>
         <div class="container">
+            <div class="left-panel">
             <div class="information_request">
                 <span class="csus">Территориальные районы </span>
             </div>
+        </div>
             <div class="map-container" id="map"></div>
             <div class="right-panel">
                 <button id="button-collapse-right"></button>
-                <div class="information_request">
+                <div class="information_request left">
                     
                    
                     <div class="csus">Панель управления </div>
@@ -52,6 +54,7 @@
         
         
         <script src="{{ url_for('static', filename='js/maps.js') }}"type="module"></script>
+        
         
 
        
