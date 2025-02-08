@@ -1,5 +1,7 @@
 "use strict"
 
+import {getRowsTable} from './db.js';
+
 export const map = new ol.Map({
     // Задание источника данных для карты
     layers: [
@@ -227,6 +229,100 @@ document.getElementById('button-collapse-right').addEventListener('click',(e)=>{
     document.querySelector('.right-panel .information_request').classList.toggle('hidden');
 })
 
+getRowsTable('ZN',0,99999).then(zone=>{
+    const leftContent=document.querySelector('.left-panel div.information_request');
+    
+   for (let i = 0; i < zone.length; i++) {
+    const elZN=document.createElement('div');
+    elZN.classList.add('zn-element')
+    elZN.innerHTML+=`<br>`
+    for(const key in zone[i])
+    {
+        if (zone[i][key]!=null) {
+             elZN.innerHTML+=`<span class="${key}">${key}:${(zone[i][key])}</span>`
+        }
+       
+    }
+    elZN.innerHTML+=`<br>`
+    leftContent.append(elZN)
+    
+   }
+   document.querySelectorAll('.zn-element').forEach((zn) => {
+    zn.addEventListener('click',(e)=>{
+       const latLN=zn.children[4].innerHTML.substring(zn.children[4].innerHTML.indexOf(':')+1);
+       const lonLN=zn.children[5].innerHTML.substring(zn.children[5].innerHTML.indexOf(':')+1);
+       const latPV=zn.children[6].innerHTML.substring(zn.children[6].innerHTML.indexOf(':')+1);
+       const lonPV=zn.children[7].innerHTML.substring(zn.children[7].innerHTML.indexOf(':')+1);
+        document.getElementById('lat_ln').value=latLN;
+        document.getElementById('lon_ln').value=lonLN;
+        document.getElementById('lat_pv').value=latPV;
+        document.getElementById('lon_pv').value=lonPV;
+        const geojsonData = {
+            // Тип коллекции объектов
+            "type": "FeatureCollection",
+            
+            // Массив объектов "Feature" (каждый объект представляет собой географическую особенность)
+            "features": [
+               
+                {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            // [
+                            //     76.01151296608155,
+                            //     -6.672207446808514
+                            // ],
+                            [   
+                                +lonPV,
+                                +latLN
+                                
+                            ],
+                            [   +lonPV,
+                                +latPV
+                                
+                            ],
+                            [
+                                +lonLN,
+                                +latPV
+                                
+                            ],
+                            [
+                                +lonLN,
+                                +latLN
+                                
+                            ]
+                        ]   
+                    ]
+                }
+            ]
+        };
+        const geojsonSource = new ol.source.Vector({
+            features: new ol.format.GeoJSON().readFeatures(geojsonData, {
+                dataProjection: 'EPSG:4326', // Проекция данных GeoJSON  
+                featureProjection: 'EPSG:4326', // Проекция карты
+            }),
+        });
+      
+        const geojsonLayer = new ol.layer.Vector({
+            // Указываем источник данных для слоя
+            source: geojsonSource,
+            style: new ol.style.Style({
+                stroke: new ol.style.Stroke({
+                                    // Задаем цвет обводки круга
+                                    color: 'rgba(0, 0,255 , 0.8)', // Белая обводка с прозрачностью 0.8
+                                    width: 1 // Ширина обводки
+                                }),
+            })
+        });
+        console.log(geojsonLayer)
+         map.addLayer(geojsonLayer);
+        // console.log(zn.children[4],zn.children[5],zn.children[6],zn.children[7]);
+    })
+   
+  });
+    // leftContent.innerHTML+=`${zone[0].SHIROTA_LN}`
+    // console.log(leftContent,zone[0])
+});
 
 // Добавление слоя на карту
 // map.addLayer(geojsonLayer);
