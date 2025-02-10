@@ -277,8 +277,13 @@ font-family: Arial, sans-serif;
     margin-bottom: auto;
 }
 .zn-element{
-    display: flex;
-    flex-direction: column;
+    /* display: flex;
+    flex-direction: column; */
+}
+.district-Table{
+    display: flex
+    ;
+        flex-wrap: wrap;
 }
 .data-district input{
     margin: 7px;
@@ -479,7 +484,7 @@ table table{
     min-width: 60px;
 } */
 img {
-    margin-right: 90%;
+    /* margin-right: 90%; */
     height: 40px;
     width: 44px;
 }
@@ -760,8 +765,13 @@ img {
     overflow: hidden;
     background-color: rgba(0, 0, 0, .5);
 }
+.bar-btn button{
+    background-color: var(--background-color);
+    cursor: pointer;
+    border: none;
+}
 thead th{
-    min-width: 200px;
+    min-width: 208px;
     border: solid;
     border-width: 1px;
 }

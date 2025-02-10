@@ -4,10 +4,25 @@
 <script src="https://cdn.jsdelivr.net/npm/ol@v10.3.1/dist/ol.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.3.1/ol.css">
     <h2>Редактор территориальных районов</h2>
+    <!-- <div class="bar-btn"><button id="clearMapButton" alt="Очистить карту" title="Очистить карту">
+        <img src="./../static/img/clear_map.svg" alt="Очистить карту" title="Очистить карту">
+        Очистить карту
+      </button></div> -->
+    
         <div class="container">
             <div class="left-panel">
             <div class="information_request">
                 <span class="csus">Территориальные районы </span>
+                <div class="table-scroll">
+                    <table class="district-Table">
+                        <thead>
+                           
+                        </thead>
+                        <tbody>
+                           
+                        </tbody>
+                    </table>
+                    </div>
             </div>
         </div>
             <div class="map-container" id="map"></div>
@@ -32,7 +47,7 @@
                         <span>Долгота правого верхнего,угла градусы:</span>
                         <input id="lon_pv" type="text" value=""> 
                     </div>   
-                       
+                    <button id="view-all-district">Отобразить все районы</button>   
                    <div>Выберите тип территориального района:</div>
                     <select class="select" name="districts" id="type-district">
                         <option value="0">Стандартный район</option>

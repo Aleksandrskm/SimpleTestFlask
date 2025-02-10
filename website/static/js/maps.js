@@ -1,6 +1,6 @@
 "use strict"
 
-import {getRowsTable} from './db.js';
+import {postJSON,getRowsTable} from './db.js';
 
 export const map = new ol.Map({
     // Задание источника данных для карты
@@ -100,8 +100,80 @@ pointLayer.getSource().addFeature(point);
 //     }),
 // });
 
+const geojsonLayers=[]
 let typeSelect = 'Box';
-
+function clearDistrict(geojsonLayers) {
+    geojsonLayers.forEach(geojsonLayer=>{
+    map.removeLayer(geojsonLayer);
+   })
+}
+function drawDistrict(latLN,lonLN,latPV,lonPV,color) {
+    const geojsonData = {
+        // Тип коллекции объектов
+        "type": "FeatureCollection",
+        
+        // Массив объектов "Feature" (каждый объект представляет собой географическую особенность)
+        "features": [
+           
+            {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        // [
+                        //     76.01151296608155,
+                        //     -6.672207446808514
+                        // ],
+                        [   
+                            +lonPV,
+                            +latLN
+                            
+                        ],
+                        [   +lonPV,
+                            +latPV
+                            
+                        ],
+                        [
+                            +lonLN,
+                            +latPV
+                            
+                        ],
+                        [
+                            +lonLN,
+                            +latLN
+                            
+                        ]
+                    ]   
+                ]
+            }
+        ]
+    };
+    const geojsonSource = new ol.source.Vector({
+        features: new ol.format.GeoJSON().readFeatures(geojsonData, {
+            dataProjection: 'EPSG:4326', // Проекция данных GeoJSON  
+            featureProjection: 'EPSG:4326', // Проекция карты
+        }),
+    });
+  
+    const geojsonLayer = new ol.layer.Vector({
+        // Указываем источник данных для слоя
+        source: geojsonSource,
+        style: new ol.style.Style({
+            stroke: new ol.style.Stroke({
+                                // Задаем цвет обводки круга
+                                color: color, // Белая обводка с прозрачностью 0.8
+                                width: 1 // Ширина обводки
+                            }),
+            // fill: new ol.style.Fill({ color: `${color}` })
+            fill: new ol.style.Fill({
+                //                 
+                                color: color // Синий цвет с прозрачностью 0.8
+                            }),
+        })
+    });
+    // console.log(geojsonLayer)
+     map.addLayer(geojsonLayer);
+     return geojsonLayer;
+}
 let draw; // global so we can remove it later
 function addInteraction() {
    
@@ -231,95 +303,92 @@ document.getElementById('button-collapse-right').addEventListener('click',(e)=>{
 
 getRowsTable('ZN',0,99999).then(zone=>{
     const leftContent=document.querySelector('.left-panel div.information_request');
-    
-   for (let i = 0; i < zone.length; i++) {
-    const elZN=document.createElement('div');
-    elZN.classList.add('zn-element')
-    elZN.innerHTML+=`<br>`
-    for(const key in zone[i])
-    {
-        if (zone[i][key]!=null) {
-             elZN.innerHTML+=`<span class="${key}">${key}:${(zone[i][key])}</span>`
-        }
-       
-    }
-    elZN.innerHTML+=`<br>`
-    leftContent.append(elZN)
-    
-   }
-   document.querySelectorAll('.zn-element').forEach((zn) => {
-    zn.addEventListener('click',(e)=>{
-       const latLN=zn.children[4].innerHTML.substring(zn.children[4].innerHTML.indexOf(':')+1);
-       const lonLN=zn.children[5].innerHTML.substring(zn.children[5].innerHTML.indexOf(':')+1);
-       const latPV=zn.children[6].innerHTML.substring(zn.children[6].innerHTML.indexOf(':')+1);
-       const lonPV=zn.children[7].innerHTML.substring(zn.children[7].innerHTML.indexOf(':')+1);
-        document.getElementById('lat_ln').value=latLN;
-        document.getElementById('lon_ln').value=lonLN;
-        document.getElementById('lat_pv').value=latPV;
-        document.getElementById('lon_pv').value=lonPV;
-        const geojsonData = {
-            // Тип коллекции объектов
-            "type": "FeatureCollection",
-            
-            // Массив объектов "Feature" (каждый объект представляет собой географическую особенность)
-            "features": [
-               
-                {
-                    "type": "Polygon",
-                    "coordinates": [
-                        [
-                            // [
-                            //     76.01151296608155,
-                            //     -6.672207446808514
-                            // ],
-                            [   
-                                +lonPV,
-                                +latLN
-                                
-                            ],
-                            [   +lonPV,
-                                +latPV
-                                
-                            ],
-                            [
-                                +lonLN,
-                                +latPV
-                                
-                            ],
-                            [
-                                +lonLN,
-                                +latLN
-                                
-                            ]
-                        ]   
-                    ]
-                }
-            ]
-        };
-        const geojsonSource = new ol.source.Vector({
-            features: new ol.format.GeoJSON().readFeatures(geojsonData, {
-                dataProjection: 'EPSG:4326', // Проекция данных GeoJSON  
-                featureProjection: 'EPSG:4326', // Проекция карты
-            }),
-        });
-      
-        const geojsonLayer = new ol.layer.Vector({
-            // Указываем источник данных для слоя
-            source: geojsonSource,
-            style: new ol.style.Style({
-                stroke: new ol.style.Stroke({
-                                    // Задаем цвет обводки круга
-                                    color: 'rgba(0, 0,255 , 0.8)', // Белая обводка с прозрачностью 0.8
-                                    width: 1 // Ширина обводки
-                                }),
-            })
-        });
-        console.log(geojsonLayer)
-         map.addLayer(geojsonLayer);
-        // console.log(zn.children[4],zn.children[5],zn.children[6],zn.children[7]);
-    })
+    const data = { name: 'ZN' };
+    const rusName={};
    
-  });
+    postJSON(data).then(tableInfo=>{
+        const tr = document.createElement('tr');
+        for( let i=0;i<tableInfo.columns.length;i++){
+           
+            // console.log(tableInfo.columns[i].column_description)
+            rusName[tableInfo.columns[i].column_name]=tableInfo.columns[i].column_description;
+            const th=document.createElement('th');
+            th.innerHTML+=tableInfo.columns[i].column_description;
+           
+            tr.append(th);
+           
+           
+        }
+        document.querySelector('.district-Table thead').append(tr);
+        console.log(Object.keys(rusName));
+        for (let i = 0; i < zone.length; i++) {
+            const elZN=document.createElement('tr');
+            elZN.classList.add('zn-element');
+            // elZN.innerHTML+=`<br>`;
+        const keysRusName=(Object.keys(rusName));
+            for(const key in zone[i])
+            {
+                // console.log(rusName)
+                for(const name in rusName)
+                { 
+                    // console.log(name,key)
+                    if (key==name) {
+                       
+                    elZN.innerHTML+=`<td>${(zone[i][key])}</td>`
+                }
+    
+                }
+               
+           
+            }
+        // elZN.innerHTML+=`<br>`
+        document.querySelector('.district-Table tbody').append(elZN)
+        
+       }
+       const allDistricts=document.querySelectorAll('.zn-element');
+       allDistricts.forEach((zn) => {
+        zn.addEventListener('click',(e)=>{
+            const trs=document.querySelectorAll('table tr');
+            trs.forEach((tr)=>{
+                if (tr==e.target.parentElement) {
+                  tr.style='background-color: #B5B8B1';
+                }
+                else{
+                  tr.style='';
+                }
+              })
+           const latLN=zn.children[4].innerHTML;
+           const lonLN=zn.children[5].innerHTML;
+           const latPV=zn.children[6].innerHTML;
+           const lonPV=zn.children[7].innerHTML;
+            document.getElementById('lat_ln').value=latLN;
+            document.getElementById('lon_ln').value=lonLN;
+            document.getElementById('lat_pv').value=latPV;
+            document.getElementById('lon_pv').value=lonPV;
+            clearDistrict(geojsonLayers);
+            geojsonLayers.push(drawDistrict(latLN,lonLN,latPV,lonPV,' rgba(0, 0, 255, 0.2)'));
+            // console.log(zn.children[4],zn.children[5],zn.children[6],zn.children[7]);
+        })
+       
+      });
+      document.getElementById('view-all-district').addEventListener('click',()=>{
+        console.log(geojsonLayers)
+        clearDistrict(geojsonLayers);
+        allDistricts.forEach(zn=>{
+            const latLN=zn.children[4].innerHTML;
+            const lonLN=zn.children[5].innerHTML;
+            const latPV=zn.children[6].innerHTML;
+            const lonPV=zn.children[7].innerHTML;
+           
+           
+            // map.removeLayer(geojsonLayer);
+            geojsonLayers.push(drawDistrict(latLN,lonLN,latPV,lonPV,'rgba(129, 129, 170, 0.6)')) ;
+        })
+      })
+
+    });
+   
+  
     // leftContent.innerHTML+=`${zone[0].SHIROTA_LN}`
     // console.log(leftContent,zone[0])
 });
