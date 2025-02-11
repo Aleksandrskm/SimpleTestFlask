@@ -422,6 +422,7 @@ font-family: Arial, sans-serif;
 
 /* Окно viewing_tables - Редактор данных*/
 .row_vi {
+    /* height: calc(100vh - var(--size-header-height) - var(--size-header-height)- var(--size-header-height)- var(--size-header-height) - var(--size-header-height)); */
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -432,7 +433,9 @@ font-family: Arial, sans-serif;
     flex-direction: column;
     justify-content: flex-start;
     line-height: 1.7;
+    
     width: 19%; /* Ограничение ширины контейнера */
+    /* max-height: calc(100vh - var(--size-header-height) -  var(--size-footer-height)-  var(--size-footer-height)); */
     height: 75vh;
     margin: 10px auto; /* Центрирование контейнера */
     background-color: #f1f1f1;
@@ -447,7 +450,7 @@ font-family: Arial, sans-serif;
     justify-content: flex-start;
     line-height: 1.5;
     width: 77%; /* Ограничение ширины контейнера */
-    /* height: 75vh; */
+    /* height: 60vh; */
     margin: 10px auto; /* Центрирование контейнера */
     background-color: #f1f1f1;
     border-radius: 20px;
@@ -520,6 +523,7 @@ h3 {
 }
 
 body {
+    height: 100vh;
     margin: 0;
     padding: 0;
 }
@@ -535,6 +539,7 @@ tr:hover{
     background-color: #C0C0C0;
 }
 .mainTable{
+    /* height: calc(100vh - var(--size-header-height) - var(--size-header-height)- var(--size-header-height)); */
     overflow-wrap: anywhere; 
 }
 table table{
@@ -573,12 +578,13 @@ img {
     background-color: #C0C0C0;
 }
 
-.butt {
+.butt { 
+    height: calc(100vh - var(--size-header-height) - var(--size-header-height));
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 80vh;
+    /* height: 80vh; */
     margin: 0;
 }
 
@@ -681,7 +687,6 @@ img {
 }
 
 .container__nav{
-    color: #000000;
     line-height: 1;
     font-size: 18;
     font-weight: normal;
@@ -1058,8 +1063,11 @@ text-transform:uppercase}
 .table-wrapper {
     position:relative;
   }
+.tables_vi{
+     height: calc(100vh - var(--size-header-height) -  var(--size-footer-height)-  var(--size-footer-height)-  var(--size-footer-height)-  var(--size-footer-height));
+}
   .table-scroll {
-    
+    height: calc(50vh - var(--size-header-height) -  var(--size-footer-height));
     height:50vh;
   overflow:auto;  
   margin-top:20px;
