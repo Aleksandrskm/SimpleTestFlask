@@ -810,6 +810,7 @@ tr td{
     text-transform:uppercase
 }
 .copy__row{
+    font-weight: 100;
     color: #000000;
     /* line-height: 1; */
     font-size: calc(0.7rem + 0.8vw);
@@ -840,6 +841,9 @@ tr td{
     flex-direction: row;
 }
 .csus{
+    font-size: calc(1.2rem);
+    font-weight: bold;
+    font-family: Arial, sans-serif;
     min-width: 200px;
 }
 .edit{
@@ -850,6 +854,9 @@ tr td{
     border-radius: 7px;
     text-align: center;
     cursor: pointer; /* Изменение вида курсора */
+}
+.selected{
+    background-color: #B5B8B1
 }
 .delete{
     font-size: 20px; /* Устанавливаем размер текста кнопки */
