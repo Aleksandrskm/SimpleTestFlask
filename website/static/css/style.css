@@ -443,7 +443,23 @@ h2 {
     padding-bottom: 15px; /* Отступ снизу */
     border-bottom: 6px solid #999999; /* Темная полоса снизу */
 }
-
+.wrapper-top{
+    display: flex;
+    flex: 1 0 100%;
+    color: #000000;
+    line-height: 1;
+    font-size: calc(0.9rem + 1vw);
+    font-weight: normal;
+    font-family: Arial, sans-serif;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    padding-bottom: 15px;
+    border-bottom: 6px solid #999999;
+    align-items: center;
+    justify-content: center;
+    
+}
 h3 {
     color: #000000;
     line-height: 1;
@@ -808,6 +824,35 @@ tr td{
     text-align:center;
     font-size:22px;
     text-transform:uppercase
+}
+.wrapper-top button{
+    outline: none;
+    min-width: 185px;
+    margin-right: 10px;
+    background-color: var(--background-color);
+    cursor: pointer;
+    border: none;
+}
+.wrapper-top div{
+    width: 100%;
+    margin-left: 150px;
+}
+.clear-map {
+    cursor: pointer;
+    height: 45px;
+    /* border: #000000 1px solid; */
+    width: 185px;
+    display: flex;
+    align-items: center;
+    font-size: calc(0.9rem);
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+    /* font-weight: var(--font-weight-normal); */
+}
+.clear-map:hover{
+    background-color: #C0C0C0;
+    border:solid 1px #C0C0C0;
+    border-radius:5px;
 }
 .copy__row{
     font-weight: 100;

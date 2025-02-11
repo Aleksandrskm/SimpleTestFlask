@@ -385,7 +385,10 @@ getRowsTable('ZN',0,99999).then(zone=>{
        
       });
       document.getElementById('view-all-district').addEventListener('click',()=>{
-        document.querySelector('.selected').classList.remove('selected');
+        if ( document.querySelector('.selected')) {
+            document.querySelector('.selected').classList.remove('selected');
+        }
+        
         console.log(geojsonLayersAll)
         clearDistrict(geojsonLayers);
         clearDistrict(geojsonLayersAll);
@@ -442,6 +445,13 @@ getRowsTable('ZN',0,99999).then(zone=>{
             modal.remove(); 
           });  
         };
+      })
+      document.getElementById('clearMapButton').addEventListener('click',()=>{
+        if ( document.querySelector('.selected')) {
+            document.querySelector('.selected').classList.remove('selected');
+        }
+        clearDistrict(geojsonLayers);
+        clearDistrict(geojsonLayersAll);
       })
 
     });
