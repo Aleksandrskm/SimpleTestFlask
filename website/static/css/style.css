@@ -422,6 +422,7 @@ font-family: Arial, sans-serif;
 
 /* Окно viewing_tables - Редактор данных*/
 .row_vi {
+    height: calc(100vh - 75px - 95px);
     /* height: calc(100vh - var(--size-header-height) - var(--size-header-height)- var(--size-header-height)- var(--size-header-height) - var(--size-header-height)); */
     display: flex;
     flex-direction: row;
@@ -436,7 +437,7 @@ font-family: Arial, sans-serif;
     
     width: 19%; /* Ограничение ширины контейнера */
     /* max-height: calc(100vh - var(--size-header-height) -  var(--size-footer-height)-  var(--size-footer-height)); */
-    height: 75vh;
+    /* height: 75vh; */
     margin: 10px auto; /* Центрирование контейнера */
     background-color: #f1f1f1;
     border-radius: 20px;
@@ -733,10 +734,12 @@ img {
 }
 
 .table-buttons{
-    /* display: flex; */
+    display: flex;
     padding-top: 20px;
 }
-
+.table-buttons button{
+    min-height: 55px;
+}
 .table-row.selected {
     background-color: #f0f0f0;
 }
@@ -1067,16 +1070,22 @@ text-transform:uppercase}
      height: calc(100vh - var(--size-header-height) -  var(--size-footer-height)-  var(--size-footer-height)-  var(--size-footer-height)-  var(--size-footer-height));
 }
   .table-scroll {
-    height: calc(50vh - var(--size-header-height) -  var(--size-footer-height));
-    height:50vh;
+    height: calc(100% - 90px);
+    /* height: calc(50vh - var(--size-header-height) - var(--size-footer-height)); */
+    /* height:50vh; */
   overflow:auto;  
   margin-top:20px;
+  }
+  .table-wrapper{
+    height: 75%;
   }
   .table-wrapper table {
     width:100%;
   
   }
- 
+ .container_content{
+    height: 100%;
+ }
   .table-wrapper table thead th .text {
     position:absolute;   
     top:-20px;
