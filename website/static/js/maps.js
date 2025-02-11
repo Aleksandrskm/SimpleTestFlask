@@ -100,13 +100,15 @@ pointLayer.getSource().addFeature(point);
 //     }),
 // });
 
-const geojsonLayersAll=[];
+let geojsonLayersAll=[];
 const geojsonLayers=[];
 let typeSelect = 'Box';
-function clearDistrict(geojsonLayersAll) {
-    geojsonLayersAll.forEach(geojsonLayer=>{
+function clearDistrict(geojsonLayers) {
+    geojsonLayers.forEach(geojsonLayer=>{
     map.removeLayer(geojsonLayer);
+    
    })
+
 }
 function drawDistrict(latLN,lonLN,latPV,lonPV,color) {
     const geojsonData = {
@@ -392,6 +394,7 @@ getRowsTable('ZN',0,99999).then(zone=>{
         console.log(geojsonLayersAll)
         clearDistrict(geojsonLayers);
         clearDistrict(geojsonLayersAll);
+        geojsonLayersAll=[];
         allDistricts.forEach(zn=>{
             const latLN=zn.children[3].innerHTML;
             const lonLN=zn.children[4].innerHTML;
@@ -452,6 +455,7 @@ getRowsTable('ZN',0,99999).then(zone=>{
         }
         clearDistrict(geojsonLayers);
         clearDistrict(geojsonLayersAll);
+        geojsonLayersAll=[];
       })
 
     });
