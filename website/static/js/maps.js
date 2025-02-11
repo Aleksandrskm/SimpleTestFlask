@@ -108,6 +108,9 @@ function clearDistrict(geojsonLayers) {
     map.removeLayer(geojsonLayer);
     
    })
+  
+   
+   
 
 }
 function drawDistrict(latLN,lonLN,latPV,lonPV,color) {
@@ -456,6 +459,11 @@ getRowsTable('ZN',0,99999).then(zone=>{
         clearDistrict(geojsonLayers);
         clearDistrict(geojsonLayersAll);
         geojsonLayersAll=[];
+        document.getElementById('name_district').value='';
+        document.getElementById('lat_ln').value='';
+        document.getElementById('lon_ln').value='';
+        document.getElementById('lat_pv').value='';
+        document.getElementById('lon_pv').value='';
       })
 
     });
