@@ -1,4 +1,50 @@
-
+:root {
+    --text-color: #000000; /* Цвет текст */
+    --background-color: #ffffff; /* Цвет фона */
+    --background-top-panel-color: #ffffff; /* Цвет шапки */
+    --disabled-color: #5c5c5c;
+  
+    --text-color-level-2: #000000; /* Цвет текста второго уровня */
+    --background-color-level-2: #e6e3e3; /* Цвет фона */
+  
+    --button-background-color: #ada5a5; /* Цвет кнопок */
+  
+    --highlight-text-color: #0060df; /*Цвет важного текста */
+  
+    --hover-background-color: #cac5c5; /* Цвет при наведении */
+    --hover-text-color: #ffffff; /* Цвет  текст при наведении */
+  
+    --selected-background-color: #434141; /* Цвет выбранного элемента*/
+    --selected-text-color: #ffffff; /* Цвет текста при выборе*/
+  
+    --font-size-h1: 24px; /* Размер шрифта заголовка */
+    --font-size-h2: 18px; /* Размер шрифта заголовка*/
+    --font-size-h3: 16px; /* Размер шрифта заголовка*/
+    --font-size-main-text: 16px; /* размер шрифта основного текста */
+    --font-size-sub-text: 14px; /* размер шрифта основного текста */
+    --font-family-main-text: "Avenir Next", "Helvetica Neue", "Helvetica"; /* шрифт  */
+    --font-family-sub-text: "Cousine", monospace; /* шрифт  */
+    --font-family-left-menu-text: "Arial", sans-serif;
+  
+    --font-weight-super-light: 400; /* Низкий вес текста */
+    --font-weight-light: 500; /* Легкий вес текста */
+    --font-weight-normal: 700; /* Нормальный вес текста */
+    --font-weight-medium: 800; /* Средний вес текста */
+    --font-weight-bold: 1000; /* Жирный вес текста */
+  
+    --z-index-up: 1000; /* По умолчанию если надо поверх всего */
+    --z-index-lowe_up: 999; /* Ниже чем максимальный, но выше всего остального */
+    --z-index-max: 99999; /* 'Экстренное, если надо что-то типа принять куки выводить выше все.' */
+  
+    /* Цвет фона всплывающего окна */
+    --background-color-popup: rgba(255, 255, 255, 0.8);
+    --text-popup: #000000; /* Цвет текста всплывающего окна */
+  
+    --size-header-height: 75px;
+    --size-header-level-2-height: 20px;
+    --size-top-panel-height: 66px;
+    --size-footer-height: 50px;
+  }
 /* Окно get_coordinates - Нахождение координат через API*/
 .input_parameters {
     display: flex;
@@ -169,7 +215,7 @@
   }
 #map{
     width: 80vw;
-    height: 80vh;
+    /* height: 80vh; */
 }
  .maps{
     flex-grow: 1;
@@ -659,7 +705,9 @@ img {
 }
 
 .container{
-    height: calc(79vh);
+    height: calc(100vh - var(--size-header-height) - var(--size-top-panel-height) - var(--size-footer-height) - var(--size-header-level-2-height));
+
+    /* height: calc(79vh); */
     /* margin: 100px auto; */
     padding: 7px;
     display: flex;
