@@ -165,7 +165,7 @@ export function table(url){
         }
       });
         }
-        if (result.columns_count>20) {
+        if (result.total_rows_count>20) {
           getRowsTable(tableName,20,result.total_rows_count).then(response=>{
           response.forEach(row=>{
             // console.log(row)
