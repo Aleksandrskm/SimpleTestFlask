@@ -434,8 +434,8 @@ font-family: Arial, sans-serif;
     flex-direction: column;
     justify-content: flex-start;
     line-height: 1.7;
-    
-    width: 19%; /* Ограничение ширины контейнера */
+    min-width: 100px;
+    width: 25%; /* Ограничение ширины контейнера */
     /* max-height: calc(100vh - var(--size-header-height) -  var(--size-footer-height)-  var(--size-footer-height)); */
     /* height: 75vh; */
     margin: 10px auto; /* Центрирование контейнера */
@@ -450,7 +450,7 @@ font-family: Arial, sans-serif;
     flex-direction: column;
     justify-content: flex-start;
     line-height: 1.5;
-    width: 77%; /* Ограничение ширины контейнера */
+    width: 73%; /* Ограничение ширины контейнера */
     /* height: 60vh; */
     margin: 10px auto; /* Центрирование контейнера */
     background-color: #f1f1f1;
@@ -734,11 +734,16 @@ img {
 }
 
 .table-buttons{
-    display: flex;
-    padding-top: 20px;
+    display: flex
+    ;
+        padding-top: 20px;
+        overflow: auto;
 }
 .table-buttons button{
-    min-height: 55px;
+    font-size: 2vh;
+    /* max-height: 55px; */
+    min-width: 230px;
+    padding-right: 10px;
 }
 .table-row.selected {
     background-color: #f0f0f0;
@@ -990,7 +995,7 @@ tr td{
     font-size: 20px;
     margin: 10px;
     width: 300px;
-    height: 35px;
+    /* height: 35px; */
     border-radius: 7px;
     text-align: center;
     cursor: pointer; /* Изменение вида курсора */
