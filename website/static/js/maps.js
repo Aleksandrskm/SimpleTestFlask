@@ -170,10 +170,10 @@ function drawDistrict(latLN,lonLN,latPV,lonPV,color) {
                                 width: 1 // Ширина обводки
                             }),
             // fill: new ol.style.Fill({ color: `${color}` })
-            fill: new ol.style.Fill({
-                //                 
-                                color: color // Синий цвет с прозрачностью 0.8
-                            }),
+            // fill: new ol.style.Fill({
+            //     //                 
+            //                     color: color // Синий цвет с прозрачностью 0.8
+            //                 }),
         })
     });
     // console.log(geojsonLayer)
@@ -384,7 +384,7 @@ function createZNTable(){
                 document.getElementById('lat_pv').value=latPV;
                 document.getElementById('lon_pv').value=lonPV;
                 clearDistrict(geojsonLayers);
-                geojsonLayers.push(drawDistrict(latLN,lonLN,latPV,lonPV,'rgba(0, 0, 255, 0.3)'));
+                geojsonLayers.push(drawDistrict(latLN,lonLN,latPV,lonPV,'rgba(0, 0, 255, 1)'));
                 // console.log(zn.children[4],zn.children[5],zn.children[6],zn.children[7]);
             })
            
@@ -405,7 +405,7 @@ function createZNTable(){
                 const lonPV=zn.children[6].innerHTML;
                
                 // map.removeLayer(geojsonLayer);
-                geojsonLayersAll.push(drawDistrict(latLN,lonLN,latPV,lonPV,'rgba(129, 129, 170, 0.3)')) ;
+                geojsonLayersAll.push(drawDistrict(latLN,lonLN,latPV,lonPV,'rgba(132, 132, 141, 0.7)')) ;
             })
           })
          
@@ -563,7 +563,9 @@ document.getElementById('daelete-district').addEventListener('click',()=>{
             modal.remove();
             document.querySelector('.district-Table thead').innerHTML='';
             document.querySelector('.district-Table tbody').innerHTML='';
+            clearMap();
             createZNTable(); 
+
             })
           })
           
@@ -602,13 +604,14 @@ document.getElementById('daelete-district').addEventListener('click',()=>{
     insertRow(data).then(()=>{
         document.querySelector('.district-Table thead').innerHTML='';
         document.querySelector('.district-Table tbody').innerHTML='';
+        clearMap();
         createZNTable();
     });
     console.log(data)
     }
  
-  })  
-document.getElementById('clearMapButton').addEventListener('click',()=>{
+  }) 
+  function clearMap(){
     if ( document.querySelector('.selected')) {
         document.querySelector('.selected').classList.remove('selected');
     }
@@ -620,7 +623,8 @@ document.getElementById('clearMapButton').addEventListener('click',()=>{
     document.getElementById('lon_ln').value='';
     document.getElementById('lat_pv').value='';
     document.getElementById('lon_pv').value='';
-  })
+  } 
+document.getElementById('clearMapButton').addEventListener('click',clearMap)
 // Добавление слоя на карту
 // map.addLayer(geojsonLayer);
 // addInteraction();
