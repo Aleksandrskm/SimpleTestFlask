@@ -408,63 +408,7 @@ getRowsTable('ZN',0,99999).then(zone=>{
             geojsonLayersAll.push(drawDistrict(latLN,lonLN,latPV,lonPV,'rgba(129, 129, 170, 0.3)')) ;
         })
       })
-      document.getElementById('daelete-district').addEventListener('click',()=>{
-        const selectedRow=document.querySelector('.selected');
-        if (selectedRow) {
-           console.log(selectedRow)
-            const modal=document.createElement('div');
-            const modalDialog=document.createElement('div');
-            const modalContent=document.createElement('div');
-            modal.classList.add('modal');
-            modalDialog.classList.add('modal__dialog');
-            modalContent.classList.add('modal__content');
-            modalContent.innerHTML=` <div class="modal__title"> Удаление строки из таблицы</div>`;
-            modalContent.innerHTML+=` <div class="copy__row">Удаляется строка ${selectedRow.id}</div>`; 
-          modalContent.innerHTML+=` 
-          <div class='btnsModal'>
-          <button class="btn modal__confirm btn_dark btn_min">Удалить</button>
-          <button class="btn modal__close btn_dark btn_min">Отмена</button></div>`;
-          const modalParent=document.querySelector('.right-panel');
-        
-         modalDialog.append(modalContent);
-         modal.append(modalDialog);
-         modalParent.append(modal); 
-         const btnConfirm=document.querySelector('.modal__confirm');
-         btnConfirm.addEventListener('click',()=>{
-            const primaryKeys={
-                ID:selectedRow.id
-            }
-            const data = {
-                table_name: `ZN`,
-                primary_keys: primaryKeys
-              };
-              console.log(data);
-              modal.remove();
-            //   deleteRow(data).then(()=>{
-                
-                
-            //     })
-              })
-              
-         const btnClose=document.querySelector('.modal__close');
-          btnClose.addEventListener('click',()=>{  
-            modal.remove(); 
-          });  
-        };
-      })
-      document.getElementById('clearMapButton').addEventListener('click',()=>{
-        if ( document.querySelector('.selected')) {
-            document.querySelector('.selected').classList.remove('selected');
-        }
-        clearDistrict(geojsonLayers);
-        clearDistrict(geojsonLayersAll);
-        geojsonLayersAll=[];
-        document.getElementById('name_district').value='';
-        document.getElementById('lat_ln').value='';
-        document.getElementById('lon_ln').value='';
-        document.getElementById('lat_pv').value='';
-        document.getElementById('lon_pv').value='';
-      })
+     
 
     });
    
@@ -472,7 +416,66 @@ getRowsTable('ZN',0,99999).then(zone=>{
     // leftContent.innerHTML+=`${zone[0].SHIROTA_LN}`
     // console.log(leftContent,zone[0])
 });
-
+document.getElementById('daelete-district').addEventListener('click',()=>{
+    const selectedRow=document.querySelector('.selected');
+    if (selectedRow) {
+       console.log(selectedRow)
+        const modal=document.createElement('div');
+        const modalDialog=document.createElement('div');
+        const modalContent=document.createElement('div');
+        modal.classList.add('modal');
+        modalDialog.classList.add('modal__dialog');
+        modalContent.classList.add('modal__content');
+        modalContent.innerHTML=` <div class="modal__title"> Удаление строки из таблицы</div>`;
+        modalContent.innerHTML+=` <div class="copy__row">Удаляется строка ${selectedRow.id}</div>`; 
+      modalContent.innerHTML+=` 
+      <div class='btnsModal'>
+      <button class="btn modal__confirm btn_dark btn_min">Удалить</button>
+      <button class="btn modal__close btn_dark btn_min">Отмена</button></div>`;
+      const modalParent=document.querySelector('.right-panel');
+    
+     modalDialog.append(modalContent);
+     modal.append(modalDialog);
+     modalParent.append(modal); 
+     const btnConfirm=document.querySelector('.modal__confirm');
+     btnConfirm.addEventListener('click',()=>{
+        const primaryKeys={
+            ID:selectedRow.id
+        }
+        const data = {
+            table_name: `ZN`,
+            primary_keys: primaryKeys
+          };
+          console.log(data);
+          modal.remove();
+        //   deleteRow(data).then(()=>{
+            
+            
+        //     })
+          })
+          
+     const btnClose=document.querySelector('.modal__close');
+      btnClose.addEventListener('click',()=>{  
+        modal.remove(); 
+      });  
+    };
+  })
+  document.getElementById('add-district').addEventListener('click',()=>{
+    
+  })  
+document.getElementById('clearMapButton').addEventListener('click',()=>{
+    if ( document.querySelector('.selected')) {
+        document.querySelector('.selected').classList.remove('selected');
+    }
+    clearDistrict(geojsonLayers);
+    clearDistrict(geojsonLayersAll);
+    geojsonLayersAll=[];
+    document.getElementById('name_district').value='';
+    document.getElementById('lat_ln').value='';
+    document.getElementById('lon_ln').value='';
+    document.getElementById('lat_pv').value='';
+    document.getElementById('lon_pv').value='';
+  })
 // Добавление слоя на карту
 // map.addLayer(geojsonLayer);
 // addInteraction();
