@@ -1,6 +1,6 @@
 "use strict"
 
-import {postJSON,getRowsTable} from './db.js';
+import {editRow,deleteRow,insertRow,postJSON,getRowsTable} from './db.js';
 
 export const map = new ol.Map({
     // Задание источника данных для карты
@@ -170,10 +170,10 @@ function drawDistrict(latLN,lonLN,latPV,lonPV,color) {
                                 width: 1 // Ширина обводки
                             }),
             // fill: new ol.style.Fill({ color: `${color}` })
-            fill: new ol.style.Fill({
-                //                 
-                                color: color // Синий цвет с прозрачностью 0.8
-                            }),
+            // fill: new ol.style.Fill({
+            //     //                 
+            //                     color: color // Синий цвет с прозрачностью 0.8
+            //                 }),
         })
     });
     // console.log(geojsonLayer)
@@ -306,173 +306,325 @@ document.getElementById('button-collapse-right').addEventListener('click',(e)=>{
     document.querySelector('.right-panel').classList.toggle('collapsed');
     document.querySelector('.right-panel .information_request').classList.toggle('hidden');
 })
-
-getRowsTable('ZN',0,99999).then(zone=>{
-    const leftContent=document.querySelector('.left-panel div.information_request');
-    const data = { name: 'ZN' };
-    const rusName={};
-   
-    postJSON(data).then(tableInfo=>{
-        const tr = document.createElement('tr');
-        
-        for( let i=0;i<tableInfo.columns.length;i++){
-           
-            // console.log(tableInfo.columns[i].column_description)
-            rusName[tableInfo.columns[i].column_name]=tableInfo.columns[i].column_description;
-            const th=document.createElement('th');
-            if (tableInfo.columns[i].column_description!='Идентификатор') {
-                console.log()
-                th.innerHTML+=tableInfo.columns[i].column_description;
-                
-                tr.append(th);
+function createZNTable(){
+    getRowsTable('ZN',0,99999).then(zone=>{
+        const leftContent=document.querySelector('.left-panel div.information_request');
+        const data = { name: 'ZN' };
+        const rusName={};
+       
+        postJSON(data).then(tableInfo=>{
+            const tr = document.createElement('tr');
+            
+            for( let i=0;i<tableInfo.columns.length;i++){
+               
+                // console.log(tableInfo.columns[i].column_description)
+                rusName[tableInfo.columns[i].column_name]=tableInfo.columns[i].column_description;
+                const th=document.createElement('th');
+                if (tableInfo.columns[i].column_description!='Идентификатор') {
+                    console.log()
+                    th.innerHTML+=tableInfo.columns[i].column_description;
+                    
+                    tr.append(th);
+                }
+             
+               
+               
+               
+               
             }
+            document.querySelector('.district-Table thead').append(tr);
+            console.log(Object.keys(rusName));
+            for (let i = 0; i < zone.length; i++) {
+                const elZN=document.createElement('tr');
+               
+                elZN.id=zone[i].ID;
+                elZN.classList.add('zn-element');
+                // elZN.innerHTML+=`<br>`;
+            const keysRusName=(Object.keys(rusName));
+                for(const key in zone[i])
+                {
+                    // console.log(rusName)
+                    for(const name in rusName)
+                    { 
+                        //  console.log(name,key)
+                        if (key==name && key!='ID') {
+                           
+                        elZN.innerHTML+=`<td>${(zone[i][key])}</td>`
+                    }
+        
+                    }
+                   
+               
+                }
+            // elZN.innerHTML+=`<br>`
+            document.querySelector('.district-Table tbody').append(elZN)
+            
+           }
+           const allDistricts=document.querySelectorAll('.zn-element');
+           allDistricts.forEach((zn) => {
+            zn.addEventListener('click',(e)=>{
+                const trs=document.querySelectorAll('table tr');
+                trs.forEach((tr)=>{
+                    if (tr==e.target.parentElement) {
+                    //   tr.style='background-color: #B5B8B1';
+                    tr.classList.add('selected');
+                    }
+                    else{
+                        tr.classList.remove('selected');
+                    }
+                  })
+                const latLN=zn.children[3].innerHTML;
+                const lonLN=zn.children[4].innerHTML;
+                const latPV=zn.children[5].innerHTML;
+                const lonPV=zn.children[6].innerHTML;
+                const nameDistrict=zn.children[0].innerHTML;
+                document.getElementById('name_district').value=nameDistrict;
+                document.getElementById('lat_ln').value=latLN;
+                document.getElementById('lon_ln').value=lonLN;
+                document.getElementById('lat_pv').value=latPV;
+                document.getElementById('lon_pv').value=lonPV;
+                clearDistrict(geojsonLayers);
+                geojsonLayers.push(drawDistrict(latLN,lonLN,latPV,lonPV,'rgba(0, 0, 255, 1)'));
+                // console.log(zn.children[4],zn.children[5],zn.children[6],zn.children[7]);
+            })
+           
+          });
+          document.getElementById('view-all-district').addEventListener('click',()=>{
+            if ( document.querySelector('.selected')) {
+                document.querySelector('.selected').classList.remove('selected');
+            }
+            
+            console.log(geojsonLayersAll)
+            clearDistrict(geojsonLayers);
+            clearDistrict(geojsonLayersAll);
+            geojsonLayersAll=[];
+            allDistricts.forEach(zn=>{
+                const latLN=zn.children[3].innerHTML;
+                const lonLN=zn.children[4].innerHTML;
+                const latPV=zn.children[5].innerHTML;
+                const lonPV=zn.children[6].innerHTML;
+               
+                // map.removeLayer(geojsonLayer);
+                geojsonLayersAll.push(drawDistrict(latLN,lonLN,latPV,lonPV,'rgba(132, 132, 141, 0.7)')) ;
+            })
+          })
+         
+    
+        });
+       
+      
+        // leftContent.innerHTML+=`${zone[0].SHIROTA_LN}`
+        // console.log(leftContent,zone[0])
+    });
+}
+createZNTable();
+// getRowsTable('ZN',0,99999).then(zone=>{
+//     const leftContent=document.querySelector('.left-panel div.information_request');
+//     const data = { name: 'ZN' };
+//     const rusName={};
+   
+//     postJSON(data).then(tableInfo=>{
+//         const tr = document.createElement('tr');
+        
+//         for( let i=0;i<tableInfo.columns.length;i++){
+           
+//             // console.log(tableInfo.columns[i].column_description)
+//             rusName[tableInfo.columns[i].column_name]=tableInfo.columns[i].column_description;
+//             const th=document.createElement('th');
+//             if (tableInfo.columns[i].column_description!='Идентификатор') {
+//                 console.log()
+//                 th.innerHTML+=tableInfo.columns[i].column_description;
+                
+//                 tr.append(th);
+//             }
          
            
            
            
            
-        }
-        document.querySelector('.district-Table thead').append(tr);
-        console.log(Object.keys(rusName));
-        for (let i = 0; i < zone.length; i++) {
-            const elZN=document.createElement('tr');
+//         }
+//         document.querySelector('.district-Table thead').append(tr);
+//         console.log(Object.keys(rusName));
+//         for (let i = 0; i < zone.length; i++) {
+//             const elZN=document.createElement('tr');
            
-            elZN.id=zone[i].ID;
-            elZN.classList.add('zn-element');
-            // elZN.innerHTML+=`<br>`;
-        const keysRusName=(Object.keys(rusName));
-            for(const key in zone[i])
-            {
-                // console.log(rusName)
-                for(const name in rusName)
-                { 
-                    //  console.log(name,key)
-                    if (key==name && key!='ID') {
+//             elZN.id=zone[i].ID;
+//             elZN.classList.add('zn-element');
+//             // elZN.innerHTML+=`<br>`;
+//         const keysRusName=(Object.keys(rusName));
+//             for(const key in zone[i])
+//             {
+//                 // console.log(rusName)
+//                 for(const name in rusName)
+//                 { 
+//                     //  console.log(name,key)
+//                     if (key==name && key!='ID') {
                        
-                    elZN.innerHTML+=`<td>${(zone[i][key])}</td>`
-                }
+//                     elZN.innerHTML+=`<td>${(zone[i][key])}</td>`
+//                 }
     
-                }
+//                 }
                
            
-            }
-        // elZN.innerHTML+=`<br>`
-        document.querySelector('.district-Table tbody').append(elZN)
+//             }
+//         // elZN.innerHTML+=`<br>`
+//         document.querySelector('.district-Table tbody').append(elZN)
         
-       }
-       const allDistricts=document.querySelectorAll('.zn-element');
-       allDistricts.forEach((zn) => {
-        zn.addEventListener('click',(e)=>{
-            const trs=document.querySelectorAll('table tr');
-            trs.forEach((tr)=>{
-                if (tr==e.target.parentElement) {
-                //   tr.style='background-color: #B5B8B1';
-                tr.classList.add('selected');
-                }
-                else{
-                    tr.classList.remove('selected');
-                }
-              })
-            const latLN=zn.children[3].innerHTML;
-            const lonLN=zn.children[4].innerHTML;
-            const latPV=zn.children[5].innerHTML;
-            const lonPV=zn.children[6].innerHTML;
-            const nameDistrict=zn.children[0].innerHTML;
-            document.getElementById('name_district').value=nameDistrict;
-            document.getElementById('lat_ln').value=latLN;
-            document.getElementById('lon_ln').value=lonLN;
-            document.getElementById('lat_pv').value=latPV;
-            document.getElementById('lon_pv').value=lonPV;
-            clearDistrict(geojsonLayers);
-            geojsonLayers.push(drawDistrict(latLN,lonLN,latPV,lonPV,'rgba(0, 0, 255, 0.3)'));
-            // console.log(zn.children[4],zn.children[5],zn.children[6],zn.children[7]);
-        })
+//        }
+//        const allDistricts=document.querySelectorAll('.zn-element');
+//        allDistricts.forEach((zn) => {
+//         zn.addEventListener('click',(e)=>{
+//             const trs=document.querySelectorAll('table tr');
+//             trs.forEach((tr)=>{
+//                 if (tr==e.target.parentElement) {
+//                 //   tr.style='background-color: #B5B8B1';
+//                 tr.classList.add('selected');
+//                 }
+//                 else{
+//                     tr.classList.remove('selected');
+//                 }
+//               })
+//             const latLN=zn.children[3].innerHTML;
+//             const lonLN=zn.children[4].innerHTML;
+//             const latPV=zn.children[5].innerHTML;
+//             const lonPV=zn.children[6].innerHTML;
+//             const nameDistrict=zn.children[0].innerHTML;
+//             document.getElementById('name_district').value=nameDistrict;
+//             document.getElementById('lat_ln').value=latLN;
+//             document.getElementById('lon_ln').value=lonLN;
+//             document.getElementById('lat_pv').value=latPV;
+//             document.getElementById('lon_pv').value=lonPV;
+//             clearDistrict(geojsonLayers);
+//             geojsonLayers.push(drawDistrict(latLN,lonLN,latPV,lonPV,'rgba(0, 0, 255, 0.3)'));
+//             // console.log(zn.children[4],zn.children[5],zn.children[6],zn.children[7]);
+//         })
        
-      });
-      document.getElementById('view-all-district').addEventListener('click',()=>{
-        if ( document.querySelector('.selected')) {
-            document.querySelector('.selected').classList.remove('selected');
-        }
+//       });
+//       document.getElementById('view-all-district').addEventListener('click',()=>{
+//         if ( document.querySelector('.selected')) {
+//             document.querySelector('.selected').classList.remove('selected');
+//         }
         
-        console.log(geojsonLayersAll)
-        clearDistrict(geojsonLayers);
-        clearDistrict(geojsonLayersAll);
-        geojsonLayersAll=[];
-        allDistricts.forEach(zn=>{
-            const latLN=zn.children[3].innerHTML;
-            const lonLN=zn.children[4].innerHTML;
-            const latPV=zn.children[5].innerHTML;
-            const lonPV=zn.children[6].innerHTML;
+//         console.log(geojsonLayersAll)
+//         clearDistrict(geojsonLayers);
+//         clearDistrict(geojsonLayersAll);
+//         geojsonLayersAll=[];
+//         allDistricts.forEach(zn=>{
+//             const latLN=zn.children[3].innerHTML;
+//             const lonLN=zn.children[4].innerHTML;
+//             const latPV=zn.children[5].innerHTML;
+//             const lonPV=zn.children[6].innerHTML;
            
-            // map.removeLayer(geojsonLayer);
-            geojsonLayersAll.push(drawDistrict(latLN,lonLN,latPV,lonPV,'rgba(129, 129, 170, 0.3)')) ;
-        })
-      })
-      document.getElementById('daelete-district').addEventListener('click',()=>{
-        const selectedRow=document.querySelector('.selected');
-        if (selectedRow) {
-           console.log(selectedRow)
-            const modal=document.createElement('div');
-            const modalDialog=document.createElement('div');
-            const modalContent=document.createElement('div');
-            modal.classList.add('modal');
-            modalDialog.classList.add('modal__dialog');
-            modalContent.classList.add('modal__content');
-            modalContent.innerHTML=` <div class="modal__title"> Удаление строки из таблицы</div>`;
-            modalContent.innerHTML+=` <div class="copy__row">Удаляется строка ${selectedRow.id}</div>`; 
-          modalContent.innerHTML+=` 
-          <div class='btnsModal'>
-          <button class="btn modal__confirm btn_dark btn_min">Удалить</button>
-          <button class="btn modal__close btn_dark btn_min">Отмена</button></div>`;
-          const modalParent=document.querySelector('.right-panel');
-        
-         modalDialog.append(modalContent);
-         modal.append(modalDialog);
-         modalParent.append(modal); 
-         const btnConfirm=document.querySelector('.modal__confirm');
-         btnConfirm.addEventListener('click',()=>{
-            const primaryKeys={
-                ID:selectedRow.id
-            }
-            const data = {
-                table_name: `ZN`,
-                primary_keys: primaryKeys
-              };
-              console.log(data);
-              modal.remove();
-            //   deleteRow(data).then(()=>{
-                
-                
-            //     })
-              })
-              
-         const btnClose=document.querySelector('.modal__close');
-          btnClose.addEventListener('click',()=>{  
-            modal.remove(); 
-          });  
-        };
-      })
-      document.getElementById('clearMapButton').addEventListener('click',()=>{
-        if ( document.querySelector('.selected')) {
-            document.querySelector('.selected').classList.remove('selected');
-        }
-        clearDistrict(geojsonLayers);
-        clearDistrict(geojsonLayersAll);
-        geojsonLayersAll=[];
-        document.getElementById('name_district').value='';
-        document.getElementById('lat_ln').value='';
-        document.getElementById('lon_ln').value='';
-        document.getElementById('lat_pv').value='';
-        document.getElementById('lon_pv').value='';
-      })
+//             // map.removeLayer(geojsonLayer);
+//             geojsonLayersAll.push(drawDistrict(latLN,lonLN,latPV,lonPV,'rgba(129, 129, 170, 0.3)')) ;
+//         })
+//       })
+     
 
-    });
+//     });
    
   
-    // leftContent.innerHTML+=`${zone[0].SHIROTA_LN}`
-    // console.log(leftContent,zone[0])
-});
+//     // leftContent.innerHTML+=`${zone[0].SHIROTA_LN}`
+//     // console.log(leftContent,zone[0])
+// });
+document.getElementById('daelete-district').addEventListener('click',()=>{
+    const selectedRow=document.querySelector('.selected');
+    if (selectedRow) {
+       console.log(selectedRow)
+        const modal=document.createElement('div');
+        const modalDialog=document.createElement('div');
+        const modalContent=document.createElement('div');
+        modal.classList.add('modal');
+        modalDialog.classList.add('modal__dialog');
+        modalContent.classList.add('modal__content');
+        modalContent.innerHTML=` <div class="modal__title"> Удаление строки из таблицы</div>`;
+        modalContent.innerHTML+=` <div class="copy__row">Удаляется строка ${selectedRow.id}</div>`; 
+      modalContent.innerHTML+=` 
+      <div class='btnsModal'>
+      <button class="btn modal__confirm btn_dark btn_min">Удалить</button>
+      <button class="btn modal__close btn_dark btn_min">Отмена</button></div>`;
+      const modalParent=document.querySelector('.right-panel');
+    
+     modalDialog.append(modalContent);
+     modal.append(modalDialog);
+     modalParent.append(modal); 
+     const btnConfirm=document.querySelector('.modal__confirm');
+     btnConfirm.addEventListener('click',()=>{
+        const primaryKeys={
+            ID:selectedRow.id
+        }
+        const data = {
+            table_name: `ZN`,
+            primary_keys: primaryKeys
+          };
+          console.log(data);
+         
+          deleteRow(data).then(()=>{
+            modal.remove();
+            document.querySelector('.district-Table thead').innerHTML='';
+            document.querySelector('.district-Table tbody').innerHTML='';
+            clearMap();
+            createZNTable(); 
 
+            })
+          })
+          
+     const btnClose=document.querySelector('.modal__close');
+      btnClose.addEventListener('click',()=>{ 
+        
+        modal.remove(); 
+      });  
+    };
+  })
+  document.getElementById('add-district').addEventListener('click',()=>{
+    if (document.getElementById('name_district').value==''||
+    document.getElementById('lat_ln').value==''||
+    document.getElementById('lon_ln').value==''||
+    document.getElementById('lat_pv').value==''||
+    document.getElementById('lon_pv').value=='') {
+      console.log('пустые поля')  
+    }
+    else{
+        let typeDistrict = document.querySelector('.select');
+
+        const data ={ 
+            table_name: "ZN",
+            columns: [
+                "NAIM", "ID_ZN_TIP","SHIROTA_LN","DOLGOTA_LN","SHIROTA_PV","DOLGOTA_PV"
+            ],
+            values:[
+                document.getElementById('name_district').value,
+                typeDistrict.options[ typeDistrict.selectedIndex ].value,
+                document.getElementById('lat_ln').value,
+                document.getElementById('lon_ln').value,
+                document.getElementById('lat_pv').value,
+                document.getElementById('lon_pv').value
+            ]
+    }
+    insertRow(data).then(()=>{
+        document.querySelector('.district-Table thead').innerHTML='';
+        document.querySelector('.district-Table tbody').innerHTML='';
+        clearMap();
+        createZNTable();
+    });
+    console.log(data)
+    }
+ 
+  }) 
+  function clearMap(){
+    if ( document.querySelector('.selected')) {
+        document.querySelector('.selected').classList.remove('selected');
+    }
+    clearDistrict(geojsonLayers);
+    clearDistrict(geojsonLayersAll);
+    geojsonLayersAll=[];
+    document.getElementById('name_district').value='';
+    document.getElementById('lat_ln').value='';
+    document.getElementById('lon_ln').value='';
+    document.getElementById('lat_pv').value='';
+    document.getElementById('lon_pv').value='';
+  } 
+document.getElementById('clearMapButton').addEventListener('click',clearMap)
 // Добавление слоя на карту
 // map.addLayer(geojsonLayer);
 // addInteraction();
