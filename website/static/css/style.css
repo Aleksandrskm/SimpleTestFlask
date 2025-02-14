@@ -716,11 +716,11 @@ img {
 }
 
 .modal__input{
-    margin-left: 50px;
-    margin-bottom: 10px;
+    /* margin-left: 50px;
+    margin-bottom: 10px; */
     display: block;
     /* margin: 20px 20px 20px auto; */
-    width: 100%;
+    width: 60%;
     height: 25px;
     background: #fff;
     box-shadow: 0 4px 15px rgba(0, 0, 0, .2);
@@ -1003,6 +1003,7 @@ tr td{
 
 .data-column{
     display: flex;
+    margin-bottom: 10px;
     flex-direction: row;
 }
 .csus{
