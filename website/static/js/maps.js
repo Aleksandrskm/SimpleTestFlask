@@ -304,8 +304,13 @@ function addInteraction() {
   }
 document.getElementById('button-collapse-right').addEventListener('click',(e)=>{
     document.querySelector('.right-panel').classList.toggle('collapsed');
-    document.querySelector('.right-panel .information_request').classList.toggle('hidden');
+    document.querySelector('.right-panel .right').classList.toggle('hidden');
 })
+document.getElementById('button-collapse-left').addEventListener('click',(e)=>{
+    document.querySelector('.left-panel').classList.toggle('collapsed');
+    document.querySelector('.left-panel .left').classList.toggle('hidden');
+})
+
 function createZNTable(){
     getRowsTable('ZN',0,99999).then(zone=>{
         const leftContent=document.querySelector('.left-panel div.information_request');

@@ -7,7 +7,7 @@
     <div class="wrapper-top"><div>Редактор территориальных районов</div>
         <button id="clearMapButton" class="default-button clear-map" alt="Очистить карту" title="Очистить карту">
             <img src="../static/img/clear_map.svg" alt="Очистить карту" title="Очистить карту">
-            <span>Очистить карту</span>
+            <span>Очистить карту</ы>
           </button>  
    
     
@@ -21,8 +21,9 @@
     
         <div class="container">
             <div class="left-panel">
-            <div class="information_request">
-                <span class="csus">Территориальные районы </span>
+                <button id="button-collapse-left"></button>   
+            <div class="information_request left">
+                <div class="csus">Территориальные районы </div>
                 <div class="table-scroll">
                     <table class="district-Table">
                         <thead>
@@ -34,11 +35,12 @@
                     </table>
                     </div>
             </div>
+            
         </div>
             <div class="map-container" id="map"></div>
             <div class="right-panel">
                 <button id="button-collapse-right"></button>
-                <div class="information_request left">
+                <div class="information_request right">
                     
                    
                     <div class="csus">Характеристики района </div>
@@ -48,19 +50,18 @@
                         <input id="name_district" type="text" value="">
                         <span>Наименование района краткое:</span>
                         <input id="name_district_short" type="text" value="">
-                        <span>Широта левого нижнего угла, градусы:</span>
+                        <div>Широта левого нижнего угла, градусы:</div>
                         <input id="lat_ln" type="text" value="">
-                        <br>
+                       
                         <span>Долгота левого нижнего,угла градусы:</span>
                         <input id="lon_ln" type="text" value=""> 
-                        <br>
+                        
                         <span>Широта правого верхнего угла, градусы:</span>
                         <input id="lat_pv" type="text" value="">
-                        <br>
+                        
                         <span>Долгота правого верхнего,угла градусы:</span>
-                        <input id="lon_pv" type="text" value=""> 
-                    </div>   
-                    <button id="view-all-district">Отобразить все районы</button>   
+                        <input id="lon_pv" type="text" value="">
+                        <button id="view-all-district">Отобразить все районы</button>   
                    <div>Выберите тип территориального района:</div>
                     <select class="select" name="districts" id="type-district">
                         <option value="1">Стандартный район</option>
@@ -70,7 +71,9 @@
                       </select>
                     <button id="add-district">Добавить район </button>
                         <button id="daelete-district">Удалить район</button>
-                </div>
+                </div> 
+                    </div>   
+                    
             </div>
           
         </div>

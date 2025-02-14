@@ -255,6 +255,24 @@
     z-index: var(--z-index-up);
     background-color: transparent;
 }
+#button-collapse-left {
+    margin-right: 10px;
+    outline: none;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid black;
+    border-left: 0;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    cursor: pointer;
+    z-index: var(--z-index-up);
+    cursor: pointer;
+    z-index: var(--z-index-up);
+    background-color: transparent;
+}
 .collapsed #button-collapse-right {
     outline: none;
     border-top: 10px solid transparent;
@@ -273,9 +291,37 @@
     z-index: var(--z-index-up);
     background-color: transparent;
 }
+.collapsed #button-collapse-left {
+    margin-right: 10px;
+    outline: none;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid black;
+    border-right: 0;
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    cursor: pointer;
+    z-index: var(--z-index-up);
+    cursor: pointer;
+    z-index: var(--z-index-up);
+    background-color: transparent;
+}
 .right-panel{
     position: relative;
     transition: width 0.3s ease;
+}
+.left-panel{
+    display: flex;
+    flex-direction: row-reverse;
+    position: relative;
+    transition: width 0.3s ease;
+}
+.left{
+    margin-right: 25px;
 }
 .collapsed{
     /* display: none; */
@@ -296,8 +342,8 @@
     font-family: Arial, sans-serif;
 
 }
-.data-district span{
-    padding: 7px;
+.data-district div{
+    padding-left: 7px;
 }
 .information_request button:hover{
     background-color: #C0C0C0;
@@ -908,7 +954,7 @@ tr td{
     border: none;
 }
 .wrapper-top div{
-    width: 100%;
+    width: 80%;
     margin-left: auto;
 }
 .clear-map {
