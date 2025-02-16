@@ -304,8 +304,13 @@ function addInteraction() {
   }
 document.getElementById('button-collapse-right').addEventListener('click',(e)=>{
     document.querySelector('.right-panel').classList.toggle('collapsed');
-    document.querySelector('.right-panel .information_request').classList.toggle('hidden');
+    document.querySelector('.right-panel .right').classList.toggle('hidden');
 })
+document.getElementById('button-collapse-left').addEventListener('click',(e)=>{
+    document.querySelector('.left-panel').classList.toggle('collapsed');
+    document.querySelector('.left-panel .left').classList.toggle('hidden');
+})
+
 function createZNTable(){
     getRowsTable('ZN',0,99999).then(zone=>{
         const leftContent=document.querySelector('.left-panel div.information_request');
@@ -378,7 +383,9 @@ function createZNTable(){
                 const latPV=zn.children[5].innerHTML;
                 const lonPV=zn.children[6].innerHTML;
                 const nameDistrict=zn.children[0].innerHTML;
+                const nameDistrictShort=zn.children[1].innerHTML;
                 document.getElementById('name_district').value=nameDistrict;
+                document.getElementById('name_district_short').value=nameDistrictShort;
                 document.getElementById('lat_ln').value=latLN;
                 document.getElementById('lon_ln').value=lonLN;
                 document.getElementById('lat_pv').value=latPV;
@@ -577,7 +584,8 @@ document.getElementById('daelete-district').addEventListener('click',()=>{
     };
   })
   document.getElementById('add-district').addEventListener('click',()=>{
-    if (document.getElementById('name_district').value==''||
+    if (document.getElementById('name_district').value==''|| 
+    document.getElementById('name_district_short').value==''||
     document.getElementById('lat_ln').value==''||
     document.getElementById('lon_ln').value==''||
     document.getElementById('lat_pv').value==''||
@@ -590,10 +598,11 @@ document.getElementById('daelete-district').addEventListener('click',()=>{
         const data ={ 
             table_name: "ZN",
             columns: [
-                "NAIM", "ID_ZN_TIP","SHIROTA_LN","DOLGOTA_LN","SHIROTA_PV","DOLGOTA_PV"
+                "NAIM","NAIM_SHORT", "ID_ZN_TIP","SHIROTA_LN","DOLGOTA_LN","SHIROTA_PV","DOLGOTA_PV"
             ],
             values:[
                 document.getElementById('name_district').value,
+                document.getElementById('name_district_short').value,
                 typeDistrict.options[ typeDistrict.selectedIndex ].value,
                 document.getElementById('lat_ln').value,
                 document.getElementById('lon_ln').value,
@@ -619,6 +628,7 @@ document.getElementById('daelete-district').addEventListener('click',()=>{
     clearDistrict(geojsonLayersAll);
     geojsonLayersAll=[];
     document.getElementById('name_district').value='';
+    document.getElementById('name_district_short').value='';
     document.getElementById('lat_ln').value='';
     document.getElementById('lon_ln').value='';
     document.getElementById('lat_pv').value='';

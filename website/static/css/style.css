@@ -214,7 +214,7 @@
     height: 100%;
   }
 #map{
-    width: 80vw;
+    width: 100%;
     /* height: 80vh; */
 }
  .maps{
@@ -230,7 +230,7 @@
     background-color: #f1f1f1;
     border-radius: 20px;
     padding: 20px;
-    max-width: 430px;
+    max-width: 33vw;
     box-sizing: border-box;
     overflow-y: auto;
     
@@ -245,6 +245,24 @@
     border-right: 0;
     position: absolute;
     left: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    cursor: pointer;
+    z-index: var(--z-index-up);
+    cursor: pointer;
+    z-index: var(--z-index-up);
+    background-color: transparent;
+}
+#button-collapse-left {
+    margin-right: 10px;
+    outline: none;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid black;
+    border-left: 0;
+    position: absolute;
     top: 50%;
     transform: translateY(-50%);
     width: 0;
@@ -273,9 +291,37 @@
     z-index: var(--z-index-up);
     background-color: transparent;
 }
+.collapsed #button-collapse-left {
+    margin-right: 10px;
+    outline: none;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid black;
+    border-right: 0;
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    cursor: pointer;
+    z-index: var(--z-index-up);
+    cursor: pointer;
+    z-index: var(--z-index-up);
+    background-color: transparent;
+}
 .right-panel{
     position: relative;
     transition: width 0.3s ease;
+}
+.left-panel{
+    display: flex;
+    flex-direction: row-reverse;
+    position: relative;
+    transition: width 0.3s ease;
+}
+.left{
+    margin-right: 25px;
 }
 .collapsed{
     /* display: none; */
@@ -284,11 +330,11 @@
     display: none;
 }
 .information_request button{
-    margin-bottom: 10px;
-    margin-top: 10px;
+    box-sizing: border-box;
+    margin: 3px;
     padding: 6px;
     text-align: center;
-    width: 348px;
+    width: 90%;
     border-radius: 6px;
     border-width: 2px;
     font-size: calc(1rem);
@@ -296,8 +342,8 @@
     font-family: Arial, sans-serif;
 
 }
-.data-district span{
-    padding: 7px;
+.data-district div{
+    padding-left: 7px;
 }
 .information_request button:hover{
     background-color: #C0C0C0;
@@ -308,7 +354,7 @@ margin-top: 10px;
 margin-right: 20px;
 padding: 6px;
 /* text-align: center; */
-width: 348px;
+width: 90%;
 border-radius: 6px;
 border-width: 2px;
 font-size: calc(1rem);
@@ -332,9 +378,10 @@ font-family: Arial, sans-serif;
         flex-wrap: wrap;
 }
 .data-district input{
-    margin: 7px;
+    box-sizing: border-box;
+    margin: 3px;
     padding: 7px;
-    width: 332px;
+    width: 90%;
     border-radius: 6px;
     border-width: 1px;
     font-size: calc(0.9rem);
@@ -464,7 +511,7 @@ font-family: Arial, sans-serif;
 /*Общие теги и главная страница - base.html*/
 header {
     grid-template-columns: 1fr 2fr 1fr;
-    white-space: nowrap;
+    /* white-space: nowrap; */
     background-color: #999999;
     height: 75px;
     width: 100%;
@@ -494,7 +541,9 @@ h2 {
     border-bottom: 6px solid #999999; /* Темная полоса снизу */
 }
 .wrapper-top{
-    display: flex;
+    width: 100%;
+    display: flex
+;
     flex: 1 0 100%;
     color: #000000;
     line-height: 1;
@@ -508,7 +557,6 @@ h2 {
     border-bottom: 6px solid #999999;
     align-items: center;
     justify-content: center;
-    
 }
 h3 {
     color: #000000;
@@ -628,7 +676,7 @@ img {
     display: flex;
     flex-direction: column;
     position:relative;
-    width:100%;
+    /* width:100%; */
     padding:40px;
     background-color:#fff;
     border:1px solid rgba(0,0,0,.2);
@@ -669,16 +717,20 @@ img {
 }
 
 .modal__input{
-    display:block;margin:20px 20px 20px auto;
-    width:280px;
-    height:50px;
-    background:#fff;
-    box-shadow:0 4px 15px rgba(0,0,0,.2);
-    border:none;
-    font-size:18px;
-    text-align:center;
-    padding-right:0px;
-    outline:0
+    /* margin-left: 50px;
+    margin-bottom: 10px; */
+    display: block;
+    /* margin: 20px 20px 20px auto; */
+    width: 60%;
+    height: 25px;
+    background: #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, .2);
+    border: none;
+    font-size: 18px;
+    text-align: center;
+    padding-right: 0px;
+    outline: 0;
+    border: solid 1px black;
 }
 
 .modal .btn{
@@ -852,6 +904,14 @@ thead th{
     border: solid;
     border-width: 1px;
 }
+.district-Table thead th{
+    min-width: 108px;
+    border: solid;
+    border-width: 1px;
+}
+.district-Table tr td{
+    min-width: 100px;
+}
 #timer {
     margin: auto;
     color: black;
@@ -895,8 +955,8 @@ tr td{
     border: none;
 }
 .wrapper-top div{
-    width: 100%;
-    margin-left: 150px;
+    width: 80%;
+    margin-left: auto;
 }
 .clear-map {
     cursor: pointer;
@@ -944,6 +1004,7 @@ tr td{
 
 .data-column{
     display: flex;
+    margin-bottom: 10px;
     flex-direction: row;
 }
 .csus{
@@ -1032,6 +1093,7 @@ tr td{
 }
 
 .name-column{
+    width: 40%;
     color: #000000;
     line-height: 1;
     font-size: 20;
