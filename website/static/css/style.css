@@ -914,6 +914,9 @@ thead th{
 .district-Table tr td{
     min-width: 100px;
 }
+table{
+    border-collapse: collapse;
+}
 #timer {
     margin: auto;
     color: black;
