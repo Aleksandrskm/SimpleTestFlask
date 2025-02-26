@@ -478,14 +478,15 @@ font-family: Arial, sans-serif;
 
 .column1_vi {
     display: flex;
+    flex-grow: 2;
     flex-direction: column;
     justify-content: flex-start;
     line-height: 1.7;
     min-width: 100px;
-    width: 25%; /* Ограничение ширины контейнера */
-    /* max-height: calc(100vh - var(--size-header-height) -  var(--size-footer-height)-  var(--size-footer-height)); */
+    width: min(45%, 300px);
+    /* max-height: calc(100vh - var(--size-header-height) - var(--size-footer-height) - var(--size-footer-height)); */
     /* height: 75vh; */
-    margin: 10px auto; /* Центрирование контейнера */
+    margin: 10px 10px;
     background-color: #f1f1f1;
     border-radius: 20px;
     padding: 20px;
@@ -494,12 +495,14 @@ font-family: Arial, sans-serif;
 }
 
 .column2_vi {
+    /* flex-shrink: 5;  */
     flex-direction: column;
     justify-content: flex-start;
+    flex-grow: 4;
     line-height: 1.5;
-    width: 73%; /* Ограничение ширины контейнера */
+    width: 50%;
     /* height: 60vh; */
-    margin: 10px auto; /* Центрирование контейнера */
+    margin: 10px auto;
     background-color: #f1f1f1;
     border-radius: 20px;
     padding: 20px;
@@ -507,6 +510,7 @@ font-family: Arial, sans-serif;
     padding-bottom: 0px;
     box-sizing: border-box;
 }
+
 
 /*Общие теги и главная страница - base.html*/
 header {
@@ -796,11 +800,11 @@ img {
     overflow: auto;
 }
 .table-buttons button{
-
+    box-sizing: border-box;
     font-size: 2vh;
     /* max-height: 55px; */
     /* min-width: 230px; */
-    min-width:  max(17%,120px);
+    min-width: max(17%, 120px);
     padding-right: 10px;
 }
 .table-row.selected {
