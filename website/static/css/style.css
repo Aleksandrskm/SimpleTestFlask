@@ -801,10 +801,10 @@ img {
 }
 .table-buttons button{
     box-sizing: border-box;
-    font-size: 2vh;
+    font-size: 1.2rem;
     /* max-height: 55px; */
     /* min-width: 230px; */
-    min-width: max(17%, 120px);
+    width: max(17%, 220px);
     padding-right: 10px;
 }
 .table-row.selected {
