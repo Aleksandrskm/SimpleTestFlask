@@ -541,6 +541,19 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentTime = getDateTime();
     document.getElementById("timer-start").innerHTML = currentTime;
   }, 0);
+  setInterval(function(){
+    let currentTime = getDateTime();
+    document.getElementById("timer-settings").innerHTML = currentTime;
+  }, 0);
+  document.getElementById('settingsBtn').addEventListener('click',(e)=>{
+    document.getElementById('myModal').style.display='flex';
+})
+document.querySelector('.close').addEventListener('click',(e)=>{
+    document.getElementById('myModal').style.display='none';
+})
+document.querySelector('.modal-resize-btn').addEventListener('click',(e)=>{
+    document.getElementById('myModal').style.display='none';
+})
   if (h2) {
     if (h2.innerText=='Редактор данных') {
       table(url);

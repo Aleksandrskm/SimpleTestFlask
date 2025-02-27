@@ -1,6 +1,14 @@
 "use strict"
-
+import {ViewUtils} from './ViewUtils.js';
 import {editRow,deleteRow,insertRow,postJSON,getRowsTable} from './db.js';
+const projectSelect = document.getElementById( "projectionSelect" );
+let project = projectSelect.options[ projectSelect.selectedIndex ].value;
+
+function changePrpjection(map){
+    project = projectSelect.options[ projectSelect.selectedIndex ].value;
+    ViewUtils.setProjection(map,project);
+}
+
 
 export const map = new ol.Map({
     // Задание источника данных для карты
@@ -16,15 +24,18 @@ export const map = new ol.Map({
     target: 'map',
     // Задание начальных координат и масштаба карты
     view: new ol.View({
-        center: ol.proj.fromLonLat([80, 0], 'EPSG:4326'), // Точка по умолчанию обычные долгота и широта в градусах
+        center: ol.proj.fromLonLat([80, 0], project), // Точка по умолчанию обычные долгота и широта в градусах
         zoom: 1, // Зум по умолчанию 
         smoothExtentConstraint: false, // 
         smoothResolutionConstraint: false, // 
-        projection: 'EPSG:4326', // Указываем базовую проекцию
+        // projection: project, // Указываем базовую проекцию
         maxZoom: 9 // Максимальный зум
     }),
 });
-
+ViewUtils.setProjection(map,project);
+projectSelect.addEventListener('change',()=>{
+    changePrpjection(map)
+})
 // Создание векторного слоя
 const pointLayer = new ol.layer.Vector({
     _typeLayer: 'kaPoint', // Назначение типа слоя
@@ -53,7 +64,7 @@ map.addLayer(pointLayer);
 
 // Создание точки
 const point = new ol.Feature({
-    geometry: new ol.geom.Point(ol.proj.fromLonLat([80, 50], 'EPSG:4326')), // Координаты долгота и широта
+    geometry: new ol.geom.Point(ol.proj.fromLonLat([80, 50], project)), // Координаты долгота и широта
 });
 
 // Добавление точки в слой
@@ -68,50 +79,105 @@ function clearDistrict(geojsonLayers) {
     map.removeLayer(geojsonLayer);
    })
 }
+function transformCoordinates(lon, lat) {
+    // Преобразуем координаты из EPSG:4326 в EPSG:3857
+    const coordinates = ol.proj.transform([lon, lat], 'EPSG:4326', 'EPSG:3857');
+    return coordinates; // Возвращаем преобразованные координаты
+}
 function drawDistrict(latLN,lonLN,latPV,lonPV,color) {
-    const geojsonData = {
-        // Тип коллекции объектов
-        "type": "FeatureCollection",
-        
-        // Массив объектов "Feature" (каждый объект представляет собой географическую особенность)
-        "features": [
-           
-            {
-                "type": "Polygon",
-                "coordinates": [
-                    [
-                        // [
-                        //     76.01151296608155,
-                        //     -6.672207446808514
-                        // ],
-                        [   
-                            +lonPV,
-                            +latLN
-                            
-                        ],
-                        [   +lonPV,
-                            +latPV
-                            
-                        ],
+    let coord=[]
+    let geojsonData;
+    if (project =='EPSG:3857') {
+        coord =[transformCoordinates( +lonPV, +latLN), transformCoordinates( +lonPV, +latPV),transformCoordinates( +lonLN, +latPV),transformCoordinates( +lonLN, +latLN)];
+        console.log(coord)
+         geojsonData = {
+            // Тип коллекции объектов
+            "type": "FeatureCollection",
+            
+            // Массив объектов "Feature" (каждый объект представляет собой географическую особенность)
+            "features": [
+               
+                {
+                    "type": "Polygon",
+                    "coordinates": [
                         [
-                            +lonLN,
-                            +latPV
-                            
-                        ],
+                            coord[0],   coord[1],   coord[2],   coord[3]
+                            // [
+                            //     76.01151296608155,
+                            //     -6.672207446808514
+                            // ],
+                            // [   
+                            //     +lonPV,
+                            //     +latLN
+                                
+                            // ],
+                            // [   +lonPV,
+                            //     +latPV
+                                
+                            // ],
+                            // [
+                            //     +lonLN,
+                            //     +latPV
+                                
+                            // ],
+                            // [
+                            //     +lonLN,
+                            //     +latLN
+                                
+                            // ]
+                        ]   
+                    ]
+                }
+            ]
+        };
+    }
+    else{
+         geojsonData = {
+            // Тип коллекции объектов
+            "type": "FeatureCollection",
+            
+            // Массив объектов "Feature" (каждый объект представляет собой географическую особенность)
+            "features": [
+               
+                {
+                    "type": "Polygon",
+                    "coordinates": [
                         [
-                            +lonLN,
-                            +latLN
-                            
-                        ]
-                    ]   
-                ]
-            }
-        ]
-    };
+                           
+                            // [
+                            //     76.01151296608155,
+                            //     -6.672207446808514
+                            // ],
+                            [   
+                                +lonPV,
+                                +latLN
+                                
+                            ],
+                            [   +lonPV,
+                                +latPV
+                                
+                            ],
+                            [
+                                +lonLN,
+                                +latPV
+                                
+                            ],
+                            [
+                                +lonLN,
+                                +latLN
+                                
+                            ]
+                        ]   
+                    ]
+                }
+            ]
+        };
+    }
+    
     const geojsonSource = new ol.source.Vector({
         features: new ol.format.GeoJSON().readFeatures(geojsonData, {
-            dataProjection: 'EPSG:4326', // Проекция данных GeoJSON  
-            featureProjection: 'EPSG:4326', // Проекция карты
+            dataProjection: project, // Проекция данных GeoJSON  
+            featureProjection: project, // Проекция карты
         }),
     });
   
@@ -222,8 +288,8 @@ function addInteraction() {
         };
         const geojsonSource = new ol.source.Vector({
             features: new ol.format.GeoJSON().readFeatures(geojsonData, {
-                dataProjection: 'EPSG:4326', // Проекция данных GeoJSON  
-                featureProjection: 'EPSG:4326', // Проекция карты
+                dataProjection: project, // Проекция данных GeoJSON  
+                featureProjection: project, // Проекция карты
             }),
         });
       
@@ -544,6 +610,16 @@ function clearMap(){
     document.getElementById('lon_pv').value='';
 } 
 document.getElementById('clearMapButton').addEventListener('click',clearMap)
+document.getElementById('settingsBtn').addEventListener('click',(e)=>{
+    document.getElementById('myModal').style.display='flex';
+})
+document.querySelector('.close').addEventListener('click',(e)=>{
+    document.getElementById('myModal').style.display='none';
+})
+document.querySelector('.modal-resize-btn').addEventListener('click',(e)=>{
+    document.getElementById('myModal').style.display='none';
+})
+console.log(1)
 // Добавление слоя на карту
 // map.addLayer(geojsonLayer);
 // addInteraction();
