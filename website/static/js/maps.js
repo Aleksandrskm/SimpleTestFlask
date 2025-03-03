@@ -33,6 +33,7 @@ export const map = new ol.Map({
     }),
 });
 ViewUtils.setProjection(map,project);
+
 projectSelect.addEventListener('change',()=>{
     changePrpjection(map)
 })
@@ -48,16 +49,10 @@ const pointLayer = new ol.layer.Vector({
 pointLayer.setVisible(false);
 
 // Создание стиля для точек
-const pointStyle = new ol.style.Style({
-    image: new ol.style.Circle({
-        radius: 5, // Радиус круга
-        fill: new ol.style.Fill({ color: 'rgba(255, 0, 0, 0.8)' }), // Заливка (красный цвет с прозрачностью)
-        stroke: new ol.style.Stroke({ color: 'rgba(255, 255, 255, 0.8)', width: 2 }), // Обводка (белый цвет)
-    }),
-});
+
 
 // Применение стиля к векторному слою
-pointLayer.setStyle(pointStyle);
+// pointLayer.setStyle(pointStyle);
 
 // Добавление слоя на карту
 map.addLayer(pointLayer);
@@ -73,6 +68,121 @@ pointLayer.getSource().addFeature(point);
 let geojsonLayersAll=[];
 const geojsonLayers=[];
 const districtTypeLayers=[];
+const typeAddDistricts=[];
+document.getElementById('color-ka-select-zapr').addEventListener('change',()=>{
+    const distStyle = new ol.style.Style({
+        
+        stroke: new ol.style.Stroke({
+                            // Задаем цвет обводки круга
+                            color: document.getElementById('color-ka-select-zapr').value, 
+                            width: 1 // Ширина обводки
+                       })
+});
+    if (geojsonLayers.length>0) {
+        
+        geojsonLayers.forEach(geojsonLayer=>{
+            geojsonLayer.setStyle(distStyle)
+        })
+        
+       
+       
+    }
+    if (districtTypeLayers.length>0){
+        districtTypeLayers.forEach((districtTypeLayer,index)=>{
+            if (typeAddDistricts[index]==4) {
+                districtTypeLayer.setStyle(distStyle)
+            }
+            
+
+        })
+    }
+})
+document.getElementById('color-ka-select-stand').addEventListener('change',()=>{
+    const distStyle = new ol.style.Style({
+        
+        stroke: new ol.style.Stroke({
+                            // Задаем цвет обводки круга
+                            color: document.getElementById('color-ka-select-stand').value, 
+                            width: 1 // Ширина обводки
+                       })
+});
+    if (geojsonLayers.length>0) {
+       
+        geojsonLayers.forEach(geojsonLayer=>{
+            
+            geojsonLayer.setStyle(distStyle);
+            
+        });
+        
+
+    }
+
+    if (districtTypeLayers.length>0){
+        districtTypeLayers.forEach((districtTypeLayer,index)=>{
+            if (typeAddDistricts[index]==1) {
+                districtTypeLayer.setStyle(distStyle)
+            }
+            
+
+        })
+    }
+})
+document.getElementById('color-ka-select-big').addEventListener('change',()=>{
+    const distStyle = new ol.style.Style({
+        
+        stroke: new ol.style.Stroke({
+                            // Задаем цвет обводки круга
+                            color: document.getElementById('color-ka-select-big').value, 
+                            width: 1 // Ширина обводки
+                       })
+});
+    if (geojsonLayers.length>0) {
+        
+        geojsonLayers.forEach(geojsonLayer=>{
+            geojsonLayer.setStyle(distStyle)
+            
+        })
+       
+    }
+     if (districtTypeLayers.length>0){
+        districtTypeLayers.forEach((districtTypeLayer,index)=>{
+            if (typeAddDistricts[index]==2) {
+                districtTypeLayer.setStyle(distStyle)
+            }
+            
+
+        })
+    }
+    
+})
+document.getElementById('color-ka-select-short').addEventListener('change',()=>{
+    const distStyle = new ol.style.Style({
+        
+        stroke: new ol.style.Stroke({
+                            // Задаем цвет обводки круга
+                            color: document.getElementById('color-ka-select-short').value, 
+                            width: 1 // Ширина обводки
+                       })
+});
+    if (geojsonLayers.length>0) {
+        
+       
+        geojsonLayers.forEach(geojsonLayer=>{
+            geojsonLayer.setStyle(distStyle)
+            console.log(geojsonLayer)
+        })
+        
+    }
+    if (districtTypeLayers.length>0){
+        districtTypeLayers.forEach((districtTypeLayer,index)=>{
+            if (typeAddDistricts[index]==3) {
+                districtTypeLayer.setStyle(distStyle)
+            }
+            
+
+        })
+    }
+})
 let typeSelect = 'Box';
 function clearDistrict(geojsonLayers) {
     geojsonLayers.forEach(geojsonLayer=>{
@@ -422,16 +532,17 @@ function createZNTable(){
                 clearDistrict(geojsonLayers);
                 clearDistrict(districtTypeLayers);
                 if (zn.children[2].innerHTML==4) {
-                    geojsonLayers.push(drawDistrict(latLN,lonLN,latPV,lonPV,'rgba(223, 25, 25, 1')) ;
+                    geojsonLayers.push(drawDistrict(latLN,lonLN,latPV,lonPV,document.getElementById('color-ka-select-zapr').value)) ;
                 }
                 else if (zn.children[2].innerHTML==3) {
-                    geojsonLayers.push(drawDistrict(latLN,lonLN,latPV,lonPV,'rgba(55, 201, 50, 1')) ;
+                    geojsonLayers.push(drawDistrict(latLN,lonLN,latPV,lonPV,document.getElementById('color-ka-select-short').value)) ;
                 }
                 else if (zn.children[2].innerHTML==2) {
-                    geojsonLayers.push(drawDistrict(latLN,lonLN,latPV,lonPV,'rgb(223, 169, 22,1)')) ;
+                    geojsonLayers.push(drawDistrict(latLN,lonLN,latPV,lonPV,document.getElementById('color-ka-select-big').value)) ;
                 }
                 else if (zn.children[2].innerHTML==1) {
-                    geojsonLayers.push(drawDistrict(latLN,lonLN,latPV,lonPV,'rgba(0, 0, 255, 1)')) ;
+                    console.log(document.getElementById('color-ka-select-stand').value)
+                    geojsonLayers.push(drawDistrict(latLN,lonLN,latPV,lonPV,document.getElementById('color-ka-select-stand').value)) ;
                 }
                 // geojsonLayers.push(drawDistrict(latLN,lonLN,latPV,lonPV,'rgba(0, 0, 255, 1)'));
                 // console.log(zn.children[4],zn.children[5],zn.children[6],zn.children[7]);
@@ -475,16 +586,21 @@ function createZNTable(){
                     const latPV=zn.children[5].innerHTML;
                     const lonPV=zn.children[6].innerHTML;
                     if (typeDistrict==4) {
-                        districtTypeLayers.push(drawDistrict(latLN,lonLN,latPV,lonPV,'rgba(223, 25, 25, 1)')) ;
+                        districtTypeLayers.push(drawDistrict(latLN,lonLN,latPV,lonPV,document.getElementById('color-ka-select-zapr').value)) ;
+                        typeAddDistricts.push(typeDistrict);
                     }
                     else if (typeDistrict==3) {
-                        districtTypeLayers.push(drawDistrict(latLN,lonLN,latPV,lonPV,'rgba(55, 201, 50, 1)')) ;
+                        districtTypeLayers.push(drawDistrict(latLN,lonLN,latPV,lonPV,document.getElementById('color-ka-select-short').value)) ;
+                        typeAddDistricts.push(typeDistrict);
+                        
                     }
                     else if (typeDistrict==2) {
-                        districtTypeLayers.push(drawDistrict(latLN,lonLN,latPV,lonPV,'rgb(223, 169, 22,1)')) ;
+                        districtTypeLayers.push(drawDistrict(latLN,lonLN,latPV,lonPV,document.getElementById('color-ka-select-big').value)) ;
+                        typeAddDistricts.push(typeDistrict);
                     }
                     else if (typeDistrict==1) {
-                        districtTypeLayers.push(drawDistrict(latLN,lonLN,latPV,lonPV,'rgba(0, 0, 255, 1)')) ;
+                        districtTypeLayers.push(drawDistrict(latLN,lonLN,latPV,lonPV,document.getElementById('color-ka-select-stand').value)) ;
+                        typeAddDistricts.push(typeDistrict);
                     }
 
                     
