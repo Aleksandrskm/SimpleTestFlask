@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function(){
     const projectSelect = document.getElementById( "projectionSelect" );
     let project = projectSelect.options[ projectSelect.selectedIndex ].value;
     
-    function changePrpjection(map){
+    function changeProjection(map){
         project = projectSelect.options[ projectSelect.selectedIndex ].value;
         ViewUtils.setProjection(map,project);
     }
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function(){
     ViewUtils.setProjection(map,project);
     
     projectSelect.addEventListener('change',()=>{
-        changePrpjection(map)
+        changeProjection(map)
     })
     // Создание векторного слоя
     const pointLayer = new ol.layer.Vector({
