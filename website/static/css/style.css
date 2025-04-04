@@ -1106,7 +1106,31 @@ tr td{
     cursor: pointer;
     border: none;
 }
-.wrapper-top div{
+.content_beams{
+    display: flex;
+    height: 70vh;
+}
+.beams_name{
+    font-size: calc(0.7rem + 0.6vw);
+    font-weight: bold;
+}
+.beams{
+    margin-right: auto;
+}
+#pain-beam-KA{
+    /* width: 1000px;
+    height: 1000px;
+    overflow: auto; */
+    
+}
+#beam-KA{
+    width: 15%;
+}
+#table-KA{
+    overflow: auto;
+    
+}
+.wrapper-top div.head-wrapper{
     width: 80%;
     margin-left: auto;
 }

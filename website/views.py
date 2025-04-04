@@ -38,3 +38,6 @@ def function_abonents():
 @views.route('/maps_territorial_districts')
 def function_maps():
     return render_template('maps_territorial_districts.html')
+@views.route('/subsystem_of calibration_beams')
+def function_beams():
+    return render_template('subsystem_of calibration_beams.html')
