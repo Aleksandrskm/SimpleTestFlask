@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-<script src="https://cdn.jsdelivr.net/npm/ol@v10.3.1/dist/ol.js"></script>
+<script src="../static/js/ol.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/ol@v10.3.1/dist/ol.js"></script> -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.3.1/ol.css">
 
     <div class="wrapper-top"><div>Редактор территориальных районов</div>
@@ -46,21 +47,21 @@
                     <div class="csus">Характеристики района </div>
                     <br>
                     <div class="data-district">
-                        <span>Наименование района:</span>
-                        <input id="name_district" type="text" value="">
-                        <span>Наименование района краткое:</span>
-                        <input id="name_district_short" type="text" value="">
-                        <div>Широта левого нижнего угла, градусы:</div>
-                        <input id="lat_ln" type="text" value="">
+                        <label for="name_district">Наименование района:</label>
+                        <input id="name_district" type="text" value="" autocomplete="off">
+                        <label for="name_district_short">Наименование района краткое:</label>
+                        <input id="name_district_short" type="text" value="" autocomplete="off">
+                        <label for="lat_ln">Широта левого нижнего угла, градусы:</label>
+                        <input id="lat_ln" type="number" value="" autocomplete="off">
                        
-                        <span>Долгота левого нижнего,угла градусы:</span>
-                        <input id="lon_ln" type="text" value=""> 
+                        <label for="lon_ln">Долгота левого нижнего,угла градусы:</label>
+                        <input id="lon_ln" type="number" value="" autocomplete="off"> 
                         
-                        <span>Широта правого верхнего угла, градусы:</span>
-                        <input id="lat_pv" type="text" value="">
+                        <label for="lat_pv">Широта правого верхнего угла, градусы:</label>
+                        <input id="lat_pv" type="number" value="" autocomplete="off">
                         
-                        <span>Долгота правого верхнего,угла градусы:</span>
-                        <input id="lon_pv" type="text" value="">
+                        <label for="lon_pv">Долгота правого верхнего,угла градусы:</label>
+                        <input id="lon_pv" type="number" value="" autocomplete="off">
                         <button id="view-all-district">Отобразить все районы</button>   
                         <button id="view-type-district">Отобразить выбранный тип района</button>
                     </div> 
