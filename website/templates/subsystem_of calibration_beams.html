@@ -1,45 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>АРМ администратора</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
+{% extends "base.html" %}
 
-    <header>
-        <div class="ref">
-            <a class="home-ref" href="/" title="Главная страница">
-                <img class="home" src="{{ url_for('static', filename='img/home.svg') }}" alt="Стартовая страница">
-               
-            </a>
-            <div id="timer-start"></div>
+{% block content %}
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/ol@v10.3.1/dist/ol.js"></script> -->
+
+
+    <div class="wrapper-top"><div class="head-wrapper">Подсистема калибровки лучей КА</div> 
+    <div class="beams">
+        <div class="beams_name">Лучи КА:  </div>
+        <div class="beams_types">
+            <label for="beam_pr">Передача</label>
+            <input type="radio" name="type_beams" id="beam_per" checked>  
         </div>
-
-        <h1>АРМ администратора</h1>
-        <button id="settingsBtn" class="button_settings">
-            <img class="settings" src="/static/img/gear.svg" alt="Настройки" title="Настройки">
-        </button>
-    </header>
-
-    {% block content %}
-
-    <main class="butt">
-        <a href="/maps_territorial_districts"><button class="btn">Cервис географического ресурса</button></a>
-        <a href="/subsystem_of calibration_beams"><button class="btn">Подсистема калибровки лучей КА</button></a>
-        <a href="/monotonous_time_service"><button class="btn">Cервис монотонного времени</button></a>
-        <a href="/abonents"><button class="btn">Заполнение данных для абонента</button></a>
-        <a href="/viewing_tables"><button class="btn">Редактор данных</button></a>
-        <a href="/azimuth_and_elevation_angle"><button class="btn">Определение азимута и угла места</button></a>
-        <a href="/get_coordinates"><button class="btn">Нахождение координат через API</button></a>
-        <a href="/communication_availability"><button class="btn">Вычисление доступности связи</button></a>
-    </main>
+        <div class="beams_types">
+            <label for="beam_pr">Прием</label>
+            <input type="radio" name="type_beams" id="beam_pr" > 
+        </div>
+        
+        
+    </div>  
+</div>
+    
     <div id="myModal" class="modal">
         <div class="modal__dialog">
           
             <div class="modal-content">
-                <div class="modal-actions-menu"><div id="timer-settings"></div><div class="modal-buttons-container"><button class="modal-resize-btn" title="Закрыть">[x]</button></div></div>
+                <div class="modal-actions-menu"><div id="timer-settings">2025-04-04 13:55:12</div><div class="modal-buttons-container"><button class="modal-resize-btn" title="Закрыть">[x]</button></div></div>
                 <h4 class="modal-header">Настройки</h4>
                 <div class="modal_wrapper">
                     <div class="wrapper-column">
@@ -117,13 +103,13 @@
                           <span>Проекция:</span>
                           <select class="default-list" id="projectionSelect">
                             <option value="EPSG:3857">EPSG:3857</option>
-                            <option value="EPSG:4326" selected="">EPSG:4326</option>
+                             <option value="EPSG:4326" selected="">EPSG:4326</option>
                           </select>
                         </div>
                         <div class="task-parameter" style="display: flex; flex-direction: column; align-items: center; justify-items: end; gap: 10px; width: 100%; margin-top: 20px;">
                             <button style="width: 100%;" class="default-button parameter-input btn-load-settings" disabled="">Загрузить сохраненные настройки</button>
                             <button style="width: 100%;" class="default-button parameter-input btn-save-settings" disabled="">Сохранить текущие настройки</button>
-                            <button style="width: 100%;" class="default-button parameter-input btn-reset-settings" disabled>Загрузить настройки по умолчанию</button>
+                            <button style="width: 100%;" class="default-button parameter-input btn-reset-settings" disabled="">Загрузить настройки по умолчанию</button>
                         </div>
                         
                         <div style="display: none">
@@ -151,11 +137,58 @@
         </div>
         
     </div>
-    {% endblock %}
-    <script src="{{ url_for('static', filename='js/abonents.js') }}"type="module"></script>
-    <script src="{{ url_for('static', filename='js/Modal.js') }}" type="module"></script>
-    <script src="{{ url_for('static', filename='js/db.js') }}" type="module"></script>
-    <script src="{{ url_for('static', filename='js/table.js') }}" type="module"></script>
-    <script src="{{ url_for('static', filename='js/index.js') }}"type="module"></script>
-</body>
-</html>
+   
+   
+      
+    <div class="content_beams">
+        <div id="beam-KA">
+            <div names-sat>
+                <span id="id-ka">КА:</span>
+                <span id="ka-name"></span>
+            </div>
+            <div class="table-scroll-beam">
+            <table class="beams-Table">
+                <thead>
+                   
+                </thead>
+                <tbody>
+                   
+                </tbody>
+            </table>
+        </div>
+            <div class="beams-btns">
+                <button id="view-beams">Отобразить</button>
+                <button id="save-beams">Сохранить</button>
+            </div>
+        </div>
+        <div id="pain-beam-KA">
+            <canvas  id="canvas"  width="1000" height="1000"></canvas>
+        </div>
+        <div id="table-KA">
+            <table class="KA-Table">
+                <thead>
+                   
+                </thead>
+                <tbody>
+                   
+                </tbody>
+            </table>
+            
+        </div>    
+    </div>
+    <div class="footer">
+        
+    </div>   
+        
+       
+        
+        
+   
+        
+        
+        
+    <script src="{{ url_for('static', filename='js/beams.js') }}"type="module"></script>      
+
+       
+    
+{% endblock %}
