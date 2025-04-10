@@ -616,7 +616,7 @@ img {
     padding-top: 20px;
     justify-content: center;
 }
-.modalColumns{
+.modal-columns-edit{
     overflow-y: auto;
 }
 .btn {
@@ -802,6 +802,9 @@ label{
         font-weight: var(--font-weight-normal);
     
     /* margin-top: 70%; */
+}
+.close-modal{
+    display: none;
 }
 .modal_wrapper{
     
@@ -1111,7 +1114,7 @@ tr td{
 }
 .content_beams{
     display: flex;
-    height: 60%;
+    height: 70%;
     width: 100%;
 }
 .beams_name{
@@ -1133,6 +1136,7 @@ tr td{
         width: 18%;
         flex-direction: column;
    height: 100%;     
+   margin-left: 20px;
 }
 #canvas{
     width: max(1000px, 100%);
@@ -1143,7 +1147,7 @@ tr td{
 }
 #table-KA{
     display: flex;
-    width: 37%;
+    width: max(47%,600px);
     overflow: auto;
     height: 100%;     
 }
@@ -1158,6 +1162,7 @@ tr td{
 }
 .beams-btns{
     display: flex;
+    overflow: auto;
 }
 .wrapper-top div.head-wrapper{
     width: 80%;
