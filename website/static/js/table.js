@@ -151,8 +151,9 @@ export function table(url){
           });
           tableBody.append(tableRow);
           table.append(tableBody);
-          if (result.columns_count<=21)
+          if (result.columns_count<=22)
             {
+              console.log('21')
               createButtonsTable(tableScroll,result,tableRow,rusName);
             } 
           // console.log(result.columns_count);

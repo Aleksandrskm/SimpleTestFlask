@@ -88,6 +88,22 @@ async function getRowsTable(tableName,skipRows,rowsCount) {
     console.error("Error:", error);
   }
 }
+async function changeQuery(query) {
+  try {
+    const response =await fetch(`http://127.0.0.1:8000/Database/ChangeQuery?query=${query}`,{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+      },
+      
+    })
+    const result = await response.json();
+    console.log("Success:", result);
+    return result;
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
 // const list_Tables = {
 //   SV_AB:"Абоненты запросов на сеансы связи ",
 //   SV_CAN_ZAN_PRD:"Текущая занятость частотных каналов по передаче ",
@@ -135,4 +151,4 @@ async function getRowsTable(tableName,skipRows,rowsCount) {
 //   KA_BEAM:'Лучи КА ',
 //   KA_ARH:'Учетные данные о КА архивные '
 // };
-export {editRow,deleteRow,insertRow,postJSON,getRowsTable,}
+export {editRow,deleteRow,insertRow,postJSON,getRowsTable,changeQuery}
