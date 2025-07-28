@@ -124,17 +124,22 @@ export class Modal{
             const inputs=document.querySelectorAll('.modal__input');
             const arrData=[];
             const columns=[];
+            const indexRows=[];
               inputs.forEach((input,index)=>{
                 if(input.value){
                   arrData.push(input.value);
                   console.log(arrData);
+                  indexRows.push(index+1)
                 }
               });
               for (let index = 1; index < this.table.columns_count; index++) {
                 const tableRow={};
                 tableRow.column_description=this.table.columns[index].column_description;
                 console.log((this.table.columns[index].column_name));
-                columns.push(String(this.table.columns[index].column_name));
+                indexRows.forEach(inedexRow=>{
+                  if (inedexRow==index) {
+                    columns.push(String(this.table.columns[index].column_name));}}
+                  )
               }
               const data={
                 "table_name": `${this.table.name}`,
@@ -161,16 +166,22 @@ export class Modal{
           const inputs=document.querySelectorAll('.modal__input');
            const arrData=[];
             const columns=[];
+            const indexRows=[];
               inputs.forEach((input,index)=>{
                 if(input.value){
                   arrData.push(String(input.value));
                   console.log(arrData);
+                  indexRows.push(index+1)
                 }
               });
             
             for (let i = 1; i < this.tableRow.cells.length; i++) {
                 // arrData.push(String(this.tableRow.cells[i].innerHTML));
-                columns.push(String(this.table.columns[i].column_name));
+                // columns.push(String(this.table.columns[i].column_name));
+                 indexRows.forEach(inedexRow=>{
+                  if (inedexRow==i) {
+                    columns.push(String(this.table.columns[i].column_name));}}
+                  )
             }
             const data={
               "table_name": `${this.table.name}`,
