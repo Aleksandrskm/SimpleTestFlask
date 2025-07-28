@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>АРМ администратора</title>
+    <title>Администратор</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
@@ -17,7 +17,7 @@
             <div id="timer-start"></div>
         </div>
 
-        <h1>АРМ администратора</h1>
+        <h1>Администратор</h1>
         <button id="settingsBtn" class="button_settings">
             <img class="settings" src="/static/img/gear.svg" alt="Настройки" title="Настройки">
         </button>
@@ -26,11 +26,11 @@
     {% block content %}
 
     <main class="butt">
+        <a href="/viewing_tables"><button class="btn">Редактор данных</button></a>
+        <a href="/abonents"><button class="btn">Заполнение данных абонента</button></a>
         <a href="/maps_territorial_districts"><button class="btn">Cервис географического ресурса</button></a>
         <a href="/subsystem_of calibration_beams"><button class="btn">Подсистема калибровки лучей КА</button></a>
         <a href="/monotonous_time_service"><button class="btn">Cервис монотонного времени</button></a>
-        <a href="/abonents"><button class="btn">Заполнение данных для абонента</button></a>
-        <a href="/viewing_tables"><button class="btn">Редактор данных</button></a>
         <a href="/azimuth_and_elevation_angle"><button class="btn">Определение азимута и угла места</button></a>
         <a href="/get_coordinates"><button class="btn">Нахождение координат через API</button></a>
         <a href="/communication_availability"><button class="btn">Вычисление доступности связи</button></a>
