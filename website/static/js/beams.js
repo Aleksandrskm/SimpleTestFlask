@@ -1,5 +1,5 @@
 'use strict';
-import {editRow,deleteRow,insertRow,postJSON,getRowsTable,changeQuery} from './db.js';
+import {editRow,deleteRow,insertRow,postJSON,getRowsTable,changeQuery,selectQuery} from './db.js';
 document.addEventListener('DOMContentLoaded',function(){
     function createKATable(){
         getRowsTable('KA',0,99999).then(KA=>{
@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded',function(){
                 // console.log(tableInfo.columns[i].column_description)
                
                 const th=document.createElement('th');
-                if (tableInfo.columns[i].column_description=='Идентификатор' || tableInfo.columns[i].column_description=='Наименование КА' 
-                    ||  tableInfo.columns[i].column_description=='Наименование КА рус.' || tableInfo.columns[i].column_description=='Номер орбиты') {
+                if (tableInfo.columns[i].column_description==='Идентификатор' || tableInfo.columns[i].column_description==='Наименование КА'
+                     || tableInfo.columns[i].column_description==='Номер орбиты') {
                     console.log()
                     rusName[tableInfo.columns[i].column_name]=tableInfo.columns[i].column_description;
                     th.innerHTML+=tableInfo.columns[i].column_description;
@@ -60,13 +60,14 @@ document.addEventListener('DOMContentLoaded',function(){
                 const trs=document.querySelectorAll('.KA-Table tbody tr');
               
                 trs.forEach((tr)=>{
-                    if (tr==e.target.parentElement) {
+                    if (tr===e.target.parentElement) {
                     //   tr.style='background-color: #B5B8B1';
                     tr.classList.add('selected');
                    
                     document.getElementById('id-ka').innerHTML=`КА: ${tr.children[0].innerHTML}`;
                     document.getElementById('ka-name').innerHTML=`${tr.children[1].innerHTML}`;
-
+                    document.querySelector('.beams-Table').innerHTML=`<thead> </thead><tbody></tbody>`;
+                    createBeamTable(tr.children[0].innerHTML)
                 
                     }
                     else{
@@ -96,18 +97,21 @@ document.addEventListener('DOMContentLoaded',function(){
         drawCircle(500,500,312.5,'blue');
     }
     function createBeamTable(idKa){
-        getRowsTable('KA_BEAM',0,99999).then(beams=>{
+        const selectedValue = document.querySelector('input[name="type_beams"]:checked').value;
+        console.log(`${selectedValue}!!!!`);
+        getRowsTable(`${selectedValue}`,0,99999).then(beams=>{
           console.log(beams.length)
-          if (beams.length!=0) {
-            const data = { name: 'KA_BEAM'};
+          if (beams.length!==0) {
+            const data = { name: `${selectedValue}`};
+            console.log(data)
             const rusName={};
             postJSON(data).then(tableInfo=>{
                 const tr = document.createElement('tr');
                 for( let i=0;i<tableInfo.columns.length;i++){
                     // console.log(tableInfo.columns[i].column_description)
                     const th=document.createElement('th');
-                    if (tableInfo.columns[i].column_description=='Идентификатор' || tableInfo.columns[i].column_description=='Азимут луча, градус' 
-                         ||  tableInfo.columns[i].column_description=='Азимут луча, градус' ) {
+                    if (tableInfo.columns[i].column_description==='Идентификатор' || tableInfo.columns[i].column_description==='Азимут луча, градус'
+                         ||  tableInfo.columns[i].column_description==='Азимут луча, градус' ) {
                            
                             rusName[tableInfo.columns[i].column_name]=tableInfo.columns[i].column_description;
                             let decr_rus=tableInfo.columns[i].column_description;
@@ -152,51 +156,127 @@ document.addEventListener('DOMContentLoaded',function(){
           });
         }
           else{
-            console.log(beams)
-            const tr = document.createElement('tr');
-            const ths=['Лучи','Азимут от подсп.точки','Расстояние от подсп.точки','Радиус,м']
-            for(let i=0;i<4;i++){
-                const th=document.createElement('th')
-                th.innerHTML=ths[i]
-                tr.append(th)
-            }
-           
-           
-            document.querySelector('.beams-Table thead').append(tr); 
-            let az=0;
-            let distance=[850000,800000,1700000,600000,500000,1400000,600000,1500000,100000,1800000,700000,550000,630000,720000,480000,1350000];
-          
-            for (let i = 0; i < 16; i++) {
-                
-                const trBody=document.createElement('tr')
-                let count=i+1;
-                trBody.classList.add('beams-element');
-               
-                trBody.innerHTML+=`<td>${count}</td>`;
-                trBody.innerHTML+=`<td>${az}</td>`;
-                trBody.innerHTML+=`<td>${distance[i]}</td>`;
-                trBody.innerHTML+=`<td>${900000}</td>`;
-                document.querySelector('.beams-Table tbody').append(trBody); 
-                az+=30;
-               
-            }
+              const data = { name: `${selectedValue}`};
+              console.log(data)
+              const rusName={};
+              postJSON(data).then(tableInfo=>{
+                  const tr = document.createElement('tr');
+                  for( let i=0;i<tableInfo.columns.length;i++){
+                       console.log(tableInfo.columns[i].column_description)
+                      const th=document.createElement('th');
+                      if (true ) {
+
+                          rusName[tableInfo.columns[i].column_name]=tableInfo.columns[i].column_description;
+                          let decr_rus=tableInfo.columns[i].column_description;
+                          switch (decr_rus) {
+                              case 'Идентификатор':
+                                  decr_rus='Лучи'
+                                  break;
+                              case 'Азимут луча, градус':
+                                  decr_rus='Азимут от подсп.точки'
+                                  break;
+
+                              default:
+                                  break;
+                          }
+                          th.innerHTML+=decr_rus;
+
+                          tr.append(th);
+                      }
+                  }
+                  document.querySelector('.beams-Table thead').append(tr);
+              });
+              console.log(selectedValue)
+              selectQuery(`SELECT * FROM ${selectedValue}  WHERE ID_KA = 1`).then((dataBeams)=>{
+
+                  dataBeams.forEach((beams)=>{
+                      const tr=document.createElement('tr');
+
+                      beams.forEach((dataBeam)=>{
+                          const td=document.createElement('td');
+                          td.textContent=dataBeam;
+                          tr.append(td);
+                      })
+                      tr.classList.add('beams-element');
+                      document.querySelector('.beams-Table tbody').append(tr);
+
+                  })
+                  document.querySelectorAll('.beams-element').forEach(beam=>{
+                      console.log('1')
+                      beam.addEventListener('click',(e)=>{
+                          const trs=document.querySelectorAll('.beams-Table tbody tr');
+                          console.log('trs')
+                          trs.forEach((tr)=>{
+                              if (tr===e.target.parentElement) {
+                                  clearCanvas();
+
+                                  //   tr.style='background-color: #B5B8B1';
+                                  tr.classList.add('selected');
+                                  let centerY=0,centerX=0,radius=(tr.children[4].innerHTML/1000)*0.125;
+                                  console.log(tr.children[1].innerHTML)
+                                  centerY=500+(tr.children[2].innerHTML*0.125)/1000+radius*Math.sin(tr.children[1].innerHTML* (Math.PI/180));
+                                  centerX=500+(tr.children[2].innerHTML*0.125)/1000+radius*Math.cos(tr.children[1].innerHTML* (Math.PI/180));
+                                  console.log(centerX,centerY,radius)
+                                  drawCircle(centerX,centerY,radius,'black')
+                              }
+                              else{
+                                  tr.classList.remove('selected');
+                              }
+                          })
+
+                      })
+
+                  })
+              })
+            // console.log(beams)
+            // const tr = document.createElement('tr');
+            // const ths=['Лучи','Азимут от подсп.точки','Расстояние от подсп.точки','Радиус,м']
+            // for(let i=0;i<4;i++){
+            //     const th=document.createElement('th')
+            //     th.innerHTML=ths[i]
+            //     tr.append(th)
+            // }
+            //
+            //
+            // document.querySelector('.beams-Table thead').append(tr);
+            // let az=0;
+            // let distance=[850000,800000,1700000,600000,500000,1400000,600000,1500000,100000,1800000,700000,550000,630000,720000,480000,1350000];
+            //
+            // for (let i = 0; i < 16; i++) {
+            //
+            //     const trBody=document.createElement('tr')
+            //     let count=i+1;
+            //     trBody.classList.add('beams-element');
+            //
+            //     trBody.innerHTML+=`<td>${count}</td>`;
+            //     trBody.innerHTML+=`<td>${az}</td>`;
+            //     trBody.innerHTML+=`<td>${distance[i]}</td>`;
+            //     trBody.innerHTML+=`<td>${900000}</td>`;
+            //     document.querySelector('.beams-Table tbody').append(trBody);
+            //     az+=30;
+            //
+            // }
+              console.log( document.querySelectorAll('.beams-element'))
+
           }
+
         document.querySelectorAll('.beams-element').forEach(beam=>{
+            console.log('1')
             beam.addEventListener('click',(e)=>{
                 const trs=document.querySelectorAll('.beams-Table tbody tr');
-              
+                console.log('trs')
                 trs.forEach((tr)=>{
-                    if (tr==e.target.parentElement) {
+                    if (tr===e.target.parentElement) {
                     clearCanvas();
                   
                     //   tr.style='background-color: #B5B8B1';
                     tr.classList.add('selected');
-                    let centerX=0,centerY=0,radius=(tr.children[3].innerHTML/1000)*0.125;
+                    let centerY=0,centerX=0,radius=(tr.children[3].innerHTML/1000)*0.125;
                     console.log(tr.children[1].innerHTML)
-                    centerX=500+(tr.children[2].innerHTML*0.125)/1000+radius*Math.sin(tr.children[1].innerHTML* (Math.PI/180));
-                    centerY=500+(tr.children[2].innerHTML*0.125)/1000+radius*Math.cos(tr.children[1].innerHTML* (Math.PI/180));
+                    centerY=500+(tr.children[2].innerHTML*0.125)/1000+radius*Math.sin(tr.children[1].innerHTML* (Math.PI/180));
+                    centerX=500+(tr.children[2].innerHTML*0.125)/1000+radius*Math.cos(tr.children[1].innerHTML* (Math.PI/180));
                     console.log(centerX,centerY,radius)
-                    drawCircle(centerY,centerX,radius,'black')
+                    drawCircle(centerX,centerY,radius,'black')
                     }
                     else{
                         tr.classList.remove('selected');
@@ -215,12 +295,12 @@ document.addEventListener('DOMContentLoaded',function(){
                 console.log(tr.children[1].innerHTML)
 
                 
-                let centerX=0,centerY=0,radius=(tr.children[3].innerHTML/1000)*0.125;
+                let centerY=0,centerX=0,radius=(tr.children[3].innerHTML/1000)*0.125;
                 console.log(tr.children[1].innerHTML)
-                centerX=500+(tr.children[2].innerHTML*0.125)/1000+radius*Math.sin(tr.children[1].innerHTML* (Math.PI/180));
-                centerY=500+(tr.children[2].innerHTML*0.125)/1000+radius*Math.cos(tr.children[1].innerHTML* (Math.PI/180));
-                console.log(centerY,centerX,radius)
-                drawCircle(centerY,centerX,radius,'black')
+                centerY=500+(tr.children[2].innerHTML*0.125)/1000+radius*Math.sin(tr.children[1].innerHTML* (Math.PI/180));
+                centerX=500+(tr.children[2].innerHTML*0.125)/1000+radius*Math.cos(tr.children[1].innerHTML* (Math.PI/180));
+                console.log(centerX,centerY,radius)
+                drawCircle(centerX,centerY,radius,'black')
                 
 
             
@@ -273,7 +353,7 @@ document.addEventListener('DOMContentLoaded',function(){
             document.querySelector('.modal-beams-save').classList.toggle('close-modal');
         })
         document.getElementById('save-save-beams').addEventListener('click',()=>{
-            changeQuery('SELECT * FROM KA_BEAM');
+            changeQuery('SELECT * FROM KA_BEAM_PRD');
             document.querySelector('.modal-beams-save').classList.toggle('close-modal');
         })
         document.getElementById('save-edit-beams').addEventListener('click',()=>{
@@ -283,13 +363,13 @@ document.addEventListener('DOMContentLoaded',function(){
                 beamSelected.children[i].innerHTML=`<td>${data.value}</td>`
                 console.log(data.value)
             })
-            let centerX=0,centerY=0,radius=(beamSelected.children[3].innerHTML/1000)*0.125;
+            let centerY=0,centerX=0,radius=(beamSelected.children[3].innerHTML/1000)*0.125;
                     console.log(beamSelected.children[1].innerHTML)
-                    centerX=500+(beamSelected.children[2].innerHTML*0.125)/1000+radius*Math.sin(beamSelected.children[1].innerHTML* (Math.PI/180));
-                    centerY=500+(beamSelected.children[2].innerHTML*0.125)/1000+radius*Math.cos(beamSelected.children[1].innerHTML* (Math.PI/180));
+                    centerY=500+(beamSelected.children[2].innerHTML*0.125)/1000+radius*Math.sin(beamSelected.children[1].innerHTML* (Math.PI/180));
+                    centerX=500+(beamSelected.children[2].innerHTML*0.125)/1000+radius*Math.cos(beamSelected.children[1].innerHTML* (Math.PI/180));
                     console.log(centerX,centerY,radius)
                     clearCanvas();
-                    drawCircle(centerY,centerX,radius,'black')
+                    drawCircle(centerX,centerY,radius,'black')
             
             document.querySelector('.modal-beams-edit').classList.toggle('close-modal');
             
@@ -303,7 +383,7 @@ document.addEventListener('DOMContentLoaded',function(){
             // console.log(leftContent,KA[0])
         });
     }
-    function drawCircle(centerX,centerY,radius,color) {
+    function drawCircle(centerY,centerX,radius,color) {
         const canvas = document.getElementById("canvas");
        
     const ctx = canvas.getContext('2d');
@@ -311,7 +391,7 @@ document.addEventListener('DOMContentLoaded',function(){
 
     ctx.beginPath();
 
-    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+    ctx.arc(centerY, centerX, radius, 0, 2 * Math.PI);
     
 
     ctx.strokeStyle = color; 
