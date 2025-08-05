@@ -92,7 +92,7 @@ async function getRowsTable(tableName,skipRows,rowsCount) {
 }
 async function changeQuery(query) {
   try {
-    const response =await fetch(`http://${testURL}/Database/ChangeQuery?query=${query}`,{
+    const response =await fetch(`http://${URL}/Database/ChangeQuery?query=${encodeURIComponent(query)}`, {
       method:'POST',
       headers:{
         'Content-Type':'application/json',
@@ -108,7 +108,7 @@ async function changeQuery(query) {
 }
 async function selectQuery(query) {
   try {
-    const response =await fetch(`http://${testURL}/Database/SelectQuery?query=${query}`,{
+    const response =await fetch(`http://${URL}/Database/SelectQuery?query=${encodeURIComponent(query)}`,{
       method:'POST',
       headers:{
         'Content-Type':'application/json',
