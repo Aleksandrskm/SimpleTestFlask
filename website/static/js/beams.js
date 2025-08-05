@@ -334,7 +334,44 @@ document.addEventListener('DOMContentLoaded',function(){
             // console.log(leftContent,KA[0])
         });
     }
+    function generateBeamUpdateQuery(tableName,arrDataBeams, arrColumnsBeams, arrIdBeams,idKa) {
+        // Проверка входных данных
+        // if (!Array.isArray(arrDataBeams) || !Array.isArray(arrColumnsBeams) || !Array.isArray(arrIdBeams)) {
+        //     throw new Error('Все аргументы должны быть массивами');
+        // }
 
+        const recordsCount = arrIdBeams.length;
+        const columnsCount = arrColumnsBeams.length;
+        const totalValues = recordsCount * columnsCount;
+        //
+        // if (arrDataBeams.length !== totalValues) {
+        //     throw new Error(`Ожидается ${totalValues} значений в arrDataBeams (${recordsCount} записей × ${columnsCount} колонок), получено ${arrDataBeams.length}`);
+        // }
+
+        // Начало запроса
+        let query = `UPDATE ${tableName} SET\n`;
+
+        // Генерируем CASE для каждого поля
+        arrColumnsBeams.forEach((column, colIndex) => {
+            query += `  ${column} = CASE\n`;
+
+            // Добавляем условия для каждого ID
+            arrIdBeams.forEach((id, idIndex) => {
+                const valueIndex = idIndex * columnsCount + colIndex;
+                const value = arrDataBeams[valueIndex];
+                query += `    WHEN ID = ${id} THEN ${value}\n`;
+            });
+
+            query += `    ELSE ${column}\n  END`;
+            if (colIndex < arrColumnsBeams.length - 1) query += ',';
+            query += '\n';
+        });
+
+        // Условие WHERE
+        query += `WHERE ID IN (${arrIdBeams.join(', ')}) AND ID_KA = ${idKa};`;
+
+        return query;
+    }
     function drawCircle(centerY,centerX,radius,color) {
         const canvas = document.getElementById("canvas");
        
@@ -385,14 +422,14 @@ document.addEventListener('DOMContentLoaded',function(){
         if (beamSelected) {
             document.querySelector('.modal-beams-edit').classList.toggle('close-modal');
             Array.from(beamSelected.children).forEach((child,index)=>{
-                if (index!==0){
+
                     const dataColum=document.createElement('div');
                     dataColum.classList.add('data-column');
                     dataColum.innerHTML+=`<div class="name-column">${ths[index].innerHTML}</div>`;
                     dataColum.innerHTML+=`<input value='${child.innerHTML}'></input>`;
                     console.log(child.innerHTML)
                     document.querySelector('.modal-columns-edit').append(dataColum)
-                }
+
 
             })
         }
@@ -411,30 +448,35 @@ document.addEventListener('DOMContentLoaded',function(){
     document.getElementById('save-save-beams').addEventListener('click',()=>{
         const idKaData=document.getElementById('id-ka').innerHTML;
         const idKa=idKaData.replace(/\D/g, '');
+        console.log(idKa);
         const elementsAllBeams=document.querySelectorAll('tr.beams-element');
         const elementsColumsBeams=document.querySelectorAll('table.beams-Table thead th');
         console.log(elementsAllBeams[0]);
         console.log(elementsColumsBeams[1]);
         const selectedValue = document.querySelector('input[name="type_beams"]:checked').value;
-        const queryBeam=`UPDATE ${selectedValue} SET `;
+
         const arrColumsBeams=[];
         const arrDataBeams=[];
         const arrIdBeams=[];
+        console.log(elementsAllBeams);
+        for (let i = 0; i < elementsAllBeams.length; i++) {
+            Array.from(elementsAllBeams[i].children).forEach((beam,index)=>{
+                if ( index===0){
+                    // console.log(beam.innerHTML);
+                    // arrIdBeams.push(elementsAllBeams[i]);
 
+                    arrIdBeams.push(+beam.innerHTML);
+
+                }
+
+            })
+        }
+        console.log(arrIdBeams)
+        console.log(elementsColumsBeams.length)
         elementsColumsBeams.forEach((column,i)=> {
-            if (i===0){
-                arrIdBeams.push(column.id);
-            }
            if (i>2){
-               console.log(column.id)
+               // console.log(column.id)
                arrColumsBeams.push(column.id);
-               Array.from(elementsAllBeams[i].children).forEach((beam,index)=>{
-                   if ( index>2){
-                       console.log(beam.innerHTML);
-                       arrDataBeams.push(beam.innerHTML);
-                   }
-
-               })
            }
 
 
@@ -442,15 +484,41 @@ document.addEventListener('DOMContentLoaded',function(){
                 console.log(`......................`)
             // queryBeam+=`${elementsColumsBeams[i]} = CASE ID`;
         })
+        for (let i = 0; i < elementsAllBeams.length; i++) {
+            Array.from(elementsAllBeams[i].children).forEach((beam,index)=>{
+                if ( index>2){
+                    // console.log(beam.innerHTML);
+                    arrDataBeams.push(beam.innerHTML);
+                }
+            })
+        }
+
+        // for (let i = 0; i < arrIdBeams.length; i++) {
+        //     for (let j = 0; j < arrDataBeams.length; j++) {
+        //         let k= j>=10?j%10 :j;
+        //             // console.log(k)
+        //         queryBeam+=` ${arrColumsBeams[k]} = ${arrDataBeams[j]},`;
+        //
+        //     }
+        //     queryBeam+=`WHERE ID = ${i} ID_KA = ${idKa};`;
+        //
+        // }
+        // console.log(queryBeam);
         // changeQuery('SELECT * FROM KA_BEAM_PRD');
+        const queryBeam=generateBeamUpdateQuery(selectedValue,arrDataBeams,arrColumsBeams,arrIdBeams,idKa);
+        console.log(queryBeam);
+        changeQuery(queryBeam).then(r => console.log(r));
         document.querySelector('.modal-beams-save').classList.toggle('close-modal');
     })
     document.getElementById('save-edit-beams').addEventListener('click',()=>{
         const dataColumns=document.querySelectorAll('.data-column input');
         const beamSelected=document.querySelector('tr.beams-element.selected');
         dataColumns.forEach((data,i)=>{
-            beamSelected.children[i].innerHTML=`<td>${data.value}</td>`
-            console.log(data.value)
+
+                beamSelected.children[i].innerHTML=`<td>${data.value}</td>`
+                console.log(data.value)
+
+
         })
         let centerY=0,centerX=0,radius=(beamSelected.children[4].innerHTML/1000)*0.125;
         const distanceBeam=700000;
