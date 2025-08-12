@@ -620,16 +620,36 @@ img {
     overflow-y: auto;
 }
 .btn {
-    font-size: 20px; /* Устанавливаем размер текста кнопки */
+    font-size: 1.2rem; /* Устанавливаем размер текста кнопки */
     padding: 10px 20px; /* Устанавливаем отступы внутри кнопки */
     margin: 10px;
-    width: 500px;
-    height: 55px;
+    /*width: 500px;*/
+    /*height: 55px;*/
+    width: max(250px, 25vw);
+    height: max(55px, 9vh);
     border-radius: 10px;
     text-align: center;
     cursor: pointer; /* Изменение вида курсора */
 }
-
+.name-column-menu{
+    text-align: center;
+    padding-left: 15px;
+    padding-bottom: 15px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+}
+.colum_menu{
+    display: flex
+;
+    flex-direction: column;
+}
+#container-menu {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 20px;
+}
 .butt button:hover {
     background-color: #C0C0C0;
 }
