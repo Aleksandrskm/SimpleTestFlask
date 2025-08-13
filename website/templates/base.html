@@ -24,16 +24,28 @@
     </header>
 
     {% block content %}
-
     <main class="butt">
-        <a href="/viewing_tables"><button class="btn">Редактор данных</button></a>
-        <a href="/abonents"><button class="btn">Заполнение данных абонента</button></a>
-        <a href="/maps_territorial_districts"><button class="btn">Cервис географического ресурса</button></a>
-        <a href="/subsystem_of calibration_beams"><button class="btn">Подсистема калибровки лучей КА</button></a>
-        <a href="/monotonous_time_service"><button class="btn">Cервис монотонного времени</button></a>
-        <a href="/azimuth_and_elevation_angle"><button class="btn">Определение азимута и угла места</button></a>
-        <a href="/get_coordinates"><button class="btn">Нахождение координат через API</button></a>
-        <a href="/communication_availability"><button class="btn">Вычисление доступности связи</button></a>
+        <div id="container-menu">
+            <div class="colum_menu">
+                <div class="name-column-menu">Редактирование данных</div>
+                <a href="/viewing_tables"><button class="btn">Редактор данных</button></a>
+                <a href="/abonents"><button class="btn">Заполнение данных абонента</button></a>
+                <a href="/maps_territorial_districts"><button class="btn">Cервис географического ресурса</button></a>
+            </div>
+            <div class="colum_menu">
+                <div class="name-column-menu">Функциональные подсистемы</div>
+                <a href="/subsystem_of calibration_beams"><button class="btn">Подсистема калибровки лучей КА</button></a>
+                <a href="/monotonous_time_service"><button class="btn">Cервис монотонного времени</button></a>
+            </div>
+            <div class="colum_menu">
+                <div class="name-column-menu">Расчетные задачи</div>
+                <a href="/azimuth_and_elevation_angle"><button class="btn">Определение азимута и угла места</button></a>
+                <a href="/get_coordinates"><button class="btn">Нахождение координат через API</button></a>
+                <a href="/communication_availability"><button class="btn">Вычисление доступности связи</button></a>
+            </div>
+        </div>
+
+
     </main>
     <div id="myModal" class="modal">
         <div class="modal__dialog">
