@@ -2,14 +2,15 @@ import {editRow,deleteRow,insertRow,postJSON,getRowsTable} from './db.js';
 import { Modal } from "./Modal.js";
 export function table(url){
       // функция  в которую  передается название выбранной таблицы и на его основе создается таблица
-      function createTable(engName,rusName) {
+      function createTable(engName,rusName,) {
         let data = { name: engName };
         postJSON(data).then(result => {
+          console.log(result)
           if (result===undefined) {
             document.querySelector('.container_content').innerHTML+=`<h3>В данный момент таблица недоступна</h3>`
           }
           else{  
-            generateTable(result,rusName);
+            generateTable(result,rusName,engName);
           }
         });
       
@@ -58,7 +59,7 @@ export function table(url){
       }
       /* функция  которая проверяет  пустая таблица или нет и если она пустая строит её структуру  */
       function checkVoidTable(result,tableName, totalRowsCount,rusName) {
-        if (totalRowsCount == 0) {
+        if (totalRowsCount === 0) {
           const containerContent=document.querySelector('div .container_content');
           containerContent.innerHTML='';
           const name = document.createElement('div');
@@ -73,25 +74,28 @@ export function table(url){
           containerContent.append(name);
           const tr = document.createElement('table');
           tr.classList.add('mainTable');
-          result.columns.forEach(column=>{
+          result.columns_info.forEach(column=>{
             const th =document.createElement('th');
-            th.innerHTML=`${column.column_description}`;
+            th.innerHTML=`${column.description}`;
             tableHead.append(th);
           })
           tr.append(tableHead);
           tableScroll.append(tr);
           tableWrapper.append(tableScroll);
           containerContent.append(tableWrapper);
-          createButtonsTable(tableScroll,result,tableHead);
+          createButtonsTable(tableScroll,result,tableHead,rusName,tableName);
         }
       }
       /* функция  в которую  передается вся информация о таблице 
       строки  в таблице  название выбранной таблицы  на  основе этих параметров строится структура таблицы*/
-      function createTableContent(result,rows,tableName,rusName) {
+      function createTableContent(result,columnsInfo,tableName,rusName) {
+        console.log(result)
+        console.log(columnsInfo)
+        console.log(tableName)
         const containerContent=document.querySelector('.container_content');
         containerContent.innerHTML='';
         const tableBody = document.createElement('tbody');
-        rows.forEach((element, rowIndex) => {
+        columnsInfo.forEach((element, rowIndex) => {
           if (rowIndex === 0) {
             const name = document.createElement('div');
             const tableWrapper = document.createElement('div');
@@ -106,10 +110,10 @@ export function table(url){
             table.classList.add('mainTable');
             document.querySelector('.container_content').append(table);
             const tableRow = document.createElement('tr');
-            result.columns.forEach(column=>{
+            columnsInfo.forEach(column=>{
               const th =document.createElement('th');
               th.scope="col";
-              th.innerHTML=`${column.column_description}`;
+              th.innerHTML=`${column.description}`;
               tableRow.append(th);
             });
             tableHead.append(tableRow);
@@ -121,16 +125,16 @@ export function table(url){
           const tableRow = document.createElement('tr');
           // console.log(element);
           let rowsIndex=0;
-          for(let field in element) {
-            // console.log(element[field])
-            const cell = document.createElement('td');
-            cell.innerText = element[field];
-            if (rowsIndex === 0) {
-              cell.setAttribute('data-key', 'ID');
-              ++rowsIndex;
-            }
-            tableRow.appendChild(cell);
-          };
+          // for(let field in element) {
+          //   // console.log(element[field])
+          //   const cell = document.createElement('td');
+          //   cell.innerText = element[field];
+          //   if (rowsIndex === 0) {
+          //     cell.setAttribute('data-key', 'ID');
+          //     ++rowsIndex;
+          //   }
+          //   tableRow.appendChild(cell);
+          // };
           const table=document.querySelector('table');
           const tableScroll = document.querySelector('.table-scroll');
           tableRow.addEventListener('click',(e)=>{
@@ -140,91 +144,137 @@ export function table(url){
             console.log(e.target.parentElement);
             const trs=document.querySelectorAll('table tr');
             trs.forEach((tr)=>{
-              if (tr==e.target.parentElement) {
+              if (tr===e.target.parentElement) {
                 tr.style='background-color: #B5B8B1';
               }
               else{
                 tr.style='';
               }
             })
-             createButtonsTable(tableScroll,result,e.target.parentElement,rusName);
+             createButtonsTable(tableScroll,result,e.target.parentElement,rusName,tableName);
           });
           tableBody.append(tableRow);
           table.append(tableBody);
-          if (result.columns_count<=22)
-            {
-              console.log('21')
-              createButtonsTable(tableScroll,result,tableRow,rusName);
-            } 
+
+          // if (result.columns_count<=22)
+          //   {
+          //     console.log('21')
+          //     createButtonsTable(tableScroll,result,tableRow,rusName);
+          //   }
           // console.log(result.columns_count);
         });
-        if (result.columns_count<21){
-          const trs=document.querySelectorAll('table tr');
-        trs.forEach((tr,index)=>{
-        if (index==trs.length-1) { 
-        tr.style='background-color: #B5B8B1';
-        }
-      });
-        }
-        if (result.total_rows_count>20) {
-          getRowsTable(tableName,20,result.total_rows_count).then(response=>{
-          response.forEach(row=>{
-            // console.log(row)
+        getRowsTable(tableName).then(dataTable => {
+          dataTable.rows.forEach((row)=>{
             const tableRow = document.createElement('tr');
             let rowsIndex=0;
             for(let field in row) {
-              // console.log(element[field])
-              const cell = document.createElement('td');
-              
-              cell.innerText = row[field];
-              if (rowsIndex === 0) {
-                cell.setAttribute('data-key', 'ID');
-                ++rowsIndex;
-              }
-              tableRow.appendChild(cell);
-            };
+                      // console.log(element[field])
+                const cell = document.createElement('td');
+                cell.innerText = row[field];
+                if (rowsIndex === 0) {
+                  cell.setAttribute('data-key', 'ID');
+                  ++rowsIndex;
+                }
+                tableRow.appendChild(cell);
+            }
             const tableBody=document.querySelector('tbody');
             tableRow.addEventListener('click',(e)=>{
-              let r = document.createRange();
-              r.selectNode(e.target.parentElement);
-              document.getSelection().addRange(r);
-              console.log(e.target.parentElement);
-              const trs=document.querySelectorAll('table tr');
-              trs.forEach((tr)=>{
-                if (tr==e.target.parentElement) {
-                  tr.style='background-color: #B5B8B1';
-                }
-                else{
-                  tr.style='';
-                }
-              })
-              createButtonsTable(tableScroll,result,e.target.parentElement,rusName); 
-            });
-            
+                      let r = document.createRange();
+                      r.selectNode(e.target.parentElement);
+                      document.getSelection().addRange(r);
+                      console.log(e.target.parentElement);
+                      const trs=document.querySelectorAll('table tr');
+                      trs.forEach((tr)=>{
+                        if (tr==e.target.parentElement) {
+                          tr.style='background-color: #B5B8B1';
+                        }
+                        else{
+                          tr.style='';
+                        }
+                      })
+                      createButtonsTable(tableScroll,result,e.target.parentElement,rusName,tableName);
+                    });
             tableBody.append(tableRow);
-            const tableScroll = document.querySelector('.table-scroll');
-            createButtonsTable(tableScroll,result,tableRow,rusName);
-          })  
+
+                  const tableScroll = document.querySelector('.table-scroll');
+                  createButtonsTable(tableScroll,result,tableRow,rusName,tableName);
+
+
+          })
           const trs=document.querySelectorAll('table tr');
-            trs.forEach((tr,index)=>{
-              if (index==trs.length-1) {
+          trs.forEach((tr,index)=>{
+            if (index===trs.length-1) {
               tr.style='background-color: #B5B8B1';
-              }
-            });
+            }
           });
-        }
+        })
+      //   if (result.columns_count<21){
+      //     const trs=document.querySelectorAll('table tr');
+      //   trs.forEach((tr,index)=>{
+      //   if (index==trs.length-1) {
+      //   tr.style='background-color: #B5B8B1';
+      //   }
+      // });
+      //   }
+      //   if (result.total_rows_count>20) {
+      //     getRowsTable(tableName,20,result.total_rows_count).then(response=>{
+      //     response.forEach(row=>{
+      //       // console.log(row)
+      //       const tableRow = document.createElement('tr');
+      //       let rowsIndex=0;
+      //       for(let field in row) {
+      //         // console.log(element[field])
+      //         const cell = document.createElement('td');
+      //
+      //         cell.innerText = row[field];
+      //         if (rowsIndex === 0) {
+      //           cell.setAttribute('data-key', 'ID');
+      //           ++rowsIndex;
+      //         }
+      //         tableRow.appendChild(cell);
+      //       };
+      //       const tableBody=document.querySelector('tbody');
+      //       tableRow.addEventListener('click',(e)=>{
+      //         let r = document.createRange();
+      //         r.selectNode(e.target.parentElement);
+      //         document.getSelection().addRange(r);
+      //         console.log(e.target.parentElement);
+      //         const trs=document.querySelectorAll('table tr');
+      //         trs.forEach((tr)=>{
+      //           if (tr==e.target.parentElement) {
+      //             tr.style='background-color: #B5B8B1';
+      //           }
+      //           else{
+      //             tr.style='';
+      //           }
+      //         })
+      //         createButtonsTable(tableScroll,result,e.target.parentElement,rusName);
+      //       });
+      //
+      //       tableBody.append(tableRow);
+      //       const tableScroll = document.querySelector('.table-scroll');
+      //       createButtonsTable(tableScroll,result,tableRow,rusName);
+      //     })
+      //     const trs=document.querySelectorAll('table tr');
+      //       trs.forEach((tr,index)=>{
+      //         if (index==trs.length-1) {
+      //         tr.style='background-color: #B5B8B1';
+      //         }
+      //       });
+      //     });
+      //   }}
       }
       /* функция  которая   создает таблицу на сайте  */
-      function generateTable(result,rusName) {
-        if (result.total_rows_count==0) {
-          checkVoidTable(result,result.name, result.total_rows_count,rusName);
+      function generateTable(result,rusName,tableNane) {
+        if (result.total_rows_count===0) {
+          checkVoidTable(result,tableNane, result.total_rows_count,rusName);
         }
         else {
-          createTableContent(result,result.rows, result.name,rusName);
+          createTableContent(result,result.columns_info,tableNane,rusName);
         }
       }
       /* функция  которая  создает  кнопки для работы с  таблицей на сайте  */
-      function createButtonsTable(table,result,tableRow,rusName) {
+      function createButtonsTable(table,result,tableRow,rusName,tableName) {
         const btns=document.querySelector('.table-buttons');
         if (btns) {
           btns.remove();
@@ -251,11 +301,12 @@ export function table(url){
             btnDelete.setAttribute('disabled', '');
             btmMap.setAttribute('disabled', '');
           }
+          // console.log(result)
         const modalParent=document.querySelector('.container_content');
-        const modalDelete= new Modal(modalParent,'delete',0,result.columns,tableRow,deleteRow,result,rusName);
-        const modalInser= new Modal(modalParent,'insert',result.columns_count,result.columns,tableRow,insertRow,result,rusName);
-        const modalCopy= new Modal(modalParent,'copy',result.columns_count,result.columns,tableRow,insertRow,result,rusName);
-        const modalEdit= new Modal(modalParent,'edit',result.columns_count,result.columns,tableRow,editRow,result,rusName);
+        const modalDelete= new Modal(modalParent,'delete',0,result.columns_info,tableRow,deleteRow,result,rusName,tableName);
+        const modalInser= new Modal(modalParent,'insert',result.columns_info.length,result.columns_info,tableRow,insertRow,result,rusName,tableName);
+        const modalCopy= new Modal(modalParent,'copy',result.columns_info.length,result.columns_info,tableRow,insertRow,result,rusName,tableName);
+        const modalEdit= new Modal(modalParent,'edit',result.columns_info.length,result.columns_info,tableRow,editRow,result,rusName,tableName);
         btnDelete.addEventListener('click',()=>{
           modalDelete.createModal(createTable)});
         btnCopy.addEventListener('click',()=>{
