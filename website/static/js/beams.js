@@ -3,20 +3,20 @@ import {editRow,deleteRow,insertRow,postJSON,getRowsTable,changeQuery,selectQuer
 document.addEventListener('DOMContentLoaded',function(){
     function createKATable(){
         getRowsTable('KA',0,99999).then(KA=>{
-          console.log(KA)
+          console.log(KA.rows)
           const data = { name: 'KA' };
           const rusName={};
           postJSON(data).then(tableInfo=>{
             const tr = document.createElement('tr');
-            for( let i=0;i<tableInfo.columns.length;i++){
+            for( let i=0;i<tableInfo.columns_info.length;i++){
                 // console.log(tableInfo.columns[i].column_description)
                
                 const th=document.createElement('th');
-                if (tableInfo.columns[i].column_description==='Идентификатор' || tableInfo.columns[i].column_description==='Наименование КА'
-                     || tableInfo.columns[i].column_description==='Номер орбиты') {
+                if (tableInfo.columns_info[i].description==='Идентификатор' || tableInfo.columns_info[i].description==='Наименование КА'
+                     || tableInfo.columns_info[i].description==='Номер орбиты') {
                     console.log()
-                    rusName[tableInfo.columns[i].column_name]=tableInfo.columns[i].column_description;
-                    th.innerHTML+=tableInfo.columns[i].column_description;
+                    rusName[tableInfo.columns_info[i].name]=tableInfo.columns_info[i].description;
+                    th.innerHTML+=tableInfo.columns_info[i].description;
                     
                     tr.append(th);
                 }
@@ -28,14 +28,14 @@ document.addEventListener('DOMContentLoaded',function(){
             }
             document.querySelector('.KA-Table thead').append(tr);
             console.log(Object.keys(rusName));
-            for (let i = 0; i < KA.length; i++) {
+            for (let i = 0; i < KA.rows.length; i++) {
                 const elKA=document.createElement('tr');
                
-                elKA.id=KA[i].ID;
+                elKA.id=KA.rows[i].ID;
                 elKA.classList.add('ka-element');
                 // elKA.innerHTML+=`<br>`;
             const keysRusName=(Object.keys(rusName));
-                for(const key in KA[i])
+                for(const key in  KA.rows[i])
                 {
                     // console.log(rusName)
                     for(const name in rusName)
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded',function(){
                         //  console.log(name,key)
                         if (key===name) {
                            
-                        elKA.innerHTML+=`<td>${(KA[i][key])}</td>`
+                        elKA.innerHTML+=`<td>${(KA.rows[i][key])}</td>`
                     }
         
                     }
@@ -163,13 +163,13 @@ document.addEventListener('DOMContentLoaded',function(){
               const rusName={};
               postJSON(data).then(tableInfo=>{
                   const tr = document.createElement('tr');
-                  for( let i=0;i<tableInfo.columns.length;i++){
-                       console.log(tableInfo.columns[i].column_name)
+                  for( let i=0;i<tableInfo.columns_info.length;i++){
+                       console.log(tableInfo.columns_info[i].name)
                       const th=document.createElement('th');
 
 
-                          rusName[tableInfo.columns[i].column_name]=tableInfo.columns[i].column_description;
-                          let decr_rus=tableInfo.columns[i].column_description;
+                          rusName[tableInfo.columns_info[i].name]=tableInfo.columns_info[i].description;
+                          let decr_rus=tableInfo.columns_info[i].description;
                           switch (decr_rus) {
                               case 'Идентификатор':
                                   decr_rus='Идентификатор'
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded',function(){
                                   break;
                           }
                           th.innerHTML+=decr_rus;
-                          th.id=tableInfo.columns[i].column_name
+                          th.id=tableInfo.columns_info[i].name
                           tr.append(th);
 
                   }
@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded',function(){
              //     document.getElementById('id-ka').innerText=`KA: ${idKa}`;
              // }
               console.log(idKa)
-              selectQuery(`SELECT * FROM ${selectedValue}  WHERE ID_KA = ${idKa}`).then((dataBeams)=>{
+              selectQuery(`SELECT * FROM ${selectedValue} WHERE ID_KA = ${idKa}`).then((dataBeams)=>{
 
                   dataBeams.forEach((beams)=>{
                       const tr=document.createElement('tr');
@@ -334,43 +334,23 @@ document.addEventListener('DOMContentLoaded',function(){
             // console.log(leftContent,KA[0])
         });
     }
-    function generateBeamUpdateQuery(tableName,arrDataBeams, arrColumnsBeams, arrIdBeams,idKa) {
-        // Проверка входных данных
-        // if (!Array.isArray(arrDataBeams) || !Array.isArray(arrColumnsBeams) || !Array.isArray(arrIdBeams)) {
-        //     throw new Error('Все аргументы должны быть массивами');
-        // }
-
+    function generateBeamUpdateQuery(tableName, arrDataBeams, arrColumnsBeams, arrIdBeams, idKa) {
         const recordsCount = arrIdBeams.length;
         const columnsCount = arrColumnsBeams.length;
-        const totalValues = recordsCount * columnsCount;
-        //
-        // if (arrDataBeams.length !== totalValues) {
-        //     throw new Error(`Ожидается ${totalValues} значений в arrDataBeams (${recordsCount} записей × ${columnsCount} колонок), получено ${arrDataBeams.length}`);
-        // }
-
-        // Начало запроса
-        let query = `UPDATE ${tableName} SET\n`;
 
         // Генерируем CASE для каждого поля
-        arrColumnsBeams.forEach((column, colIndex) => {
-            query += `  ${column} = CASE\n`;
-
-            // Добавляем условия для каждого ID
-            arrIdBeams.forEach((id, idIndex) => {
+        const caseStatements = arrColumnsBeams.map((column, colIndex) => {
+            const cases = arrIdBeams.map((id, idIndex) => {
                 const valueIndex = idIndex * columnsCount + colIndex;
                 const value = arrDataBeams[valueIndex];
-                query += `    WHEN ID = ${id} THEN ${value}\n`;
-            });
+                return `WHEN ID = ${id} THEN ${value}`;
+            }).join(' ');
 
-            query += `    ELSE ${column}\n  END`;
-            if (colIndex < arrColumnsBeams.length - 1) query += ',';
-            query += '\n';
-        });
+            return `${column} = CASE ${cases} ELSE ${column} END`;
+        }).join(', ');
 
-        // Условие WHERE
-        query += `WHERE ID IN (${arrIdBeams.join(', ')}) AND ID_KA = ${idKa};`;
-
-        return query;
+        // Формируем итоговый запрос в одну строку
+        return `UPDATE ${tableName} SET ${caseStatements} WHERE ID IN (${arrIdBeams.join(', ')}) AND ID_KA = ${idKa};`;
     }
     function drawCircle(centerY,centerX,radius,color) {
         const canvas = document.getElementById("canvas");

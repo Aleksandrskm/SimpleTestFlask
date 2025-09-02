@@ -445,9 +445,9 @@ document.addEventListener('DOMContentLoaded', function(){
     })
     function getTypesDistrict(){
         getRowsTable('ZN_TIP',0,99999).then(types=>{
-            for (let type of types) {
-                console.log(type)
-                document.getElementById('type-district').innerHTML+=` <option value="${type.ID}">${type.NAIM}</option>`       
+            console.log(types)
+            for (let type of types.rows) {
+                    document.getElementById('type-district').innerHTML+=` <option value="${type.ID}">${type.NAIM}</option>`
             }  
         })
     }
@@ -460,15 +460,15 @@ document.addEventListener('DOMContentLoaded', function(){
            
             postJSON(data).then(tableInfo=>{
                 const tr = document.createElement('tr');
-                
-                for( let i=0;i<tableInfo.columns.length;i++){
+                console.log(tableInfo)
+                for( let i=0;i<tableInfo.columns_info.length;i++){
                    
                     // console.log(tableInfo.columns[i].column_description)
-                    rusName[tableInfo.columns[i].column_name]=tableInfo.columns[i].column_description;
+                    rusName[tableInfo.columns_info[i].name]=tableInfo.columns_info[i].description;
                     const th=document.createElement('th');
-                    if (tableInfo.columns[i].column_description!='Идентификатор') {
+                    if (tableInfo.columns_info[i].description!='Идентификатор') {
                         console.log()
-                        th.innerHTML+=tableInfo.columns[i].column_description;
+                        th.innerHTML+=tableInfo.columns_info[i].description;
                         
                         tr.append(th);
                     }
@@ -480,14 +480,14 @@ document.addEventListener('DOMContentLoaded', function(){
                 }
                 document.querySelector('.district-Table thead').append(tr);
                 console.log(Object.keys(rusName));
-                for (let i = 0; i < zone.length; i++) {
+                for (let i = 0; i < zone.rows.length; i++) {
                     const elZN=document.createElement('tr');
                    
-                    elZN.id=zone[i].ID;
+                    elZN.id=zone.rows[i].ID;
                     elZN.classList.add('zn-element');
                     // elZN.innerHTML+=`<br>`;
                 const keysRusName=(Object.keys(rusName));
-                    for(const key in zone[i])
+                    for(const key in zone.rows[i])
                     {
                         // console.log(rusName)
                         for(const name in rusName)
@@ -495,7 +495,7 @@ document.addEventListener('DOMContentLoaded', function(){
                             //  console.log(name,key)
                             if (key==name && key!='ID') {
                                
-                            elZN.innerHTML+=`<td>${(zone[i][key])}</td>`
+                            elZN.innerHTML+=`<td>${(zone.rows[i][key])}</td>`
                         }
             
                         }
@@ -622,7 +622,7 @@ document.addEventListener('DOMContentLoaded', function(){
             });
            
           
-            // leftContent.innerHTML+=`${zone[0].SHIROTA_LN}`
+            // leftContent.innerHTML+=`${zone.rows[0].SHIROTA_LN}`
             // console.log(leftContent,zone[0])
         });
     }
@@ -654,13 +654,16 @@ document.addEventListener('DOMContentLoaded', function(){
                 const primaryKeys={
                     ID:selectedRow.id
                 }
-                const data = {
-                    table_name: `ZN`,
-                    primary_keys: primaryKeys
+                // const data = {
+                //     table_name: `ZN`,
+                //     primary_keys: primaryKeys
+                // };
+                const data={
+                    where: {column:Object.keys(primaryKeys)[0],operator:"=",value:primaryKeys[Object.keys(primaryKeys)[0]]},
                 };
                 console.log(data);
                 
-                deleteRow(data).then(()=>{
+                deleteRow(data,`ZN`).then(()=>{
                     modal.remove();
                     document.querySelector('.district-Table thead').innerHTML='';
                     document.querySelector('.district-Table tbody').innerHTML='';
@@ -676,33 +679,41 @@ document.addEventListener('DOMContentLoaded', function(){
         };
       })
     document.getElementById('add-district').addEventListener('click',()=>{
-        if (document.getElementById('name_district').value==''|| 
-        document.getElementById('name_district_short').value==''||
-        document.getElementById('lat_ln').value==''||
-        document.getElementById('lon_ln').value==''||
-        document.getElementById('lat_pv').value==''||
-        document.getElementById('lon_pv').value=='') {
+        if (document.getElementById('name_district').value===''||
+        document.getElementById('name_district_short').value===''||
+        document.getElementById('lat_ln').value===''||
+        document.getElementById('lon_ln').value===''||
+        document.getElementById('lat_pv').value===''||
+        document.getElementById('lon_pv').value==='') {
           console.log('пустые поля')  
         }
         else{
             let typeDistrict = document.querySelector('.select');
     
             const data ={ 
-                table_name: "ZN",
-                columns: [
-                    "NAIM","NAIM_SHORT", "ID_ZN_TIP","SHIROTA_LN","DOLGOTA_LN","SHIROTA_PV","DOLGOTA_PV"
-                ],
-                values:[
-                    document.getElementById('name_district').value,
-                    document.getElementById('name_district_short').value,
-                    typeDistrict.options[ typeDistrict.selectedIndex ].value,
-                    document.getElementById('lat_ln').value,
-                    document.getElementById('lon_ln').value,
-                    document.getElementById('lat_pv').value,
-                    document.getElementById('lon_pv').value
-                ]
+               row:{
+                   NAIM:document.getElementById('name_district').value,
+                   NAIM_SHORT:document.getElementById('name_district_short').value,
+                   ID_ZN_TIP:typeDistrict.options[ typeDistrict.selectedIndex ].value,
+                   SHIROTA_LN:document.getElementById('lat_ln').value,
+                   DOLGOTA_LN:document.getElementById('lon_ln').value,
+                   SHIROTA_PV:document.getElementById('lat_pv').value,
+                   DOLGOTA_PV:document.getElementById('lon_pv').value
+               }
+                // columns: [
+                //     "NAIM","NAIM_SHORT", "ID_ZN_TIP","SHIROTA_LN","DOLGOTA_LN","SHIROTA_PV","DOLGOTA_PV"
+                // ],
+                // values:[
+                //     document.getElementById('name_district').value,
+                //     document.getElementById('name_district_short').value,
+                //     typeDistrict.options[ typeDistrict.selectedIndex ].value,
+                //     document.getElementById('lat_ln').value,
+                //     document.getElementById('lon_ln').value,
+                //     document.getElementById('lat_pv').value,
+                //     document.getElementById('lon_pv').value
+                // ]
         }
-        insertRow(data).then(()=>{
+        insertRow(data,"ZN").then(()=>{
             document.querySelector('.district-Table thead').innerHTML='';
             document.querySelector('.district-Table tbody').innerHTML='';
             clearMap();
