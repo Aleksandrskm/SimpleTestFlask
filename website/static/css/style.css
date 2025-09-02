@@ -644,6 +644,9 @@ img {
 ;
     flex-direction: column;
 }
+.modalColumns{
+    overflow: auto;
+}
 #container-menu {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
