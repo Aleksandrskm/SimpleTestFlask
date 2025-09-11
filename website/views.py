@@ -41,3 +41,6 @@ def function_maps():
 @views.route('/subsystem_of calibration_beams')
 def function_beams():
     return render_template('subsystem_of calibration_beams.html')
+@views.route('/plan_ochr')
+def function_plan_ochr():
+    return render_template('plan_ochr.html')
