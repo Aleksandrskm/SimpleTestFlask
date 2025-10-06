@@ -2,18 +2,265 @@
 
 {% block content %}
 
-    <h2>Заполнение данных Абонентов</h2>
-    <!-- <select class="select" name="abonents" id="abonent-select"></select> -->
-    <main class="container">
-        <div class="input_parameters_imitator">
-            <div class="selects"></div>
+<h2>Заполнение данных Абонентов</h2>
+
+<main class="row_vi">
+    <div class="column1_vi">
+        <h3>Выбор абонента</h3>
+        <div class="search-select-container">
+            <input id="abonent-search" type="text" placeholder="Поиск абонента...">
+            <div id="search-results" class="search-results hidden"></div>
         </div>
-        <div class="information_request">
-            <span class="csus">Заполните данные</span>
+    </div>
+
+    <div class="column2_vi">
+        <div class="container__nav">
+            <div style="width: 100%">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+                    <h3 style="border-bottom: none; display: inline-block; margin: 0;">Профиль субъекта абонентского терминала</h3>
+                    <button class="insert" data-testid="button-add-subject">+ Добавить</button>
+                </div>
+                <div style="overflow-x: auto; overflow-y: auto;">
+                    <table id="subjects_table" class="mainTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>ТИП АБОНЕНТА</th>
+                                <th>ОРГАНИЗАЦИЯ</th>
+                                <th>ФОИВ</th>
+                                <th>СТРАНА</th>
+                                <th>ФАМИЛИЯ</th>
+                                <th>ИМЯ</th>
+                                <th>ОТЧЕСТВО</th>
+                                <th>ПАСПОРТ</th>
+                                <th>АДРЕС</th>
+                                <th>ДАТА РОЖДЕНИЯ</th>
+                                <th>ТЕЛЕФОН ДОП.</th>
+                                <th>EMAIL</th>
+                                <th>СОЦ. СЕТИ</th>
+                                <th>ДАТА РЕГИСТРАЦИИ</th>
+                                <th>ДАТА ОКОНЧАНИЯ РЕГ.</th>
+                                <th>ДЕЙСТВИЯ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subjects-tbody">
+                            <tr>
+                                <td>1</td>
+                                <td>ЮЛ</td>
+                                <td>ООО "Компания"</td>
+                                <td>Министерство связи</td>
+                                <td>Россия</td>
+                                <td>Иванов</td>
+                                <td>Иван</td>
+                                <td>Иванович</td>
+                                <td>4510 123456</td>
+                                <td>г. Москва, ул. Ленина, д. 1</td>
+                                <td>01.01.1980</td>
+                                <td>+7-495-234-56-78</td>
+                                <td>ivanov@example.com</td>
+                                <td>@ivanov</td>
+                                <td>01.01.2020</td>
+                                <td>01.01.2025</td>
+                                <td>
+                                    <button class="edit" style="font-size: 14px" onclick="editSubject(0)" title="Редактировать">Редактировать</button>
+                                    <button class="delete" style="font-size: 14px" onclick="deleteSubject(0)" title="Удалить">Удалить</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    
+            <div style="width: 100%; margin-top: 10px;">
+                <div class="margin: 0; padding: 0;">
+                    <h3 style="border-bottom: none; display: inline-block; margin: 0;">Профиль абонентского терминала</h3>
+                    <button class="insert" data-testid="button-add-terminal">+ Добавить</button>
+                </div>
+                <div style="overflow-x: auto; overflow-y: auto;">
+                    <table id="terminals-table" class="mainTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>НАИМЕНОВАНИЕ</th>
+                                <th>ТЕЛЕФОН</th>
+                                <th>ИДЕНТИФИКАТОР</th>
+                                <th>ТИП АБОНЕНТА</th>
+                                <th>СТАТУС</th>
+                                <th>ВИД ОБОРУДОВАНИЯ</th>
+                                <th>ГРУППА АБОНЕНТА</th>
+                                <th>ВАЖНОСТЬ</th>
+                                <th>ВЫБОР ВРЕМЕНИ СЕАНСА</th>
+                                <th>МИН. ВРЕМЯ СЕАНСА</th>
+                                <th>МАКС. ВРЕМЯ СЕАНСА</th>
+                                <th>ДАТА РЕГИСТРАЦИИ</th>
+                                <th>ДАТА ОКОНЧАНИЯ РЕГ.</th>
+                                <th>ДЕЙСТВИЯ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="terminals-tbody">
+                            <tr>
+                                <td>1</td>
+                                <td>Терминал-001</td>
+                                <td>+7-495-123-45-67</td>
+                                <td>C</td>
+                                <td>ЮЛ</td>
+                                <td>Действующий</td>
+                                <td>Стационарный</td>
+                                <td>ID=1 группа основная</td>
+                                <td>Высокая</td>
+                                <td>Любой</td>
+                                <td>300</td>
+                                <td>3600</td>
+                                <td>01.01.2020</td>
+                                <td>01.01.2025</td>
+                                <td>
+                                    <button class="edit" style="font-size: 14px" onclick="editTerminal(0)" title="Редактировать">Редактировать</button>
+                                    <button class="delete" style="font-size: 14px" onclick="deleteTerminal(0)" title="Удалить">Удалить</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px;">
+                <div style="width: 100%">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+                        <h3 style="border-bottom: none; display: inline-block; margin: 0;">Типы абонентов</h3>
+                        <button class="insert" style="font-size: 14px; padding: 4px 8px; margin: 5px;" data-testid="button-add-type">+</button>
+                    </div>
+                    <div style="overflow-x: auto; overflow-y: auto; height: 200px;">
+                        <table id="types-table" class="mainTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>НАИМЕНОВАНИЕ</th>
+                                    <th>ДЕЙСТВИЯ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>ЮЛ</td>
+                                    <td>
+                                        <button class="edit" style="font-size: 14px" onclick="editType(0)">Редактировать</button>
+                                        <button class="delete" style="font-size: 14px" onclick="deleteType(0)">Удалить</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>ЧЛ</td>
+                                    <td>
+                                        <button class="edit" style="font-size: 14px" onclick="editType(1)">Редактировать</button>
+                                        <button class="delete" style="font-size: 14px" onclick="deleteType(1)">Удалить</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Ведомство</td>
+                                    <td>
+                                        <button class="edit" style="font-size: 14px" onclick="editType(2)">Редактировать</button>
+                                        <button class="delete" style="font-size: 14px" onclick="deleteType(2)">Удалить</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+    
+                <div style="width: 100%">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+                        <h3 style="border-bottom: none; display: inline-block; margin: 0;">Статусы абонентов</h3>
+                        <button class="insert" style="font-size: 14px; padding: 4px 8px; margin: 5px;" data-testid="button-add-status">+</button>
+                    </div>
+                    <div style="overflow-x: auto; overflow-y: auto; height: 200px;">
+                        <table id="statuses-table" class="mainTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>НАИМЕНОВАНИЕ</th>
+                                    <th>ДЕЙСТВИЯ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Действующий</td>
+                                    <td>
+                                        <button class="edit" style="font-size: 14px" onclick="editStatus(0)">Редактировать</button>
+                                        <button class="delete" style="font-size: 14px" onclick="deleteStatus(0)">Удалить</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Заблокированный</td>
+                                    <td>
+                                        <button class="edit" style="font-size: 14px" onclick="editStatus(1)">Редактировать</button>
+                                        <button class="delete" style="font-size: 14px" onclick="deleteStatus(1)">Удалить</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Тестовый</td>
+                                    <td>
+                                        <button class="edit" style="font-size: 14px" onclick="editStatus(2)">Редактировать</button>
+                                        <button class="delete" style="font-size: 14px" onclick="deleteStatus(2)">Удалить</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+    
+                <div style="width: 100%">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+                        <h3 style="border-bottom: none; display: inline-block; margin: 0;">Важность терминала</h3>
+                        <button class="insert" style="font-size: 14px; padding: 4px 8px; margin: 5px;" data-testid="button-add-priority">+</button>
+                    </div>
+                    <div style="overflow-x: auto; overflow-y: auto; height: 200px;">
+                        <table id="priorities-table" class="mainTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>НАИМЕНОВАНИЕ</th>
+                                    <th>ДЕЙСТВИЯ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="priorities-tbody">
+                                <tr>
+                                    <td>1</td>
+                                    <td>Низкая</td>
+                                    <td>
+                                        <button class="edit" style="font-size: 14px" onclick="editPriority(0)">Редактировать</button>
+                                        <button class="delete" style="font-size: 14px" onclick="deletePriority(0)">Удалить</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Средняя</td>
+                                    <td>
+                                        <button class="edit" style="font-size: 14px" onclick="editPriority(1)">Редактировать</button>
+                                        <button class="delete" style="font-size: 14px" onclick="deletePriority(1)">Удалить</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Высокая</td>
+                                    <td>
+                                        <button class="edit" style="font-size: 14px" onclick="editPriority(2)">Редактировать</button>
+                                        <button class="delete" style="font-size: 14px" onclick="deletePriority(2)">Удалить</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-    </main>
-   
-    <div id="myModal" class="modal">
+    </div>
+</main>
+
+<div id="myModal" class="modal">
         <div class="modal__dialog">
           
             <div class="modal-content">
@@ -95,7 +342,7 @@
                           <span>Проекция:</span>
                           <select class="default-list" id="projectionSelect">
                             <option value="EPSG:3857">EPSG:3857</option>
-                            <option value="EPSG:4326" >EPSG:4326</option>
+                             <option value="EPSG:4326" selected="">EPSG:4326</option>
                           </select>
                         </div>
                         <div class="task-parameter" style="display: flex; flex-direction: column; align-items: center; justify-items: end; gap: 10px; width: 100%; margin-top: 20px;">
@@ -127,4 +374,6 @@
                 </div>
             </div>
         </div>
+        
+    </div>
 {% endblock %}
