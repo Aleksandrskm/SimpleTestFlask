@@ -10,13 +10,31 @@ export function completionAbonents(url) {
     let priorities = [];
     let abonents = [];
 
-    const subjectsTableName = 'subjects';
-    const terminalsTableName = 'terminals';
-    const typesTableName = 'abonent_types';
-    const statusesTableName = 'abonent_statuses';
-    const prioritiesTableName = 'abonent_priorities';
+    const subjectsTableName = 'Ab_S';
+    const terminalsTableName = 'Ab_T';
+    const typesTableName = 'Ab_Type';
+    const statusesTableName = 'Ab_Status';
+    const prioritiesTableName = 'Ab_Prioritet';
 
     const loader = new Loader('.loader-container');
+
+    document.querySelector('.container__nav').append(elemSection);
+    // console.log(elemSection)
+    elemSection.addEventListener('click', (e) => {
+        const trsNavMenu=document.querySelectorAll('.container__nav__el');
+        trsNavMenu.forEach((trMenu)=>{
+        if (trMenu==e.target) {
+            trMenu.style='background-color: #B5B8B1';
+            console.log(e.target.id,e.target.innerHTML);
+            createTable(e.target.id,e.target.innerHTML);
+        }
+        else{
+            if (e.target.id) {
+            trMenu.style='';
+            }
+        }
+        }) 
+    });
 
     function loadData() {
         loader.show('Загрузка данных...');
@@ -58,8 +76,8 @@ export function completionAbonents(url) {
 
     function updateAbonentsList() {
         abonents = subjects.map(s => ({
-            id: s.id,
-            label: `${s.family || ''} ${s.name || ''} ${s.surname || ''} (${s.phone || ''})`.trim()
+            ID: s.ID,
+            label: `${s.Family || ''} ${s.Name || ''} ${s.Surname || ''} (${s.Tlf_dop || ''})`.trim()
         }));
     }
 
@@ -73,7 +91,7 @@ export function completionAbonents(url) {
         }
 
         searchResults.innerHTML = abonents.map(a =>
-            `<div class="container__nav__el" data-abonent-id="${a.id}" style="padding: 10px; cursor: pointer;">${a.label}</div>`
+            `<div class="container__nav__el" data-abonent-id="${a.ID}" style="padding: 10px; cursor: pointer;">${a.label}</div>`
         ).join('');
 
         searchResults.querySelectorAll('.container__nav__el').forEach(el => {
@@ -113,7 +131,7 @@ export function completionAbonents(url) {
             }
 
             searchResults.innerHTML = filtered.map(a =>
-                `<div class="container__nav__el" data-abonent-id="${a.id}" style="padding: 10px; cursor: pointer;">${a.label}</div>`
+                `<div class="container__nav__el" data-abonent-id="${a.ID}" style="padding: 10px; cursor: pointer;">${a.label}</div>`
             ).join('');
 
             searchResults.querySelectorAll('.container__nav__el').forEach(el => {
@@ -139,26 +157,25 @@ export function completionAbonents(url) {
 
         tbody.innerHTML = subjects.map((s, i) => `
             <tr>
-                <td>${s.id || ''}</td>
-                <td>${s.type || ''}</td>
-                <td>${s.organization || ''}</td>
-                <td>${s.foiv || ''}</td>
-                <td>${s.country || ''}</td>
-                <td>${s.family || ''}</td>
-                <td>${s.name || ''}</td>
-                <td>${s.surname || ''}</td>
-                <td>${s.passport || ''}</td>
-                <td>${s.address || ''}</td>
-                <td>${s.birth_date || ''}</td>
-                <td>${s.phone || ''}</td>
-                <td>${s.email || ''}</td>
-                <td>${s.social || ''}</td>
-                <td>${s.reg_date || ''}</td>
-                <td>${s.reg_end_date || ''}</td>
-                <td>
-                    <button class="edit" style="font-size: 14px" data-index="${i}" data-type="subject" title="Редактировать">Редактировать</button>
-                    <button class="delete" style="font-size: 14px" data-index="${i}" data-type="subject" title="Удалить">Удалить</button>
-                </td>
+                <td>${s.ID || ''}</td>
+                <td>${s.ID_Ab_Type || ''}</td>
+                <td>${s.ID_Organization || ''}</td>
+                <td>${s.ID_FOIV || ''}</td>
+                <td>${s.ID_SP_Country || ''}</td>
+                <td>${s.Family || ''}</td>
+                <td>${s.Name || ''}</td>
+                <td>${s.Surname || ''}</td>
+                <td>${s.Pasport || ''}</td>
+                <td>${s.Adres || ''}</td>
+                <td>${s.Data_R || ''}</td>
+                <td>${s.Tlf_dop || ''}</td>
+                <td>${s.Email || ''}</td>
+                <td>${s.Soc_seti || ''}</td>
+                <td>${s.Data_Reg || ''}</td>
+                <td>${s.Data_Reg_end || ''}</td>
+                <td>${s.ID_Zapret || ''}</td>
+                <td>${s.Data_Beg_Z || ''}</td>
+                <td>${s.Data_End_Z || ''}</td>
             </tr>
         `).join('');
 
@@ -185,24 +202,26 @@ export function completionAbonents(url) {
 
         tbody.innerHTML = terminals.map((t, i) => `
             <tr>
-                <td>${t.id || ''}</td>
-                <td>${t.name || ''}</td>
-                <td>${t.phone || ''}</td>
-                <td>${t.identifier || ''}</td>
-                <td>${t.type || ''}</td>
-                <td>${t.status || ''}</td>
-                <td>${t.equipment || ''}</td>
-                <td>${t.group || ''}</td>
-                <td>${t.priority || ''}</td>
-                <td>${t.time_choice || ''}</td>
-                <td>${t.min_time || ''}</td>
-                <td>${t.max_time || ''}</td>
-                <td>${t.reg_date || ''}</td>
-                <td>${t.reg_end_date || ''}</td>
-                <td>
-                    <button class="edit" style="font-size: 14px" data-index="${i}" data-type="terminal" title="Редактировать">Редактировать</button>
-                    <button class="delete" style="font-size: 14px" data-index="${i}" data-type="terminal" title="Удалить">Удалить</button>
-                </td>
+                <td>${t.ID || ''}</td>
+                <td>${t.Naim || ''}</td>
+                <td>${t.Tlf || ''}</td>
+                <td>${t.ID_Ab_S || ''}</td>
+                <td>${t.ID_Ab_Type || ''}</td>
+                <td>${t.ID_Ab_Status || ''}</td>
+                <td>${t.ID_Ab_Vid || ''}</td>
+                <td>${t.ID_Ab_Group || ''}</td>
+                <td>${t.ID_Ab_Prioritet || ''}</td>
+                <td>${t.ID_Ab_Vid_sv || ''}</td>
+                <td>${t.ID_Ab_Prava || ''}</td>
+                <td>${t.ID_Ab_Type_Mobile || ''}</td>
+                <td>${t.Min_Time_Seans || ''}</td>
+                <td>${t.Max_Time_Seans || ''}</td>
+                <td>${t.Vyb_Time_Seans || ''}</td>
+                <td>${t.Data_Reg || ''}</td>
+                <td>${t.Data_Reg_end || ''}</td>
+                <td>${t.ID_Zapret || ''}</td>
+                <td>${t.Data_Beg_Z || ''}</td>
+                <td>${t.Data_End_Z || ''}</td>
             </tr>
         `).join('');
 
@@ -224,17 +243,13 @@ export function completionAbonents(url) {
     }
 
     function renderTypes() {
-        const tbody = document.querySelector('#types-table tbody');
+        const tbody = document.querySelector('types-table tbody');
         if (!tbody) return;
 
         tbody.innerHTML = types.map((t, i) => `
             <tr>
-                <td>${t.id || ''}</td>
-                <td>${t.name || ''}</td>
-                <td>
-                    <button class="edit" style="font-size: 14px" data-index="${i}" data-type="type">Редактировать</button>
-                    <button class="delete" style="font-size: 14px" data-index="${i}" data-type="type">Удалить</button>
-                </td>
+                <td>${t.ID || ''}</td>
+                <td>${t.Naim || ''}</td>
             </tr>
         `).join('');
 
@@ -254,17 +269,13 @@ export function completionAbonents(url) {
     }
 
     function renderStatuses() {
-        const tbody = document.querySelector('#statuses-table tbody');
+        const tbody = document.querySelector('statuses-table tbody');
         if (!tbody) return;
 
         tbody.innerHTML = statuses.map((s, i) => `
             <tr>
-                <td>${s.id || ''}</td>
-                <td>${s.name || ''}</td>
-                <td>
-                    <button class="edit" style="font-size: 14px" data-index="${i}" data-type="status">Редактировать</button>
-                    <button class="delete" style="font-size: 14px" data-index="${i}" data-type="status">Удалить</button>
-                </td>
+                <td>${s.ID || ''}</td>
+                <td>${s.Naim || ''}</td>
             </tr>
         `).join('');
 
@@ -284,17 +295,13 @@ export function completionAbonents(url) {
     }
 
     function renderPriorities() {
-        const tbody = document.querySelector('#priorities-table tbody');
+        const tbody = document.querySelector('priorities-table tbody');
         if (!tbody) return;
 
         tbody.innerHTML = priorities.map((p, i) => `
             <tr>
-                <td>${p.id || ''}</td>
-                <td>${p.name || ''}</td>
-                <td>
-                    <button class="edit" style="font-size: 14px" data-index="${i}" data-type="priority">Редактировать</button>
-                    <button class="delete" style="font-size: 14px" data-index="${i}" data-type="priority">Удалить</button>
-                </td>
+                <td>${p.ID || ''}</td>
+                <td>${p.Naim || ''}</td>
             </tr>
         `).join('');
 
@@ -313,399 +320,324 @@ export function completionAbonents(url) {
         });
     }
 
-    function editSubject(index) {
-        const subject = subjects[index];
-        const subjectRow = document.querySelector('#subjects-tbody').children[index];
+    // function editSubject(index) {
+    //     const subject = subjects[index];
+    //     const subjectRow = document.querySelector('subjects-tbody').children[index];
 
-        const tableInfo = {
-            name: subjectsTableName,
-            columns_info: [
-                { name: 'id', description: 'ID' },
-                { name: 'type', description: 'Тип абонента' },
-                { name: 'organization', description: 'Организация' },
-                { name: 'foiv', description: 'ФОИВ' },
-                { name: 'country', description: 'Страна' },
-                { name: 'family', description: 'Фамилия' },
-                { name: 'name', description: 'Имя' },
-                { name: 'surname', description: 'Отчество' },
-                { name: 'passport', description: 'Паспорт' },
-                { name: 'address', description: 'Адрес' },
-                { name: 'birth_date', description: 'Дата рождения' },
-                { name: 'phone', description: 'Телефон доп.' },
-                { name: 'email', description: 'Email' },
-                { name: 'social', description: 'Соц. сети' },
-                { name: 'reg_date', description: 'Дата регистрации' },
-                { name: 'reg_end_date', description: 'Дата окончания рег.' }
-            ]
-        };
+    //     const tableInfo = {
+    //         name: subjectsTableName,
+    //         columns_info: [
+    //             { name: 'ID', description: 'Идентификатор' },
+    //             { name: 'ID_Ab_Type', description: 'Тип абонента' },
+    //             { name: 'ID_Organization', description: 'Предприятие абонентcкого терминала' },
+    //             { name: 'ID_FOIV', description: 'Ссылка на органы власти, ведомства и прочие гос. органы' },
+    //             { name: 'ID_SP_Country', description: 'Страна принадлежности субъекта абонентcкого терминала' },
+    //             { name: 'Family', description: 'Фамилия' },
+    //             { name: 'Name', description: 'Имя' },
+    //             { name: 'Surname', description: 'Отчество' },
+    //             { name: 'passport', description: 'Паспорт' },
+    //             { name: 'Adres', description: 'Адрес' },
+    //             { name: 'Data_R', description: 'Дата рождения' },
+    //             { name: 'Tlf_dop', description: 'Дополнительный номер телефона' },
+    //             { name: 'Email', description: 'Электронный адрес' },
+    //             { name: 'Soc_seti', description: 'Логины в социальных сетях' },
+    //             { name: 'Data_Reg', description: 'Дата регистрации в системе' },
+    //             { name: 'Data_Reg_end', description: 'Дата окончания регистрации в системе' },
+    //             { name: 'ID_Zapret', description: 'Наличие запрета на связь' },
+    //             { name: 'Data_Beg_Z', description: 'Время начала запрета на связь' },
+    //             { name: 'Data_End_Z', description: 'Время окончания запрета на связь' }
+    //         ]
+    //     };
 
-        const modal = new Modal(
-            document.querySelector('.column2_vi'),
-            'edit',
-            tableInfo.columns_info.length,
-            tableInfo.columns_info,
-            subjectRow,
-            editRow,
-            tableInfo,
-            'Субъект абонентского терминала',
-            subjectsTableName
-        );
+    //     const modal = new Modal(
+    //         document.querySelector('.column2_vi'),
+    //         'edit',
+    //         tableInfo.columns_info.length,
+    //         tableInfo.columns_info,
+    //         subjectRow,
+    //         editRow,
+    //         tableInfo,
+    //         'Профиль субъекта абонентcкого терминала',
+    //         subjectsTableName
+    //     );
 
-        modal.createModal(loadData);
-    }
+    //     modal.createModal(loadData);
+    // }
 
-    function deleteSubject(index) {
-        if (!confirm('Удалить запись?')) return;
+    // function deleteSubject(index) {
+    //     if (!confirm('Удалить запись?')) return;
 
-        const subject = subjects[index];
-        const data = {
-            where: { column: 'id', operator: '=', value: subject.id }
-        };
+    //     const subject = subjects[index];
+    //     const data = {
+    //         where: { column: 'ID', operator: '=', value: subject.ID }
+    //     };
 
-        loader.show('Удаление...');
-        deleteRow(data, subjectsTableName).then(() => {
-            loadData();
-        }).catch(error => {
-            console.error('Ошибка удаления:', error);
-            alert('Ошибка при удалении записи');
-            loader.close();
-        });
-    }
+    //     loader.show('Удаление...');
+    //     deleteRow(data, subjectsTableName).then(() => {
+    //         loadData();
+    //     }).catch(error => {
+    //         console.error('Ошибка удаления:', error);
+    //         alert('Ошибка при удалении записи');
+    //         loader.close();
+    //     });
+    // }
 
-    function editTerminal(index) {
-        const terminal = terminals[index];
-        const terminalRow = document.querySelector('#terminals-tbody').children[index];
+    // function editTerminal(index) {
+    //     const terminal = terminals[index];
+    //     const terminalRow = document.querySelector('terminals-tbody').children[index];
 
-        const tableInfo = {
-            name: terminalsTableName,
-            columns_info: [
-                { name: 'id', description: 'ID' },
-                { name: 'name', description: 'Наименование' },
-                { name: 'phone', description: 'Телефон' },
-                { name: 'identifier', description: 'Идентификатор' },
-                { name: 'type', description: 'Тип абонента' },
-                { name: 'status', description: 'Статус' },
-                { name: 'equipment', description: 'Вид оборудования' },
-                { name: 'group', description: 'Группа абонента' },
-                { name: 'priority', description: 'Важность' },
-                { name: 'time_choice', description: 'Выбор времени сеанса' },
-                { name: 'min_time', description: 'Мин. время сеанса' },
-                { name: 'max_time', description: 'Макс. время сеанса' },
-                { name: 'reg_date', description: 'Дата регистрации' },
-                { name: 'reg_end_date', description: 'Дата окончания рег.' }
-            ]
-        };
+    //     const tableInfo = {
+    //         name: terminalsTableName,
+    //         columns_info: [
+    //             { name: 'ID', description: 'Идентификатор' },
+    //             { name: 'Naim', description: 'Наименование абонентского терминала в системе' },
+    //             { name: 'Tlf', description: 'Номер телефона абонентского терминала' },
+    //             { name: 'ID_Ab_S', description: 'Абонент' },
+    //             { name: 'ID_Ab_Type', description: 'Тип абонента' },
+    //             { name: 'ID_Ab_Status', description: 'Статус абонентcкого терминала' },
+    //             { name: 'ID_Ab_Vid', description: 'Вид оборудования абонентcкого терминала' },
+    //             { name: 'ID_Ab_Group', description: 'Группа абонентов' },
+    //             { name: 'ID_Ab_Prioritet', description: 'Важность абонентcкого терминала' },
+    //             { name: 'ID_Ab_Vid_sv', description: 'Вид связи' },
+    //             { name: 'ID_Ab_Prava', description: 'Уровень права абонентcкого терминала на занятие каналов' },
+    //             { name: 'ID_Ab_Type_Mobile', description: 'Тип размещения абонентcкого терминала' },
+    //             { name: 'Min_Time_Seans', description: 'Минимальная продолжительность доступности для отбора возможных сеансов, сек.' },
+    //             { name: 'Max_Time_Seans', description: 'Максимальная разрешенная продолжительность доступности для отбора возможных сеансов, сек.' },
+    //             { name: 'Vyb_Time_Seans', description: 'Рекомендуемая минимальная продолжительность сеанса для назначения/выбора сеанса связи, сек.' },
+    //             { name: 'Data_Reg', description: 'Дата регистрации в системе' },
+    //             { name: 'Data_Reg_end', description: 'Дата окончания регистрации в системе' },
+    //             { name: 'ID_Zapret', description: 'Наличие действующего запрета на связь' },
+    //             { name: 'Data_Beg_Z', description: 'Время начала запрета на связь' },
+    //             { name: 'Data_End_Z', description: 'Время окончания запрета на связь' }
+    //         ]
+    //     };
 
-        const modal = new Modal(
-            document.querySelector('.column2_vi'),
-            'edit',
-            tableInfo.columns_info.length,
-            tableInfo.columns_info,
-            terminalRow,
-            editRow,
-            tableInfo,
-            'Абонентский терминал',
-            terminalsTableName
-        );
+    //     const modal = new Modal(
+    //         document.querySelector('.column2_vi'),
+    //         'edit',
+    //         tableInfo.columns_info.length,
+    //         tableInfo.columns_info,
+    //         terminalRow,
+    //         editRow,
+    //         tableInfo,
+    //         'Профиль абонентского терминала',
+    //         terminalsTableName
+    //     );
 
-        modal.createModal(loadData);
-    }
+    //     modal.createModal(loadData);
+    // }
 
-    function deleteTerminal(index) {
-        if (!confirm('Удалить запись?')) return;
+    // function deleteTerminal(index) {
+    //     if (!confirm('Удалить запись?')) return;
 
-        const terminal = terminals[index];
-        const data = {
-            where: { column: 'id', operator: '=', value: terminal.id }
-        };
+    //     const terminal = terminals[index];
+    //     const data = {
+    //         where: { column: 'ID', operator: '=', value: terminal.ID }
+    //     };
 
-        loader.show('Удаление...');
-        deleteRow(data, terminalsTableName).then(() => {
-            loadData();
-        }).catch(error => {
-            console.error('Ошибка удаления:', error);
-            alert('Ошибка при удалении записи');
-            loader.close();
-        });
-    }
+    //     loader.show('Удаление...');
+    //     deleteRow(data, terminalsTableName).then(() => {
+    //         loadData();
+    //     }).catch(error => {
+    //         console.error('Ошибка удаления:', error);
+    //         alert('Ошибка при удалении записи');
+    //         loader.close();
+    //     });
+    // }
 
-    function editType(index) {
-        const type = types[index];
-        const typeRow = document.querySelector('#types-table tbody').children[index];
+    // function editType(index) {
+    //     const type = types[index];
+    //     const typeRow = document.querySelector('types-table tbody').children[index];
 
-        const tableInfo = {
-            name: typesTableName,
-            columns_info: [
-                { name: 'id', description: 'ID' },
-                { name: 'name', description: 'Наименование' }
-            ]
-        };
+    //     const tableInfo = {
+    //         name: typesTableName,
+    //         columns_info: [
+    //             { name: 'ID', description: 'Идентификатор' },
+    //             { name: 'name', description: 'Наименование типов абонентов' }
+    //         ]
+    //     };
 
-        const modal = new Modal(
-            document.querySelector('.column2_vi'),
-            'edit',
-            tableInfo.columns_info.length,
-            tableInfo.columns_info,
-            typeRow,
-            editRow,
-            tableInfo,
-            'Тип абонента',
-            typesTableName
-        );
+    //     const modal = new Modal(
+    //         document.querySelector('.column2_vi'),
+    //         'edit',
+    //         tableInfo.columns_info.length,
+    //         tableInfo.columns_info,
+    //         typeRow,
+    //         editRow,
+    //         tableInfo,
+    //         'Тип абонента',
+    //         typesTableName
+    //     );
 
-        modal.createModal(loadData);
-    }
+    //     modal.createModal(loadData);
+    // }
 
-    function deleteType(index) {
-        if (!confirm('Удалить тип?')) return;
+    // function deleteType(index) {
+    //     if (!confirm('Удалить тип абонентcкого терминала?')) return;
 
-        const type = types[index];
-        const data = {
-            where: { column: 'id', operator: '=', value: type.id }
-        };
+    //     const type = types[index];
+    //     const data = {
+    //         where: { column: 'ID', operator: '=', value: type.ID }
+    //     };
 
-        loader.show('Удаление...');
-        deleteRow(data, typesTableName).then(() => {
-            loadData();
-        }).catch(error => {
-            console.error('Ошибка удаления:', error);
-            alert('Ошибка при удалении записи');
-            loader.close();
-        });
-    }
+    //     loader.show('Удаление...');
+    //     deleteRow(data, typesTableName).then(() => {
+    //         loadData();
+    //     }).catch(error => {
+    //         console.error('Ошибка удаления:', error);
+    //         alert('Ошибка при удалении записи');
+    //         loader.close();
+    //     });
+    // }
 
-    function editStatus(index) {
-        const status = statuses[index];
-        const statusRow = document.querySelector('#statuses-table tbody').children[index];
+    // function editStatus(index) {
+    //     const status = statuses[index];
+    //     const statusRow = document.querySelector('statuses-table tbody').children[index];
 
-        const tableInfo = {
-            name: statusesTableName,
-            columns_info: [
-                { name: 'id', description: 'ID' },
-                { name: 'name', description: 'Наименование' }
-            ]
-        };
+    //     const tableInfo = {
+    //         name: statusesTableName,
+    //         columns_info: [
+    //             { name: 'ID', description: 'Идентификатор' },
+    //             { name: 'Naim', description: 'Наименование статусов абонентов' }
+    //         ]
+    //     };
 
-        const modal = new Modal(
-            document.querySelector('.column2_vi'),
-            'edit',
-            tableInfo.columns_info.length,
-            tableInfo.columns_info,
-            statusRow,
-            editRow,
-            tableInfo,
-            'Статус абонента',
-            statusesTableName
-        );
+    //     const modal = new Modal(
+    //         document.querySelector('.column2_vi'),
+    //         'edit',
+    //         tableInfo.columns_info.length,
+    //         tableInfo.columns_info,
+    //         statusRow,
+    //         editRow,
+    //         tableInfo,
+    //         'Статусы абонентов',
+    //         statusesTableName
+    //     );
 
-        modal.createModal(loadData);
-    }
+    //     modal.createModal(loadData);
+    // }
 
-    function deleteStatus(index) {
-        if (!confirm('Удалить статус?')) return;
+    // function deleteStatus(index) {
+    //     if (!confirm('Удалить статус абонентcкого терминала?')) return;
 
-        const status = statuses[index];
-        const data = {
-            where: { column: 'id', operator: '=', value: status.id }
-        };
+    //     const status = statuses[index];
+    //     const data = {
+    //         where: { column: 'ID', operator: '=', value: status.ID }
+    //     };
 
-        loader.show('Удаление...');
-        deleteRow(data, statusesTableName).then(() => {
-            loadData();
-        }).catch(error => {
-            console.error('Ошибка удаления:', error);
-            alert('Ошибка при удалении записи');
-            loader.close();
-        });
-    }
+    //     loader.show('Удаление...');
+    //     deleteRow(data, statusesTableName).then(() => {
+    //         loadData();
+    //     }).catch(error => {
+    //         console.error('Ошибка удаления:', error);
+    //         alert('Ошибка при удалении записи');
+    //         loader.close();
+    //     });
+    // }
 
-    function editPriority(index) {
-        const priority = priorities[index];
-        const priorityRow = document.querySelector('#priorities-table tbody').children[index];
+    // function editPriority(index) {
+    //     const priority = priorities[index];
+    //     const priorityRow = document.querySelector('priorities-table tbody').children[index];
 
-        const tableInfo = {
-            name: prioritiesTableName,
-            columns_info: [
-                { name: 'id', description: 'ID' },
-                { name: 'name', description: 'Наименование' }
-            ]
-        };
+    //     const tableInfo = {
+    //         name: prioritiesTableName,
+    //         columns_info: [
+    //             { name: 'ID', description: 'ID' },
+    //             { name: 'Naim', description: 'Наименование' }
+    //         ]
+    //     };
 
-        const modal = new Modal(
-            document.querySelector('.column2_vi'),
-            'edit',
-            tableInfo.columns_info.length,
-            tableInfo.columns_info,
-            priorityRow,
-            editRow,
-            tableInfo,
-            'Важность',
-            prioritiesTableName
-        );
+    //     const modal = new Modal(
+    //         document.querySelector('.column2_vi'),
+    //         'edit',
+    //         tableInfo.columns_info.length,
+    //         tableInfo.columns_info,
+    //         priorityRow,
+    //         editRow,
+    //         tableInfo,
+    //         'Важность абонентcкого терминала',
+    //         prioritiesTableName
+    //     );
 
-        modal.createModal(loadData);
-    }
+    //     modal.createModal(loadData);
+    // }
 
-    function deletePriority(index) {
-        if (!confirm('Удалить важность?')) return;
+    // function deletePriority(index) {
+    //     if (!confirm('Удалить важность абонентcкого терминала?')) return;
 
-        const priority = priorities[index];
-        const data = {
-            where: { column: 'id', operator: '=', value: priority.id }
-        };
+    //     const priority = priorities[index];
+    //     const data = {
+    //         where: { column: 'ID', operator: '=', value: priority.ID }
+    //     };
 
-        loader.show('Удаление...');
-        deleteRow(data, prioritiesTableName).then(() => {
-            loadData();
-        }).catch(error => {
-            console.error('Ошибка удаления:', error);
-            alert('Ошибка при удалении записи');
-            loader.close();
-        });
-    }
+    //     loader.show('Удаление...');
+    //     deleteRow(data, prioritiesTableName).then(() => {
+    //         loadData();
+    //     }).catch(error => {
+    //         console.error('Ошибка удаления:', error);
+    //         alert('Ошибка при удалении записи');
+    //         loader.close();
+    //     });
+    // }
 
-    const editSubjectBtn = document.querySelector('[data-testid="button-edit-subject"]');
-    if (editSubjectBtn) {
-        editSubjectBtn.addEventListener('click', function() {
-            if (subjects.length > 0) {
-                editSubject(0);
-            } else {
-                alert('Нет данных для редактирования');
-            }
-        });
-    }
+    // const editSubjectBtn = document.querySelector('[data-testid="button-edit-subject"]');
+    // if (editSubjectBtn) {
+    //     editSubjectBtn.addEventListener('click', function() {
+    //         if (subjects.length > 0) {
+    //             editSubject(0);
+    //         } else {
+    //             alert('Нет данных для редактирования');
+    //         }
+    //     });
+    // }
 
-    const addTerminalBtn = document.querySelector('[data-testid="button-add-terminal"]');
-    if (addTerminalBtn) {
-        addTerminalBtn.addEventListener('click', function() {
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = '<td></td>'.repeat(15);
+    // const addTerminalBtn = document.querySelector('[data-testid="button-add-terminal"]');
+    // if (addTerminalBtn) {
+    //     addTerminalBtn.addEventListener('click', function() {
+    //         const newRow = document.createElement('tr');
+    //         newRow.innerHTML = '<td></td>'.repeat(15);
 
-            const tableInfo = {
-                name: terminalsTableName,
-                columns_info: [
-                    { name: 'id', description: 'ID' },
-                    { name: 'name', description: 'Наименование' },
-                    { name: 'phone', description: 'Телефон' },
-                    { name: 'identifier', description: 'Идентификатор' },
-                    { name: 'type', description: 'Тип абонента' },
-                    { name: 'status', description: 'Статус' },
-                    { name: 'equipment', description: 'Вид оборудования' },
-                    { name: 'group', description: 'Группа абонента' },
-                    { name: 'priority', description: 'Важность' },
-                    { name: 'time_choice', description: 'Выбор времени сеанса' },
-                    { name: 'min_time', description: 'Мин. время сеанса' },
-                    { name: 'max_time', description: 'Макс. время сеанса' },
-                    { name: 'reg_date', description: 'Дата регистрации' },
-                    { name: 'reg_end_date', description: 'Дата окончания рег.' }
-                ]
-            };
+    //         const tableInfo = {
+    //             name: terminalsTableName,
+    //             columns_info: [
+    //                 { name: 'ID', description: 'Идентификатор' },
+        //             { name: 'Naim', description: 'Наименование абонентского терминала в системе' },
+        //             { name: 'Tlf', description: 'Номер телефона абонентского терминала' },
+        //             { name: 'ID_Ab_S', description: 'Абонент' },
+        //             { name: 'ID_Ab_Type', description: 'Тип абонента' },
+        //             { name: 'ID_Ab_Status', description: 'Статус абонентcкого терминала' },
+        //             { name: 'ID_Ab_Vid', description: 'Вид оборудования абонентcкого терминала' },
+        //             { name: 'ID_Ab_Group', description: 'Группа абонентов' },
+        //             { name: 'ID_Ab_Prioritet', description: 'Важность абонентcкого терминала' },
+        //             { name: 'ID_Ab_Vid_sv', description: 'Вид связи' },
+        //             { name: 'ID_Ab_Prava', description: 'Уровень права абонентcкого терминала на занятие каналов' },
+        //             { name: 'ID_Ab_Type_Mobile', description: 'Тип размещения абонентcкого терминала' },
+        //             { name: 'Min_Time_Seans', description: 'Минимальная продолжительность доступности для отбора возможных сеансов, сек.' },
+        //             { name: 'Max_Time_Seans', description: 'Максимальная разрешенная продолжительность доступности для отбора возможных сеансов, сек.' },
+        //             { name: 'Vyb_Time_Seans', description: 'Рекомендуемая минимальная продолжительность сеанса для назначения/выбора сеанса связи, сек.' },
+        //             { name: 'Data_Reg', description: 'Дата регистрации в системе' },
+        //             { name: 'Data_Reg_end', description: 'Дата окончания регистрации в системе' },
+        //             { name: 'ID_Zapret', description: 'Наличие действующего запрета на связь' },
+        //             { name: 'Data_Beg_Z', description: 'Время начала запрета на связь' },
+        //             { name: 'Data_End_Z', description: 'Время окончания запрета на связь' }
+    //             ]
+    //         };
 
-            const modal = new Modal(
-                document.querySelector('.column2_vi'),
-                'insert',
-                tableInfo.columns_info.length,
-                tableInfo.columns_info,
-                newRow,
-                insertRow,
-                tableInfo,
-                'Абонентский терминал',
-                terminalsTableName
-            );
+    //         const modal = new Modal(
+    //             document.querySelector('.column2_vi'),
+    //             'insert',
+    //             tableInfo.columns_info.length,
+    //             tableInfo.columns_info,
+    //             newRow,
+    //             insertRow,
+    //             tableInfo,
+    //             'Профиль абонентского терминала',
+    //             terminalsTableName
+    //         );
 
-            modal.createModal(loadData);
-        });
-    }
-
-    const addTypeBtn = document.querySelector('[data-testid="button-add-type"]');
-    if (addTypeBtn) {
-        addTypeBtn.addEventListener('click', function() {
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = '<td></td><td></td>';
-
-            const tableInfo = {
-                name: typesTableName,
-                columns_info: [
-                    { name: 'id', description: 'ID' },
-                    { name: 'name', description: 'Наименование' }
-                ]
-            };
-
-            const modal = new Modal(
-                document.querySelector('.column2_vi'),
-                'insert',
-                tableInfo.columns_info.length,
-                tableInfo.columns_info,
-                newRow,
-                insertRow,
-                tableInfo,
-                'Тип абонента',
-                typesTableName
-            );
-
-            modal.createModal(loadData);
-        });
-    }
-
-    const addStatusBtn = document.querySelector('[data-testid="button-add-status"]');
-    if (addStatusBtn) {
-        addStatusBtn.addEventListener('click', function() {
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = '<td></td><td></td>';
-
-            const tableInfo = {
-                name: statusesTableName,
-                columns_info: [
-                    { name: 'id', description: 'ID' },
-                    { name: 'name', description: 'Наименование' }
-                ]
-            };
-
-            const modal = new Modal(
-                document.querySelector('.column2_vi'),
-                'insert',
-                tableInfo.columns_info.length,
-                tableInfo.columns_info,
-                newRow,
-                insertRow,
-                tableInfo,
-                'Статус абонента',
-                statusesTableName
-            );
-
-            modal.createModal(loadData);
-        });
-    }
-
-    const addPriorityBtn = document.querySelector('[data-testid="button-add-priority"]');
-    if (addPriorityBtn) {
-        addPriorityBtn.addEventListener('click', function() {
-            const newRow = document.createElement('tr');
-            newRow.innerHTML = '<td></td><td></td>';
-
-            const tableInfo = {
-                name: prioritiesTableName,
-                columns_info: [
-                    { name: 'id', description: 'ID' },
-                    { name: 'name', description: 'Наименование' }
-                ]
-            };
-
-            const modal = new Modal(
-                document.querySelector('.column2_vi'),
-                'insert',
-                tableInfo.columns_info.length,
-                tableInfo.columns_info,
-                newRow,
-                insertRow,
-                tableInfo,
-                'Важность',
-                prioritiesTableName
-            );
-
-            modal.createModal(loadData);
-        });
-    }
+    //         modal.createModal(loadData);
+    //     });
+    // }
 
     loadData();
 }
