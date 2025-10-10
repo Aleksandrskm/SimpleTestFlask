@@ -1,643 +1,653 @@
-import { editRow, deleteRow, insertRow, getRowsTable } from './db.js';
-import { Modal } from "./Modal.js";
-import { Loader } from "./Loader.js";
+import { editRow, deleteRow, insertRow, postJSON, getRowsTable } from './db.js';
+import { Modal } from './Modal.js';
+import { Loader } from './Loader.js';
 
-export function completionAbonents(url) {
-    let subjects = [];
-    let terminals = [];
-    let types = [];
-    let statuses = [];
-    let priorities = [];
-    let abonents = [];
+const subjectsTableName = 'Ab_S';
+const terminalsTableName = 'Ab_T';
+const typesTableName = 'Ab_Type';
+const statusesTableName = 'Ab_Status';
+const prioritiesTableName = 'Ab_Prioritet';
 
-    const subjectsTableName = 'Ab_S';
-    const terminalsTableName = 'Ab_T';
-    const typesTableName = 'Ab_Type';
-    const statusesTableName = 'Ab_Status';
-    const prioritiesTableName = 'Ab_Prioritet';
+let currentColumnsInfo = {};
+let allSubjects = []; // все абоненты 
+let selectedAbonentId = null; // ID абонента
 
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Abonents page loaded');
     const loader = new Loader('.loader-container');
+    
+    initializeTimer();
+    initializeSettingsHandlers();
+    initializeEventDelegation();
+    initializeAbonentSelect();
+    initializeTables(loader);
+});
 
-    document.querySelector('.container__nav').append(elemSection);
-    // console.log(elemSection)
-    elemSection.addEventListener('click', (e) => {
-        const trsNavMenu=document.querySelectorAll('.container__nav__el');
-        trsNavMenu.forEach((trMenu)=>{
-        if (trMenu==e.target) {
-            trMenu.style='background-color: #B5B8B1';
-            console.log(e.target.id,e.target.innerHTML);
-            createTable(e.target.id,e.target.innerHTML);
-        }
-        else{
-            if (e.target.id) {
-            trMenu.style='';
+function initializeEventDelegation() {
+    const container = document.querySelector('.column2_vi');
+    
+    container.addEventListener('click', (e) => {
+        //клик по строке
+        if (e.target.closest('tbody td') || e.target.closest('tbody tr')) {
+            const row = e.target.closest('tr');
+            const tbody = row.closest('tbody');
+            const table = tbody.closest('table');
+            const tableName = getTableNameByTableElement(table);
+            
+            if (tableName && currentColumnsInfo[tableName]) {
+                // снять выделение со всех строк таблицы
+                const allRows = tbody.querySelectorAll('tr');
+                allRows.forEach(r => r.classList.remove('selected'));
+                
+                // текущая строку
+                row.classList.add('selected');
             }
+            return;
         }
-        }) 
+        
+        // клик по кнопке
+        const button = e.target.closest('button');
+        if (!button) return;
+        
+        const tableButtons = button.closest('.table-buttons');
+        if (!tableButtons) return;
+        
+        const tableWrapper = tableButtons.previousElementSibling;
+        const table = tableWrapper?.querySelector('table');
+        if (!table) return;
+        
+        const tableName = getTableNameByTableElement(table);
+        const selectedRow = table.querySelector('tbody tr.selected');
+        
+        if (!tableName || !currentColumnsInfo[tableName]) {
+            console.error('Table info not found for:', tableName);
+            return;
+        }
+        
+        const columnsInfo = currentColumnsInfo[tableName];
+        
+        // разные типы кнопок
+        if (button.classList.contains('insert')) {
+            createInsertModal(tableName, columnsInfo);
+        } else if (button.classList.contains('edit')) {
+            if (!selectedRow) {
+                alert('Пожалуйста, выберите строку для редактирования');
+                return;
+            }
+            createModal('edit', tableName, selectedRow, columnsInfo);
+        } else if (button.classList.contains('copy')) {
+            if (!selectedRow) {
+                alert('Пожалуйста, выберите строку для копирования');
+                return;
+            }
+            createModal('copy', tableName, selectedRow, columnsInfo);
+        } else if (button.classList.contains('delete')) {
+            if (!selectedRow) {
+                alert('Пожалуйста, выберите строку для удаления');
+                return;
+            }
+            createModal('delete', tableName, selectedRow, columnsInfo);
+        }
+    });
+}
+
+// выпадающий список абонентов
+function initializeAbonentSelect() {
+    const select = document.getElementById('abonent-select');
+    if (!select) {
+        console.error('Элемент выбора абонента не найден');
+        return;
+    }
+
+    // изменение выбора
+    select.addEventListener('change', function() {
+        const abonentId = this.value;
+        if (abonentId) {
+            filterTablesByAbonent(abonentId);
+        } else {
+            resetFilter();
+        }
+    });
+}
+
+// заполнение выпадающего списка
+function fillAbonentSelect() {
+    const select = document.getElementById('abonent-select');
+    if (!select) return;
+
+    const currentValue = select.value;
+    select.innerHTML = '<option value="">Все абоненты</option>';
+
+    allSubjects.forEach(subject => {
+        const family = subject['FAMILY'] || '';
+        const name = subject['NAME'] || '';
+        const surname = subject['SURNAME'] || '';
+        
+        const fullName = `${family} ${name} ${surname}`.trim();
+
+        const option = document.createElement('option');
+        option.value = subject.ID;
+        option.textContent = fullName || `Абонент ${subject.ID}`;
+        select.appendChild(option);
     });
 
-    function loadData() {
-        loader.show('Загрузка данных...');
+    if (currentValue) {
+        select.value = currentValue;
+    }
+}
+
+// получение имени таблицы по dom элементу
+function getTableNameByTableElement(table) {
+    const mapping = {
+        'subjects': 'Ab_S',
+        'terminals': 'Ab_T', 
+        'types': 'Ab_Type',
+        'statuses': 'Ab_Status',
+        'priorities': 'Ab_Prioritet'
+    };
+    
+    const tableId = table.id;
+    return mapping[tableId] || '';
+}
+
+// модальное окно(МО) для добавления
+function createInsertModal(tableName, columnsInfo) {
+    const modalParent = document.querySelector('.column2_vi');
+    
+    // МО
+    const modal = document.createElement('div');
+    modal.classList.add('modal');
+    
+    const modalDialog = document.createElement('div');
+    modalDialog.classList.add('modal__dialog');
+    
+    const modalContent = document.createElement('div');
+    modalContent.classList.add('modal__content');
+    
+    // Заголовок МО
+    modalContent.innerHTML = `<div class="modal__title">Добавление новой строки в таблицу</div>`;
+    
+    // контейнер для ввода
+    const columnsContainer = document.createElement('div');
+    columnsContainer.classList.add('modalColumns');
+    
+    // ввод для каждой колонки (кроме ID)
+    for (let i = 1; i < columnsInfo.length; i++) {
+        const column = columnsInfo[i];
         
-        Promise.all([
-            getRowsTable(subjectsTableName),
-            getRowsTable(terminalsTableName),
-            getRowsTable(typesTableName),
-            getRowsTable(statusesTableName),
-            getRowsTable(prioritiesTableName)
-        ]).then(([subjectsData, terminalsData, typesData, statusesData, prioritiesData]) => {
-            if (subjectsData && subjectsData.rows) {
-                subjects = subjectsData.rows;
-                renderSubjects();
-                updateAbonentsList();
+        const dataColumn = document.createElement('div');
+        dataColumn.classList.add('data-column');
+        
+        const nameColumn = document.createElement('div');
+        nameColumn.classList.add('name-column');
+        nameColumn.textContent = column.description;
+        
+        const modalInput = document.createElement('input');
+        modalInput.type = 'text';
+        modalInput.classList.add('modal__input');
+        modalInput.placeholder = column.description;
+        
+        dataColumn.appendChild(nameColumn);
+        dataColumn.appendChild(modalInput);
+        columnsContainer.appendChild(dataColumn);
+    }
+    
+    modalContent.appendChild(columnsContainer);
+    
+    // кнопки
+    const buttonsContainer = document.createElement('div');
+    buttonsContainer.classList.add('btnsModal');
+    buttonsContainer.innerHTML = `
+        <button class="btn modal__confirm btn_dark btn_min">Добавить</button>
+        <button class="btn modal__close btn_dark btn_min">Отмена</button>
+    `;
+    
+    modalContent.appendChild(buttonsContainer);
+    
+    modalDialog.appendChild(modalContent);
+    modal.appendChild(modalDialog);
+    modalParent.appendChild(modal);
+    
+    // подтверждения добавления
+    modal.querySelector('.modal__confirm').addEventListener('click', () => {
+        const inputs = modal.querySelectorAll('.modal__input');
+        const data = {};
+        const columns = [];
+        const values = [];
+        
+        inputs.forEach((input, index) => {
+            const columnIndex = index + 1;
+            if (input.value) {
+                columns.push(columnsInfo[columnIndex].name);
+                values.push(input.value);
             }
-            if (terminalsData && terminalsData.rows) {
-                terminals = terminalsData.rows;
-                renderTerminals();
-            }
-            if (typesData && typesData.rows) {
-                types = typesData.rows;
-                renderTypes();
-            }
-            if (statusesData && statusesData.rows) {
-                statuses = statusesData.rows;
-                renderStatuses();
-            }
-            if (prioritiesData && prioritiesData.rows) {
-                priorities = prioritiesData.rows;
-                renderPriorities();
-            }
-            loader.close();
-        }).catch(error => {
-            console.error('Ошибка загрузки данных:', error);
-            loader.close();
         });
+        
+        // для отправки
+        const bodyReq = {
+            row: {}
+        };
+        
+        columns.forEach((column, index) => {
+            bodyReq.row[column] = values[index];
+        });
+        
+        // на добавление
+        insertRow(bodyReq, tableName).then(() => {
+            modal.remove();
+            refreshTable(tableName);
+        }).catch(error => {
+            console.error('Ошибка при добавлении строки:', error);
+            alert('Произошла ошибка при добавлении строки');
+        });
+    });
+    
+    // отмена
+    modal.querySelector('.modal__close').addEventListener('click', () => {
+        modal.remove();
+    });
+    
+    // закрытие при клике вне МО
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+}
+
+// создание МО для других операций
+function createModal(type, tableName, selectedRow, columnsInfo) {
+    const modalParent = document.querySelector('.column2_vi');
+    let funcRow;
+    
+    switch(type) {
+        case 'edit':
+            funcRow = editRow;
+            break;
+        case 'copy':
+            funcRow = insertRow;
+            break;
+        case 'delete':
+            funcRow = deleteRow;
+            break;
+        default:
+            return;
     }
 
-    function updateAbonentsList() {
-        abonents = subjects.map(s => ({
-            ID: s.ID,
-            label: `${s.Family || ''} ${s.Name || ''} ${s.Surname || ''} (${s.Tlf_dop || ''})`.trim()
-        }));
-    }
+    // удаление, передаем 0 колонок, чтобы не создавались поля ввода
+    const colCount = type === 'delete' ? 0 : columnsInfo.length;
+    
+    const modal = new Modal(modalParent, type, colCount, columnsInfo,
+        selectedRow, funcRow, { columns_info: columnsInfo, name: tableName },
+        '', tableName);
+    
+    modal.createModal(() => refreshTable(tableName));
+}
 
-    function showAllAbonents() {
-        const searchResults = document.getElementById('search-results');
-        if (!searchResults) return;
+// заполнение таблицы данными
+async function fillTable(tableName, tbodyId, loader, filterByAbonentId = null) {
+    try {
+        loader.show(`Загрузка ${tableName}...`);
+        
+        // информация о структуре таблицы
+        const tableInfo = await postJSON({ name: tableName });
+        if (!tableInfo || !tableInfo.columns_info) {
+            console.warn(`Не удалось получить информацию о таблице ${tableName} - таблица может отсутствовать`);
+            await createTablePlaceholder(tableName, tbodyId);
+            return;
+        }
+        
+        const columnsInfo = tableInfo.columns_info;
+        currentColumnsInfo[tableName] = columnsInfo;
+        
+        // заголовки таблицы
+        await fillTableHeaders(tableName, tbodyId, columnsInfo);
+        
+        // данные таблицы
+        const data = await getRowsTable(tableName, 0, 1000);
+        const tbody = document.getElementById(tbodyId);
+        
+        if (tableName === terminalsTableName) {
+            checkTerminalFields(data.rows);
+        }
+        
+        tbody.innerHTML = '';
 
-        if (abonents.length === 0) {
-            searchResults.classList.add('hidden');
+        // пустые данных
+        if (!data || !data.rows || data.rows.length === 0) {
+            console.warn(`Таблица ${tableName} пуста или не содержит данных`);
+            const emptyRow = document.createElement('tr');
+            const emptyCell = document.createElement('td');
+            emptyCell.colSpan = columnsInfo.length;
+            emptyCell.textContent = 'Таблица пуста';
+            emptyCell.style.textAlign = 'center';
+            emptyCell.style.fontStyle = 'italic';
+            emptyRow.appendChild(emptyCell);
+            tbody.appendChild(emptyRow);
+            
+            // состояние кнопок для пустой таблицы
+            updateButtonsState(tableName, false);
             return;
         }
 
-        searchResults.innerHTML = abonents.map(a =>
-            `<div class="container__nav__el" data-abonent-id="${a.ID}" style="padding: 10px; cursor: pointer;">${a.label}</div>`
-        ).join('');
+        // данные абонентов для выпадающего списка
+        if (tableName === subjectsTableName) {
+            allSubjects = data.rows;
+            fillAbonentSelect(); // выпадающий список
+        }
 
-        searchResults.querySelectorAll('.container__nav__el').forEach(el => {
-            el.addEventListener('click', function() {
-                const searchInput = document.getElementById('abonent-search');
-                if (searchInput) {
-                    searchInput.value = this.textContent;
-                }
-                searchResults.classList.add('hidden');
-            });
-        });
-
-        searchResults.classList.remove('hidden');
-    }
-
-    const searchInput = document.getElementById('abonent-search');
-    const searchResults = document.getElementById('search-results');
-
-    if (searchInput) {
-        searchInput.addEventListener('focus', function() {
-            showAllAbonents();
-        });
-
-        searchInput.addEventListener('input', function() {
-            const query = this.value.toLowerCase();
-            
-            if (query.length === 0) {
-                showAllAbonents();
-                return;
-            }
-
-            const filtered = abonents.filter(a => a.label.toLowerCase().includes(query));
-
-            if (filtered.length === 0) {
-                searchResults.classList.add('hidden');
-                return;
-            }
-
-            searchResults.innerHTML = filtered.map(a =>
-                `<div class="container__nav__el" data-abonent-id="${a.ID}" style="padding: 10px; cursor: pointer;">${a.label}</div>`
-            ).join('');
-
-            searchResults.querySelectorAll('.container__nav__el').forEach(el => {
-                el.addEventListener('click', function() {
-                    searchInput.value = this.textContent;
-                    searchResults.classList.add('hidden');
+        // данные если указан ID абонента
+        let rowsToDisplay = data.rows;
+        if (filterByAbonentId) {
+            if (tableName === subjectsTableName) {
+                // для таблицы субъектов только выбранный абонента
+                rowsToDisplay = data.rows.filter(row => row.ID == filterByAbonentId);
+            } else if (tableName === terminalsTableName) {
+                // для таблицы терминалов только терминалы выбранного абонента
+                console.log('Фильтрация терминалов по абоненту:', filterByAbonentId);
+                console.log('Всего терминалов до фильтрации:', data.rows.length);
+                
+                rowsToDisplay = data.rows.filter(row => {
+                    // поле ID_AB_S для связи с абонентом
+                    return row.ID_AB_S == filterByAbonentId;
                 });
-            });
-
-            searchResults.classList.remove('hidden');
-        });
-
-        document.addEventListener('click', function(e) {
-            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-                searchResults.classList.add('hidden');
+                
+                console.log('Терминалов после фильтрации:', rowsToDisplay.length);
             }
+        }
+
+        // заполняем данными
+        rowsToDisplay.forEach(row => {
+            const tr = document.createElement('tr');
+            
+            columnsInfo.forEach(column => {
+                const td = document.createElement('td');
+                td.textContent = row[column.name] || '';
+                if (column.name === 'ID') {
+                    td.setAttribute('data-key', 'ID');
+                }
+                tr.appendChild(td);
+            });
+
+            tbody.appendChild(tr);
+        });
+
+        if (rowsToDisplay.length > 0 && !filterByAbonentId) {
+            const rows = tbody.querySelectorAll('tr');
+            const lastRow = rows[rows.length - 1];
+            if (lastRow) {
+                lastRow.classList.add('selected');
+            }
+        }
+
+        // обновляем кнопокм
+        updateButtonsState(tableName, rowsToDisplay.length > 0);
+
+        console.log(`Таблица ${tableName} успешно загружена`);
+
+    } catch (error) {
+        console.error(`Ошибка при загрузке данных для таблицы ${tableName}:`, error);
+        await createTablePlaceholder(tableName, tbodyId);
+    }
+}
+
+// проверка полей в таблице терминалов
+function checkTerminalFields(terminalsData) {
+    if (terminalsData.length > 0) {
+        console.log('=== ПРОВЕРКА СТРУКТУРЫ ТЕРМИНАЛОВ ===');
+        console.log('Первый терминал:', terminalsData[0]);
+        console.log('Ключи:', Object.keys(terminalsData[0]));
+        
+        // проверка наличия поля для связи с абонентом
+        const possibleAbonentFields = ['ID_AB_S'];
+        const foundField = possibleAbonentFields.find(field => field in terminalsData[0]);
+        console.log('Найдено поле для связи с абонентом:', foundField);
+    }
+}
+
+// обновление состояния кнопок
+function updateButtonsState(tableName, hasData) {
+    const tableId = getTableIdByTableName(tableName);
+    const tableElement = document.getElementById(tableId);
+    if (!tableElement) return;
+    
+    const tableButtons = tableElement.closest('.table-wrapper')?.nextElementSibling;
+    if (!tableButtons) return;
+    
+    const editBtn = tableButtons.querySelector('.edit');
+    const copyBtn = tableButtons.querySelector('.copy');
+    const deleteBtn = tableButtons.querySelector('.delete');
+    const mapsBtn = tableButtons.querySelector('.maps');
+    
+    if (hasData) {
+        editBtn?.removeAttribute('disabled');
+        copyBtn?.removeAttribute('disabled');
+        deleteBtn?.removeAttribute('disabled');
+        mapsBtn?.removeAttribute('disabled');
+    } else {
+        editBtn?.setAttribute('disabled', '');
+        copyBtn?.setAttribute('disabled', '');
+        deleteBtn?.setAttribute('disabled', '');
+        mapsBtn?.setAttribute('disabled', '');
+    }
+}
+
+// получение ID таблицы по имени таблицы
+function getTableIdByTableName(tableName) {
+    const mapping = {
+        'Ab_S': 'subjects',
+        'Ab_T': 'terminals',
+        'Ab_Type': 'types',
+        'Ab_Status': 'statuses',
+        'Ab_Prioritet': 'priorities'
+    };
+    return mapping[tableName] || '';
+}
+
+// заглушка для отсутствующих таблиц
+async function createTablePlaceholder(tableName, tbodyId) {
+    const tableId = tbodyId.replace('-tbody', '');
+    const table = document.getElementById(tableId);
+    
+    if (!table) return;
+
+    let thead = table.querySelector('thead');
+    if (!thead) {
+        thead = document.createElement('thead');
+        table.insertBefore(thead, table.querySelector('tbody'));
+    }
+
+    // базовые заголовки
+    thead.innerHTML = '';
+    const headerRow = document.createElement('tr');
+    const th = document.createElement('th');
+    th.textContent = 'Информация';
+    th.colSpan = 2;
+    headerRow.appendChild(th);
+    thead.appendChild(headerRow);
+
+    // сообщением о отсутствии
+    const tbody = document.getElementById(tbodyId);
+    if (tbody) {
+        tbody.innerHTML = '';
+        const messageRow = document.createElement('tr');
+        const messageCell = document.createElement('td');
+        messageCell.colSpan = 2;
+        messageCell.textContent = `Таблица ${tableName} недоступна или пуста`;
+        messageCell.style.textAlign = 'center';
+        messageCell.style.fontStyle = 'italic';
+        messageCell.style.padding = '20px';
+        messageRow.appendChild(messageCell);
+        tbody.appendChild(messageRow);
+    }
+}
+
+// заполнение заголовков таблицы
+async function fillTableHeaders(tableName, tbodyId, columnsInfo) {
+    const tableId = tbodyId.replace('-tbody', '');
+    const table = document.getElementById(tableId);
+    
+    if (!table) {
+        console.error(`Не найдена таблица с ID: ${tableId}`);
+        return;
+    }
+
+    let thead = table.querySelector('thead');
+    if (!thead) {
+        thead = document.createElement('thead');
+        table.insertBefore(thead, table.querySelector('tbody'));
+    }
+
+    thead.innerHTML = '';
+    const headerRow = document.createElement('tr');
+    
+    columnsInfo.forEach(column => {
+        const th = document.createElement('th');
+        th.textContent = column.description || column.name;
+        headerRow.appendChild(th);
+    });
+    
+    thead.appendChild(headerRow);
+}
+
+// обновление таблицы
+async function refreshTable(tableName, filterByAbonentId = null) {
+    const loader = new Loader('.loader-container');
+    const tbodyId = getTbodyIdByTableName(tableName);
+    await fillTable(tableName, tbodyId, loader, filterByAbonentId);
+}
+
+// получение ID tbody по имени таблицы
+function getTbodyIdByTableName(tableName) {
+    const mapping = {
+        'Ab_S': 'subjects-tbody',
+        'Ab_T': 'terminals-tbody',
+        'Ab_Type': 'types-tbody',
+        'Ab_Status': 'statuses-tbody',
+        'Ab_Prioritet': 'priorities-tbody'
+    };
+    return mapping[tableName] || '';
+}
+
+// обновление всех таблиц с фильтрацией по абоненту
+async function filterTablesByAbonent(abonentId) {
+    selectedAbonentId = abonentId;
+    const loader = new Loader('.loader-container');
+    
+    try {
+        loader.show('Фильтрация данных...');
+        
+        // показываем только выбранного абонента
+        await fillTable(subjectsTableName, 'subjects-tbody', loader, abonentId);
+        
+        // показываем только терминалы выбранного абонента
+        await fillTable(terminalsTableName, 'terminals-tbody', loader, abonentId);
+        
+        // таблицы типов, статусов и приоритетов не фильтруем
+        await fillTable(typesTableName, 'types-tbody', loader);
+        await fillTable(statusesTableName, 'statuses-tbody', loader);
+        await fillTable(prioritiesTableName, 'priorities-tbody', loader);
+        
+    } catch (error) {
+        console.error('Ошибка при фильтрации таблиц:', error);
+    } finally {
+        loader.close();
+    }
+}
+
+// сброс фильтра
+function resetFilter() {
+    selectedAbonentId = null;
+    const loader = new Loader('.loader-container');
+    
+    // перезагружаем все таблицы без фильтра
+    initializeTables(loader);
+}
+
+// инициализация таблиц
+async function initializeTables(loader) {
+    try {
+        loader.show('Загрузка данных...');
+
+        // загрузка таблицы 
+        await Promise.allSettled([
+            fillTable(subjectsTableName, 'subjects-tbody', loader),
+            fillTable(terminalsTableName, 'terminals-tbody', loader),
+            fillTable(typesTableName, 'types-tbody', loader),
+            fillTable(statusesTableName, 'statuses-tbody', loader),
+            fillTable(prioritiesTableName, 'priorities-tbody', loader).catch(error => {
+                console.warn('Таблица приоритетов недоступна:', error);
+                return createTablePlaceholder(prioritiesTableName, 'priorities-tbody');
+            })
+        ]);
+
+        console.log('Загрузка таблиц завершена');
+
+    } catch (error) {
+        console.error('Общая ошибка при инициализации таблиц:', error);
+    } finally {
+        loader.close();
+    }
+}
+
+// кнопки настроек
+function initializeSettingsHandlers() {
+    const settingsBtn = document.getElementById('settingsBtn');
+    const modal = document.getElementById('myModal');
+    const closeBtn = document.querySelector('.close');
+    const modalResizeBtn = document.querySelector('.modal-resize-btn');
+
+    if (settingsBtn && modal) {
+        settingsBtn.addEventListener('click', () => {
+            modal.style.display = 'flex';
         });
     }
 
-    function renderSubjects() {
-        const tbody = document.getElementById('subjects-tbody');
-        if (!tbody) return;
-
-        tbody.innerHTML = subjects.map((s, i) => `
-            <tr>
-                <td>${s.ID || ''}</td>
-                <td>${s.ID_Ab_Type || ''}</td>
-                <td>${s.ID_Organization || ''}</td>
-                <td>${s.ID_FOIV || ''}</td>
-                <td>${s.ID_SP_Country || ''}</td>
-                <td>${s.Family || ''}</td>
-                <td>${s.Name || ''}</td>
-                <td>${s.Surname || ''}</td>
-                <td>${s.Pasport || ''}</td>
-                <td>${s.Adres || ''}</td>
-                <td>${s.Data_R || ''}</td>
-                <td>${s.Tlf_dop || ''}</td>
-                <td>${s.Email || ''}</td>
-                <td>${s.Soc_seti || ''}</td>
-                <td>${s.Data_Reg || ''}</td>
-                <td>${s.Data_Reg_end || ''}</td>
-                <td>${s.ID_Zapret || ''}</td>
-                <td>${s.Data_Beg_Z || ''}</td>
-                <td>${s.Data_End_Z || ''}</td>
-            </tr>
-        `).join('');
-
-        tbody.querySelectorAll('.edit').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const index = parseInt(this.dataset.index);
-                const type = this.dataset.type;
-                if (type === 'subject') editSubject(index);
-            });
-        });
-
-        tbody.querySelectorAll('.delete').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const index = parseInt(this.dataset.index);
-                const type = this.dataset.type;
-                if (type === 'subject') deleteSubject(index);
-            });
+    if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
         });
     }
 
-    function renderTerminals() {
-        const tbody = document.getElementById('terminals-tbody');
-        if (!tbody) return;
-
-        tbody.innerHTML = terminals.map((t, i) => `
-            <tr>
-                <td>${t.ID || ''}</td>
-                <td>${t.Naim || ''}</td>
-                <td>${t.Tlf || ''}</td>
-                <td>${t.ID_Ab_S || ''}</td>
-                <td>${t.ID_Ab_Type || ''}</td>
-                <td>${t.ID_Ab_Status || ''}</td>
-                <td>${t.ID_Ab_Vid || ''}</td>
-                <td>${t.ID_Ab_Group || ''}</td>
-                <td>${t.ID_Ab_Prioritet || ''}</td>
-                <td>${t.ID_Ab_Vid_sv || ''}</td>
-                <td>${t.ID_Ab_Prava || ''}</td>
-                <td>${t.ID_Ab_Type_Mobile || ''}</td>
-                <td>${t.Min_Time_Seans || ''}</td>
-                <td>${t.Max_Time_Seans || ''}</td>
-                <td>${t.Vyb_Time_Seans || ''}</td>
-                <td>${t.Data_Reg || ''}</td>
-                <td>${t.Data_Reg_end || ''}</td>
-                <td>${t.ID_Zapret || ''}</td>
-                <td>${t.Data_Beg_Z || ''}</td>
-                <td>${t.Data_End_Z || ''}</td>
-            </tr>
-        `).join('');
-
-        tbody.querySelectorAll('.edit').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const index = parseInt(this.dataset.index);
-                const type = this.dataset.type;
-                if (type === 'terminal') editTerminal(index);
-            });
-        });
-
-        tbody.querySelectorAll('.delete').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const index = parseInt(this.dataset.index);
-                const type = this.dataset.type;
-                if (type === 'terminal') deleteTerminal(index);
-            });
+    if (modalResizeBtn && modal) {
+        modalResizeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
         });
     }
+}
 
-    function renderTypes() {
-        const tbody = document.querySelector('types-table tbody');
-        if (!tbody) return;
-
-        tbody.innerHTML = types.map((t, i) => `
-            <tr>
-                <td>${t.ID || ''}</td>
-                <td>${t.Naim || ''}</td>
-            </tr>
-        `).join('');
-
-        tbody.querySelectorAll('.edit').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const index = parseInt(this.dataset.index);
-                editType(index);
-            });
-        });
-
-        tbody.querySelectorAll('.delete').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const index = parseInt(this.dataset.index);
-                deleteType(index);
-            });
-        });
+// таймер
+function initializeTimer() {
+    function getDateTime() {
+        const now = new Date(); 
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hour = String(now.getHours()).padStart(2, '0');
+        const minute = String(now.getMinutes()).padStart(2, '0');
+        const second = String(now.getSeconds()).padStart(2, '0');
+        
+        return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
     }
 
-    function renderStatuses() {
-        const tbody = document.querySelector('statuses-table tbody');
-        if (!tbody) return;
-
-        tbody.innerHTML = statuses.map((s, i) => `
-            <tr>
-                <td>${s.ID || ''}</td>
-                <td>${s.Naim || ''}</td>
-            </tr>
-        `).join('');
-
-        tbody.querySelectorAll('.edit').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const index = parseInt(this.dataset.index);
-                editStatus(index);
-            });
-        });
-
-        tbody.querySelectorAll('.delete').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const index = parseInt(this.dataset.index);
-                deleteStatus(index);
-            });
-        });
+    // время в шапке
+    const timerElement = document.getElementById('timer-start');
+    if (timerElement) {
+        setInterval(() => {
+            timerElement.innerHTML = getDateTime();
+        }, 1000);
     }
 
-    function renderPriorities() {
-        const tbody = document.querySelector('priorities-table tbody');
-        if (!tbody) return;
-
-        tbody.innerHTML = priorities.map((p, i) => `
-            <tr>
-                <td>${p.ID || ''}</td>
-                <td>${p.Naim || ''}</td>
-            </tr>
-        `).join('');
-
-        tbody.querySelectorAll('.edit').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const index = parseInt(this.dataset.index);
-                editPriority(index);
-            });
-        });
-
-        tbody.querySelectorAll('.delete').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const index = parseInt(this.dataset.index);
-                deletePriority(index);
-            });
-        });
+    // время в настройках
+    const timerSettings = document.getElementById('timer-settings');
+    if (timerSettings) {
+        setInterval(() => {
+            timerSettings.innerHTML = getDateTime();
+        }, 1000);
     }
+}
 
-    // function editSubject(index) {
-    //     const subject = subjects[index];
-    //     const subjectRow = document.querySelector('subjects-tbody').children[index];
-
-    //     const tableInfo = {
-    //         name: subjectsTableName,
-    //         columns_info: [
-    //             { name: 'ID', description: 'Идентификатор' },
-    //             { name: 'ID_Ab_Type', description: 'Тип абонента' },
-    //             { name: 'ID_Organization', description: 'Предприятие абонентcкого терминала' },
-    //             { name: 'ID_FOIV', description: 'Ссылка на органы власти, ведомства и прочие гос. органы' },
-    //             { name: 'ID_SP_Country', description: 'Страна принадлежности субъекта абонентcкого терминала' },
-    //             { name: 'Family', description: 'Фамилия' },
-    //             { name: 'Name', description: 'Имя' },
-    //             { name: 'Surname', description: 'Отчество' },
-    //             { name: 'passport', description: 'Паспорт' },
-    //             { name: 'Adres', description: 'Адрес' },
-    //             { name: 'Data_R', description: 'Дата рождения' },
-    //             { name: 'Tlf_dop', description: 'Дополнительный номер телефона' },
-    //             { name: 'Email', description: 'Электронный адрес' },
-    //             { name: 'Soc_seti', description: 'Логины в социальных сетях' },
-    //             { name: 'Data_Reg', description: 'Дата регистрации в системе' },
-    //             { name: 'Data_Reg_end', description: 'Дата окончания регистрации в системе' },
-    //             { name: 'ID_Zapret', description: 'Наличие запрета на связь' },
-    //             { name: 'Data_Beg_Z', description: 'Время начала запрета на связь' },
-    //             { name: 'Data_End_Z', description: 'Время окончания запрета на связь' }
-    //         ]
-    //     };
-
-    //     const modal = new Modal(
-    //         document.querySelector('.column2_vi'),
-    //         'edit',
-    //         tableInfo.columns_info.length,
-    //         tableInfo.columns_info,
-    //         subjectRow,
-    //         editRow,
-    //         tableInfo,
-    //         'Профиль субъекта абонентcкого терминала',
-    //         subjectsTableName
-    //     );
-
-    //     modal.createModal(loadData);
-    // }
-
-    // function deleteSubject(index) {
-    //     if (!confirm('Удалить запись?')) return;
-
-    //     const subject = subjects[index];
-    //     const data = {
-    //         where: { column: 'ID', operator: '=', value: subject.ID }
-    //     };
-
-    //     loader.show('Удаление...');
-    //     deleteRow(data, subjectsTableName).then(() => {
-    //         loadData();
-    //     }).catch(error => {
-    //         console.error('Ошибка удаления:', error);
-    //         alert('Ошибка при удалении записи');
-    //         loader.close();
-    //     });
-    // }
-
-    // function editTerminal(index) {
-    //     const terminal = terminals[index];
-    //     const terminalRow = document.querySelector('terminals-tbody').children[index];
-
-    //     const tableInfo = {
-    //         name: terminalsTableName,
-    //         columns_info: [
-    //             { name: 'ID', description: 'Идентификатор' },
-    //             { name: 'Naim', description: 'Наименование абонентского терминала в системе' },
-    //             { name: 'Tlf', description: 'Номер телефона абонентского терминала' },
-    //             { name: 'ID_Ab_S', description: 'Абонент' },
-    //             { name: 'ID_Ab_Type', description: 'Тип абонента' },
-    //             { name: 'ID_Ab_Status', description: 'Статус абонентcкого терминала' },
-    //             { name: 'ID_Ab_Vid', description: 'Вид оборудования абонентcкого терминала' },
-    //             { name: 'ID_Ab_Group', description: 'Группа абонентов' },
-    //             { name: 'ID_Ab_Prioritet', description: 'Важность абонентcкого терминала' },
-    //             { name: 'ID_Ab_Vid_sv', description: 'Вид связи' },
-    //             { name: 'ID_Ab_Prava', description: 'Уровень права абонентcкого терминала на занятие каналов' },
-    //             { name: 'ID_Ab_Type_Mobile', description: 'Тип размещения абонентcкого терминала' },
-    //             { name: 'Min_Time_Seans', description: 'Минимальная продолжительность доступности для отбора возможных сеансов, сек.' },
-    //             { name: 'Max_Time_Seans', description: 'Максимальная разрешенная продолжительность доступности для отбора возможных сеансов, сек.' },
-    //             { name: 'Vyb_Time_Seans', description: 'Рекомендуемая минимальная продолжительность сеанса для назначения/выбора сеанса связи, сек.' },
-    //             { name: 'Data_Reg', description: 'Дата регистрации в системе' },
-    //             { name: 'Data_Reg_end', description: 'Дата окончания регистрации в системе' },
-    //             { name: 'ID_Zapret', description: 'Наличие действующего запрета на связь' },
-    //             { name: 'Data_Beg_Z', description: 'Время начала запрета на связь' },
-    //             { name: 'Data_End_Z', description: 'Время окончания запрета на связь' }
-    //         ]
-    //     };
-
-    //     const modal = new Modal(
-    //         document.querySelector('.column2_vi'),
-    //         'edit',
-    //         tableInfo.columns_info.length,
-    //         tableInfo.columns_info,
-    //         terminalRow,
-    //         editRow,
-    //         tableInfo,
-    //         'Профиль абонентского терминала',
-    //         terminalsTableName
-    //     );
-
-    //     modal.createModal(loadData);
-    // }
-
-    // function deleteTerminal(index) {
-    //     if (!confirm('Удалить запись?')) return;
-
-    //     const terminal = terminals[index];
-    //     const data = {
-    //         where: { column: 'ID', operator: '=', value: terminal.ID }
-    //     };
-
-    //     loader.show('Удаление...');
-    //     deleteRow(data, terminalsTableName).then(() => {
-    //         loadData();
-    //     }).catch(error => {
-    //         console.error('Ошибка удаления:', error);
-    //         alert('Ошибка при удалении записи');
-    //         loader.close();
-    //     });
-    // }
-
-    // function editType(index) {
-    //     const type = types[index];
-    //     const typeRow = document.querySelector('types-table tbody').children[index];
-
-    //     const tableInfo = {
-    //         name: typesTableName,
-    //         columns_info: [
-    //             { name: 'ID', description: 'Идентификатор' },
-    //             { name: 'name', description: 'Наименование типов абонентов' }
-    //         ]
-    //     };
-
-    //     const modal = new Modal(
-    //         document.querySelector('.column2_vi'),
-    //         'edit',
-    //         tableInfo.columns_info.length,
-    //         tableInfo.columns_info,
-    //         typeRow,
-    //         editRow,
-    //         tableInfo,
-    //         'Тип абонента',
-    //         typesTableName
-    //     );
-
-    //     modal.createModal(loadData);
-    // }
-
-    // function deleteType(index) {
-    //     if (!confirm('Удалить тип абонентcкого терминала?')) return;
-
-    //     const type = types[index];
-    //     const data = {
-    //         where: { column: 'ID', operator: '=', value: type.ID }
-    //     };
-
-    //     loader.show('Удаление...');
-    //     deleteRow(data, typesTableName).then(() => {
-    //         loadData();
-    //     }).catch(error => {
-    //         console.error('Ошибка удаления:', error);
-    //         alert('Ошибка при удалении записи');
-    //         loader.close();
-    //     });
-    // }
-
-    // function editStatus(index) {
-    //     const status = statuses[index];
-    //     const statusRow = document.querySelector('statuses-table tbody').children[index];
-
-    //     const tableInfo = {
-    //         name: statusesTableName,
-    //         columns_info: [
-    //             { name: 'ID', description: 'Идентификатор' },
-    //             { name: 'Naim', description: 'Наименование статусов абонентов' }
-    //         ]
-    //     };
-
-    //     const modal = new Modal(
-    //         document.querySelector('.column2_vi'),
-    //         'edit',
-    //         tableInfo.columns_info.length,
-    //         tableInfo.columns_info,
-    //         statusRow,
-    //         editRow,
-    //         tableInfo,
-    //         'Статусы абонентов',
-    //         statusesTableName
-    //     );
-
-    //     modal.createModal(loadData);
-    // }
-
-    // function deleteStatus(index) {
-    //     if (!confirm('Удалить статус абонентcкого терминала?')) return;
-
-    //     const status = statuses[index];
-    //     const data = {
-    //         where: { column: 'ID', operator: '=', value: status.ID }
-    //     };
-
-    //     loader.show('Удаление...');
-    //     deleteRow(data, statusesTableName).then(() => {
-    //         loadData();
-    //     }).catch(error => {
-    //         console.error('Ошибка удаления:', error);
-    //         alert('Ошибка при удалении записи');
-    //         loader.close();
-    //     });
-    // }
-
-    // function editPriority(index) {
-    //     const priority = priorities[index];
-    //     const priorityRow = document.querySelector('priorities-table tbody').children[index];
-
-    //     const tableInfo = {
-    //         name: prioritiesTableName,
-    //         columns_info: [
-    //             { name: 'ID', description: 'ID' },
-    //             { name: 'Naim', description: 'Наименование' }
-    //         ]
-    //     };
-
-    //     const modal = new Modal(
-    //         document.querySelector('.column2_vi'),
-    //         'edit',
-    //         tableInfo.columns_info.length,
-    //         tableInfo.columns_info,
-    //         priorityRow,
-    //         editRow,
-    //         tableInfo,
-    //         'Важность абонентcкого терминала',
-    //         prioritiesTableName
-    //     );
-
-    //     modal.createModal(loadData);
-    // }
-
-    // function deletePriority(index) {
-    //     if (!confirm('Удалить важность абонентcкого терминала?')) return;
-
-    //     const priority = priorities[index];
-    //     const data = {
-    //         where: { column: 'ID', operator: '=', value: priority.ID }
-    //     };
-
-    //     loader.show('Удаление...');
-    //     deleteRow(data, prioritiesTableName).then(() => {
-    //         loadData();
-    //     }).catch(error => {
-    //         console.error('Ошибка удаления:', error);
-    //         alert('Ошибка при удалении записи');
-    //         loader.close();
-    //     });
-    // }
-
-    // const editSubjectBtn = document.querySelector('[data-testid="button-edit-subject"]');
-    // if (editSubjectBtn) {
-    //     editSubjectBtn.addEventListener('click', function() {
-    //         if (subjects.length > 0) {
-    //             editSubject(0);
-    //         } else {
-    //             alert('Нет данных для редактирования');
-    //         }
-    //     });
-    // }
-
-    // const addTerminalBtn = document.querySelector('[data-testid="button-add-terminal"]');
-    // if (addTerminalBtn) {
-    //     addTerminalBtn.addEventListener('click', function() {
-    //         const newRow = document.createElement('tr');
-    //         newRow.innerHTML = '<td></td>'.repeat(15);
-
-    //         const tableInfo = {
-    //             name: terminalsTableName,
-    //             columns_info: [
-    //                 { name: 'ID', description: 'Идентификатор' },
-        //             { name: 'Naim', description: 'Наименование абонентского терминала в системе' },
-        //             { name: 'Tlf', description: 'Номер телефона абонентского терминала' },
-        //             { name: 'ID_Ab_S', description: 'Абонент' },
-        //             { name: 'ID_Ab_Type', description: 'Тип абонента' },
-        //             { name: 'ID_Ab_Status', description: 'Статус абонентcкого терминала' },
-        //             { name: 'ID_Ab_Vid', description: 'Вид оборудования абонентcкого терминала' },
-        //             { name: 'ID_Ab_Group', description: 'Группа абонентов' },
-        //             { name: 'ID_Ab_Prioritet', description: 'Важность абонентcкого терминала' },
-        //             { name: 'ID_Ab_Vid_sv', description: 'Вид связи' },
-        //             { name: 'ID_Ab_Prava', description: 'Уровень права абонентcкого терминала на занятие каналов' },
-        //             { name: 'ID_Ab_Type_Mobile', description: 'Тип размещения абонентcкого терминала' },
-        //             { name: 'Min_Time_Seans', description: 'Минимальная продолжительность доступности для отбора возможных сеансов, сек.' },
-        //             { name: 'Max_Time_Seans', description: 'Максимальная разрешенная продолжительность доступности для отбора возможных сеансов, сек.' },
-        //             { name: 'Vyb_Time_Seans', description: 'Рекомендуемая минимальная продолжительность сеанса для назначения/выбора сеанса связи, сек.' },
-        //             { name: 'Data_Reg', description: 'Дата регистрации в системе' },
-        //             { name: 'Data_Reg_end', description: 'Дата окончания регистрации в системе' },
-        //             { name: 'ID_Zapret', description: 'Наличие действующего запрета на связь' },
-        //             { name: 'Data_Beg_Z', description: 'Время начала запрета на связь' },
-        //             { name: 'Data_End_Z', description: 'Время окончания запрета на связь' }
-    //             ]
-    //         };
-
-    //         const modal = new Modal(
-    //             document.querySelector('.column2_vi'),
-    //             'insert',
-    //             tableInfo.columns_info.length,
-    //             tableInfo.columns_info,
-    //             newRow,
-    //             insertRow,
-    //             tableInfo,
-    //             'Профиль абонентского терминала',
-    //             terminalsTableName
-    //         );
-
-    //         modal.createModal(loadData);
-    //     });
-    // }
-
-    loadData();
+// экспорт для других модулей
+export function completionAbonents(url) {
+    console.log('Initializing abonents with URL:', url);
 }

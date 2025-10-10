@@ -7,54 +7,58 @@
 <main class="row_vi">
     <div class="column1_vi" style="width: 10%, min(5%, 100px); min-width: 100px;">
         <h3>Выбор абонента</h3>
-        <div class="search-select-container">
-            <input id="abonent-search" type="text" placeholder="Поиск абонента...">
-            <div id="search-results" class="search-results hidden"></div>
-            
-            <!-- <input id="abonent-search" type="text" placeholder="Поиск абонента...">
-            <div id="search-results" class="search-results hidden"></div> -->
+        <div class="search-select-container" style="position: relative;">
+            <select id="abonent-select" class="default-list" style="width: 80%;">
+                <option value="">Все абоненты</option>
+            </select>
         </div>
     </div>
 
     <div class="column2_vi" style="overflow-y: auto; width: 80%;">
         <div class="container__nav">
+            <!-- профиль субъекта -->
             <div style="width: 100%">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
                     <div class="table-name" style="border-bottom: none; display: inline-block; margin: 0;">Профиль субъекта абонентcкого терминала</div>
                 </div>
-                <div class="table-wrapper" >
+                <div class="table-wrapper">
                     <div class="table-scroll">
-                        <table id="subjects_table" class="mainTable">
+                        <table id="subjects" class="mainTable">
                             <thead>
-                                <tr>
-                                    <th>Идентификатор</th>
-                                    <th>Тип абонента</th>
-                                    <th>Предприятие абонентcкого терминала</th>
-                                    <th>Ссылка на органы власти, ведомства и прочие гос. органы</th>
-                                    <th>Страна принадлежности субъекта абонентcкого терминала</th>
-                                    <th>Фамилия</th>
-                                    <th>Имя</th>
-                                    <th>Отчество</th>
-                                    <th>Паспорт</th>
-                                    <th>Адрес</th>
-                                    <th>Дата рождения</th>
-                                    <th>Дополнительный номер телефона</th>
-                                    <th>Электронный адрес</th>
-                                    <th>Логины в социальных сетях</th>
-                                    <th>Дата регистрации в системе</th>
-                                    <th>Дата окончания регистрации в системе</th>
-                                    <th>Наличие запрета на связь</th>
-                                    <th>Время начала запрета на связь</th>
-                                    <th>Время окончания запрета на связь</th>
-                                </tr>
+                                <!-- заполнены автоматически -->
                             </thead>
                             <tbody id="subjects-tbody">
-                                
+                                <!-- заполнены автоматически -->
                             </tbody>
                         </table>
                     </div>
                     <div class="table-buttons">
                         <button class="insert">Добавить</button>
+                        <button class="edit" data-testid="button-edit-subject">Редактировать</button>
+                        <button class="copy">Добавить с копированием</button>
+                        <button class="delete">Удалить</button>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- профиль терминала -->
+            <div style="width: 100%; margin-top: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+                    <div class="table-name" style="border-bottom: none; display: inline-block; margin: 0;">Профиль абонентского терминала</div>
+                </div>
+                <div class="table-wrapper">
+                    <div class="table-scroll">
+                        <table id="terminals" class="mainTable">
+                            <thead>
+                                <!-- заполнены автоматически -->
+                            </thead>
+                            <tbody id="terminals-tbody">
+                                <!-- заполнены автоматически -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-buttons">
+                        <button class="insert" data-testid="button-add-terminal">Добавить</button>
                         <button class="edit">Редактировать</button>
                         <button class="copy">Добавить с копированием</button>
                         <button class="delete">Удалить</button>
@@ -62,107 +66,51 @@
                 </div>
             </div>
     
-            <div style="width: 100%; margin-top: 10px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
-                    <div class="table-name" style="border-bottom: none; display: inline-block; margin: 0;">Профиль абонентского терминала</div>
-                </div>
-                <div class="table-wrapper">
-                    <div class="table-scroll">
-                        <table id="terminals-table" class="mainTable">
-                            <thead>
-                                <tr>
-                                    <th>Идентификатор</th>
-                                    <th>Наименование абонентского терминала в системе</th>
-                                    <th>Номер телефона абонентского терминала</th>
-                                    <th>Абонент</th>
-                                    <th>Тип абонента</th>
-                                    <th>Статус абонентcкого терминала</th>
-                                    <th>Вид оборудования абонентcкого терминала</th>
-                                    <th>Группа абонентов</th>
-                                    <th>Важность абонентcкого терминала</th>
-                                    <th>Вид связи</th>
-                                    <th>Уровень права абонентcкого терминала на занятие каналов</th>
-                                    <th>Тип размещения абонентcкого терминала</th>
-                                    <th>Минимальная продолжительность доступности для отбора возможных сеансов, сек.</th>
-                                    <th>Максимальная разрешенная продолжительность доступности для отбора возможных сеансов, сек.</th>
-                                    <th>Рекомендуемая минимальная продолжительность сеанса для назначения/выбора сеанса связи, сек.</th>
-                                    <th>Дата регистрации в системе</th>
-                                    <th>Дата окончания регистрации в системе</th>
-                                    <th>Наличие действующего запрета на связь</th>
-                                    <th>Время начала запрета на связь</th>
-                                    <th>Время окончания запрета на связь</th>
-                                </tr>
-                            </thead>
-                            <tbody id="terminals-tbody">
-                                
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="table-buttons">
-                            <button class="insert">Добавить</button>
-                            <button class="edit">Редактировать</button>
-                            <button class="copy">Добавить с копированием</button>
-                            <button class="delete">Удалить</button>
-                    </div>
-                </div>
-            </div>
-    
+            <!-- вспомогательные таблицы -->
             <div style="overflow-y: auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px;">
+                <!-- типы абонентов -->
                 <div style="width: 100%; overflow-x: auto; overflow-y: auto;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
                         <div class="table-name" style="border-bottom: none; display: inline-block; margin: 0;">Типы абонентов</div>
                     </div>
-                        
-                    <table id="types-table" class="mainTable">
-                            <thead>
-                                <tr>
-                                    <th>Идентификатор</th>
-                                    <th>Наименование типов абонентов</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                
-                            </tbody>
-                        </table>
-
+                    <table id="types" class="mainTable">
+                        <thead>
+                            <!-- заполнены автоматически -->
+                        </thead>
+                        <tbody id="types-tbody">
+                            <!-- заполнены автоматически -->
+                        </tbody>
+                    </table>
                 </div>
     
+                <!-- статусы абонентов -->
                 <div style="width: 100%; overflow-x: auto; overflow-y: auto;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
                         <div class="table-name" style="border-bottom: none; display: inline-block; margin: 0;">Статусы абонентов</div>
                     </div>
-                    
-                        <table id="statuses-table" class="mainTable">
-                            <thead>
-                                <tr>
-                                    <th>Идентификатор</th>
-                                    <th>Наименование статусов абонентов</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                
-                            </tbody>
-                        </table>
-                    
+                    <table id="statuses" class="mainTable">
+                        <thead>
+                            <!-- заполнены автоматически -->
+                        </thead>
+                        <tbody id="statuses-tbody">
+                            <!-- заполнены автоматически -->
+                        </tbody>
+                    </table>
                 </div>
     
+                <!-- важность терминала -->
                 <div style="width: 100%; overflow-x: auto; overflow-y: auto">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
                         <div class="table-name" style="border-bottom: none; display: inline-block; margin: 0;">Важность абонентcкого терминала</div>
                     </div>
-                    
-                        <table id="priorities-table" class="mainTable">
-                            <thead>
-                                <tr>
-                                    <th>Идентификатор</th>
-                                    <th>Наименование важности абонентcкого терминала</th>
-                                </tr>
-                            </thead>
-                            <tbody id="priorities-table tbody">
-                                
-                            </tbody>
-                        </table>
-                    
+                    <table id="priorities" class="mainTable">
+                        <thead>
+                            <!-- заполнены автоматически -->
+                        </thead>
+                        <tbody id="priorities-tbody">
+                            <!-- заполнены автоматически -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
