@@ -100,24 +100,33 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentTime = getDateTime();
     document.getElementById("timer-start").innerHTML = currentTime;
   }, 0);
-  setInterval(function(){
-    let currentTime = getDateTime();
-    document.getElementById("timer-settings").innerHTML = currentTime;
-  }, 0);
+  if (document.getElementById("timer-settings"))
+  {
+      setInterval(function(){
+          let currentTime = getDateTime();
+          document.getElementById("timer-settings").innerHTML = currentTime;
+      }, 0);
+  }
+
+  console.log(1);
   document.getElementById('settingsBtn').addEventListener('click',(e)=>{
     document.getElementById('myModal').style.display='flex';
 })
-document.querySelector('.close').addEventListener('click',(e)=>{
-    document.getElementById('myModal').style.display='none';
-})
-document.querySelector('.modal-resize-btn').addEventListener('click',(e)=>{
-    document.getElementById('myModal').style.display='none';
-})
+if (document.querySelector('.close')){
+    document.querySelector('.close').addEventListener('click',(e)=>{
+        document.getElementById('myModal').style.display='none';
+    })
+}
+   if (document.querySelector('.modal-resize-btn')){document.querySelector('.modal-resize-btn').addEventListener('click',(e)=>{
+       document.getElementById('myModal').style.display='none';
+   })}
+
   if (h2) {
     if (h2.innerText==='Редактор данных') {
       table(url);
     }
     if (h2.innerText==='Заполнение данных для Абонентов') {
+        console.log(222);
       completionAbonents(url);
     }
     if (h2.innerText==='Cервис монотонного времени') {
