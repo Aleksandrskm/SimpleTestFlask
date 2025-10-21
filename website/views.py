@@ -44,3 +44,6 @@ def function_beams():
 @views.route('/plan_ochr')
 def function_plan_ochr():
     return render_template('plan_ochr.html')
+@views.route('/edit_KA')
+def function_edit_KA():
+    return render_template('edit_KA.html')
