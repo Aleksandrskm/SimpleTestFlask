@@ -46,4 +46,4 @@ def function_plan_ochr():
     return render_template('plan_ochr.html')
 @views.route('/edit_KA')
 def function_edit_KA():
-    return render_template('edit_KA.html')
+    return render_template('edit_Ka.html')
