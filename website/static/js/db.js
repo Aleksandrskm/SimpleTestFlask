@@ -1,6 +1,21 @@
 // функция  изменения строки в API
-const URL=`185.192.247.60:7130`;
+let URL=`185.192.247.60:7130`;
 const testURL=`127.0.0.1:8000`;
+function renderPopup(popupElement,message){
+  const div = document.createElement("div");
+  popupElement.innerHTML=` <button type="button" onclick="this.closest('dialog').classList.remove('popup');this.closest('dialog').close();">
+        Закрыть
+    </button>`;
+  div.textContent=message;
+  div.classList.add('dialog-div');
+  popupElement.prepend(div);
+  popupElement.classList.add('popup');
+  popupElement.showModal()
+  setTimeout(()=>{
+    popupElement.classList.remove('popup')
+    popupElement.close()
+  },5000)
+}
 function cleanStringCompact(str) {
   if (typeof str !== 'string') {
     return str;
@@ -22,9 +37,16 @@ async function editRow(data,tableName) {
           });
           const result = await response.json();
           console.log(`Row edit successfully:`, result);
+          if(document.querySelector('#dialog-res')){
+            renderPopup(document.querySelector('#dialog-res'),`Данные успешно обновлены`)
+          }
+
           return result;
         }
         catch (error) {
+          if(document.querySelector('#dialog-res')){
+            renderPopup(document.querySelector('#dialog-res'),`Произошла ошибка ${error}`)
+          }
           console.error(`Error edit row:`, error);
         }
 }
