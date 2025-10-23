@@ -1310,6 +1310,14 @@ tr td{
      overflow: auto;
     /*overflow-y: scroll;*/
     max-height: 60vh;
+
+    background-color: white;
+}
+#ids-Ka:has(div.id-ka-list){
+    border: 1px solid black;
+}
+#ka-Data:has(>div.flexKa){
+    border: 1px solid black;
 }
 #table-KA{
     display: flex;
@@ -1318,7 +1326,9 @@ tr td{
     height: 100%;     
 }
 #send-Ka{
-    width: 97%;
+    width: 100%;
+    margin: 0;
+    margin-top: 3px;
 }
 .dialog-div{
     font-size: 1.1rem;
