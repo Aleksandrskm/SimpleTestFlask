@@ -1,6 +1,7 @@
 // функция  изменения строки в API
 let URL=`185.192.247.60:7130`;
 const testURL=`127.0.0.1:8000`;
+// URL=testURL
 function renderPopup(popupElement,message){
   const div = document.createElement("div");
   popupElement.innerHTML=` <button type="button" onclick="this.closest('dialog').classList.remove('popup');this.closest('dialog').close();">
