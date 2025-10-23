@@ -1,6 +1,6 @@
 'use strict';
 import {getRowsTable,editRow} from "./db.js";
-console.log(`1`);
+import {DataTle} from "./DataTle.js";
 async function getKa(){
     const dataKa = await getRowsTable('KA');
     return dataKa?.rows;
@@ -38,7 +38,11 @@ function renderKaData(filtredData,parentElement){
                 elementLabelKa.innerText=`${key}: `;
                 elementLabelKa.htmlFor=`field-${key}`
                 dataKa.append(elementLabelKa,elementInputKa);
-                parentElement.append(dataKa);
+                if (key==='TLE_LINE1' || key==='TLE_LINE2'){
+                    elementLabelKa.innerText=`Строка ${key.at(-1)}: `;
+                    parentElement.append(dataKa);
+                }
+
             }));
 
     // parentElement.append(...elemKa);
@@ -59,7 +63,8 @@ function createArrValuesKa(){
 function  createArrFieldsData(){
     const arrFieldsData=[];
     document.querySelectorAll('.flexKa > label').forEach(item=>{
-        arrFieldsData.push(item.innerHTML.replace(/:/g, ""))
+        // arrFieldsData.push(item.innerHTML.replace(/:/g, "").trim())
+        arrFieldsData.push(item.htmlFor.slice(6).trim())
     });
 
     return arrFieldsData;
@@ -95,22 +100,24 @@ document.addEventListener('DOMContentLoaded', async () => {
                 btnSendKa.disabled=false;
                 console.log(e.target.innerHTML);
             }
-
         })
-
         btnSendKa.addEventListener('click',(e)=>{
             const arrValueData= createArrValuesKa()
             const arrFieldsData = createArrFieldsData()
             const objData= createObjKa(arrValueData,arrFieldsData);
+
+            console.log('TLE_LINE1',objData['TLE_LINE1'])
+            const dataTles =new DataTle()
+            dataTles.setAllTLEParam(objData.TLE_LINE1,0)
+            dataTles.setAllTLEParam(objData.TLE_LINE2,1)
+            console.log('dataTles',dataTles)
             console.log('objData',objData)
             console.log('arrFieldsData',arrFieldsData)
             console.log('arrValueData',arrValueData)
-            editRow({updates: objData,where:{column: 'ID',operator: "=",value: idKa,}},'KA').then(async () => {
+            editRow({updates: dataTles,where:{column: 'ID',operator: "=",value: idKa,}},'KA').then(async () => {
                 kaData = await getKa()
-
             })
         })
-
         console.log(ids);
     } catch (error) {
         console.error('Ошибка:', error);
