@@ -1,9 +1,13 @@
 'use strict';
-import {getRowsTable,editRow} from "./db.js";
+import {getRowsTable,editRow,postJSON} from "./db.js";
 import {DataTle} from "./DataTle.js";
 async function getKa(){
     const dataKa = await getRowsTable('KA');
     return dataKa?.rows;
+}
+async  function getRusName(){
+    const rusNames = await postJSON({name:'KA'});
+    return rusNames?.columns_info;
 }
 function getIdsKA(kaData){
     return  kaData.map(item=> item?.ID);
@@ -21,25 +25,81 @@ function renderIdsKa(idsKa,parentElement){
 function filterKaDataForId(kaData,idKa){
     return kaData.filter(item=> item?.ID===idKa);
 }
-function renderKaData(filtredData,parentElement){
+function renderTleData(elementLabelKa,elementInputKa,parentElement){
+
+    const dataKa=document.createElement('div');
+    dataKa.classList.add('flexTle')
+    dataKa.append(elementLabelKa,elementInputKa);
+    parentElement.append(dataKa);
+}
+function updateKaData(){
+    const arrValueData= createArrValuesKa('.flexTle > input')
+    const arrFieldsData = createArrFieldsData('.flexTle > label')
+    const objData= createObjKa(arrValueData,arrFieldsData);
+    const dataTles =new DataTle()
+    dataTles.setAllTLEParam(objData.TLE_LINE1,0)
+    dataTles.setAllTLEParam(objData.TLE_LINE2,1)
+    console.log('dataTles',dataTles)
+    const inputsKA=document.querySelectorAll(`.flexKa > input`)
+    Object.keys(dataTles).forEach((key)=>{
+        inputsKA.forEach(elemKA=>{
+            if(elemKA.id.slice(6).trim()===key){
+                elemKA.value=dataTles[key];
+            }
+        })
+    })
+}
+function updateTleData(){
+    const arrValueDataKa= createArrValuesKa('.flexKa > input')
+    const arrFieldsDataKa = createArrFieldsData('.flexKa > label')
+    let newTleParam= createObjKa(arrValueDataKa,arrFieldsDataKa);
+    const tleData = DataTle.fromJSON(newTleParam);
+    const tleLines=document.querySelectorAll('.flexTle > input');
+// Генерируем TLE строки
+    tleData.getAllTLEAsString();
+    console.log('tleData',tleData);
+    console.log("TLE Line 1:", tleData.TLE_LINE1);
+    console.log("TLE Line 2:", tleData.TLE_LINE2);
+    tleLines.forEach((inputLine,index)=>{
+        if(index===0){
+            inputLine.value=tleData.TLE_LINE1;
+        }
+        else {
+            inputLine.value=tleData.TLE_LINE2;
+        }
+    })
+}
+function renderKaData(filtredData,parentElement,rusNames){
+   console.log('filtredData ',filtredData);
     const elemKa=[];
+    console.log('filtredData',filtredData);
     parentElement.innerHTML=``;
     filtredData.forEach(
         ka=>
-            Object.keys(ka).forEach(key=>{
+            Object.keys(ka).forEach((key,index)=>{
                 const dataKa=document.createElement('div');
                 const elementLabelKa=document.createElement('label');
                 const elementInputKa=document.createElement('input');
                 dataKa.classList.add('flexKa')
                 elementInputKa.value=ka[key];
-                elementInputKa.placeholder=key;
                 elementInputKa.name=`field-${key}`
                 elementInputKa.id=`field-${key}`
-                elementLabelKa.innerText=`${key}: `;
+                if (key===rusNames[index].name){
+                    elementLabelKa.innerText=`${rusNames[index].description}: `;
+                    elementInputKa.placeholder=rusNames[index].description;
+                }
                 elementLabelKa.htmlFor=`field-${key}`
                 dataKa.append(elementLabelKa,elementInputKa);
                 if (key==='TLE_LINE1' || key==='TLE_LINE2'){
+                    const tleLines=document.getElementById('tle-Data')
                     elementLabelKa.innerText=`Строка ${key.at(-1)}: `;
+                    if (key==='TLE_LINE1')
+                    {
+                        tleLines.innerHTML=``;
+                    }
+                    renderTleData(elementLabelKa,elementInputKa,tleLines)
+                }
+                else {
                     parentElement.append(dataKa);
                 }
 
@@ -47,10 +107,14 @@ function renderKaData(filtredData,parentElement){
 
     // parentElement.append(...elemKa);
     console.log(elemKa);
+    document.querySelector('#arrow-left').removeEventListener('click', updateKaData)
+    document.querySelector('#arrow-right').removeEventListener('click', updateTleData)
+    document.querySelector('#arrow-left').addEventListener('click', updateKaData)
+    document.querySelector('#arrow-right').addEventListener('click', updateTleData)
 }
-function createArrValuesKa(){
+function createArrValuesKa(selector){
     const arrValueData=[];
-    document.querySelectorAll('.flexKa > input').forEach((item,index)=>{
+    document.querySelectorAll(`${selector}`).forEach((item,index)=>{
         if (!Number.isNaN(+item.value) && item.value!=='' && index!==4 ){
             arrValueData.push(+item.value)
         }
@@ -60,9 +124,9 @@ function createArrValuesKa(){
     });
     return arrValueData
 }
-function  createArrFieldsData(){
+function  createArrFieldsData(selector){
     const arrFieldsData=[];
-    document.querySelectorAll('.flexKa > label').forEach(item=>{
+    document.querySelectorAll(`${selector}`).forEach(item=>{
         // arrFieldsData.push(item.innerHTML.replace(/:/g, "").trim())
         arrFieldsData.push(item.htmlFor.slice(6).trim())
     });
@@ -85,6 +149,8 @@ function createObjKa(arrValueData,arrFieldsData){
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         let kaData = await getKa();
+        let rusNames = await getRusName();
+        console.log('rusNames',rusNames);
         const ids = getIdsKA(kaData);
         const kaList=document.querySelector('#ids-Ka')
         const kaListData=document.querySelector('#ka-Data')
@@ -96,21 +162,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (e.target.closest('.id-ka-list')){
                 idKa=Number(e.target.innerHTML.slice(-2).trim())
                 const filteredKa=filterKaDataForId(kaData,idKa);
-                renderKaData(filteredKa,kaListData)
+                renderKaData(filteredKa,kaListData,rusNames)
                 btnSendKa.disabled=false;
                 console.log(e.target.innerHTML);
             }
         })
         btnSendKa.addEventListener('click',(e)=>{
-            const arrValueData= createArrValuesKa()
-            const arrFieldsData = createArrFieldsData()
+            const arrValueData= createArrValuesKa('.flexTle > input')
+            const arrFieldsData = createArrFieldsData('.flexTle > label')
             const objData= createObjKa(arrValueData,arrFieldsData);
 
-            console.log('TLE_LINE1',objData['TLE_LINE1'])
             const dataTles =new DataTle()
             dataTles.setAllTLEParam(objData.TLE_LINE1,0)
             dataTles.setAllTLEParam(objData.TLE_LINE2,1)
             console.log('dataTles',dataTles)
+            // updateKaData(dataTles);
+            // updateTleData(objDataKa);
             console.log('objData',objData)
             console.log('arrFieldsData',arrFieldsData)
             console.log('arrValueData',arrValueData)
