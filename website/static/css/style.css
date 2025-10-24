@@ -64,6 +64,7 @@ input{
 .flexKa{
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 .input_parameters input {
     margin: 7px;
@@ -81,6 +82,7 @@ input{
 }
 .id-ka-list:hover{
     cursor: pointer;
+    background-color: #C0C0C0;
 }
 .input_parameters button {
     margin-bottom: 10px;
@@ -106,6 +108,7 @@ input{
 
 .input_parameters button:hover {
     background-color: #C0C0C0;
+    cursor: pointer;
 }
 
 /* Окно azimuth_and_elevation_angle - Определение азимута и угла места*/
@@ -342,6 +345,11 @@ input{
 .hidden{
     display: none;
 }
+#exit{
+    width: 98%;
+    margin: 0;
+    margin-top: 3px;
+}
 .information_request button{
     box-sizing: border-box;
     margin: 3px;
@@ -360,6 +368,10 @@ input{
 }
 .information_request button:hover{
     background-color: #C0C0C0;
+    cursor: pointer;
+}
+#arrows img:hover{
+    cursor: pointer;
 }
 #type-district{
 margin-bottom: 10px;
@@ -578,6 +590,13 @@ h2 {
     align-items: center;
     justify-content: center;
 }
+#arrows{
+    display: flex
+;
+    flex-direction: column;
+    justify-content: start;
+    margin-top: 50px;
+}
 h3 {
     color: #000000;
     line-height: 1;
@@ -590,7 +609,7 @@ h3 {
     padding-bottom: 15px; /* Отступ снизу */
     border-bottom: 6px solid #999999; /* Темная полоса снизу */
 }
-.flexKa input{
+.flexKa input,.flexTle input{
     box-sizing: border-box;
     margin: 7px;
     padding: 7px;
