@@ -330,6 +330,15 @@ input{
     position: relative;
     transition: width 0.3s ease;
 }
+.modal__names{
+    margin-bottom: 20px;
+    /* font-weight: 600; */
+    font-size: 18px;
+    display: grid
+;
+    align-content: initial;
+    justify-content: space-around;
+}
 .left-panel{
     display: flex;
     flex-direction: row-reverse;

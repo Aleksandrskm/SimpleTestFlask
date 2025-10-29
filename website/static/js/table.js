@@ -92,14 +92,19 @@ export function table(url){
               modalRowData.innerHTML+=`<div>Наименование поля: ${column.name}</div> `;
               modalRowData.innerHTML+=`<div>Русское наименование поля:${column.description}</div> `;
               modalRowData.innerHTML+=`<div>Тип поля: ${column['data_type']}</div> `;
-              modalRowData.innerHTML+=`<div>Может ли быть null: ${column['is_not_null']}</div> `;
+              modalRowData.innerHTML+=`<div>Обязательно к заполнению: ${column['is_not_null']}</div> `;
               modalRowData.innerHTML+=`<div>Первичный ключ:${column['is_primary_key']}</div> `;
               modalRowData.innerHTML+=`<div>Уникальность поля: ${column['is_unique']}</div> `;
               modalRowData.classList.add('modal__row');
               modalRow.append(modalRowData);
             })
+            const  modalRowData=document.createElement('div');
 
-
+            modalRowData.innerHTML+=`<div>Наименование таблицы: ${tableName}</div> `;
+            modalRowData.innerHTML+=`<div>Наименование таблицы (рус): ${rusName}</div> `;
+            modalRowData.classList.add('modal__names');
+            modalRow.prepend(modalRowData)
+            console.log(modalRow,'modalRowData')
             document.querySelector('#modal__sql .modal_data').append(modalRow);
           })
           const tr = document.createElement('table');
@@ -151,13 +156,18 @@ export function table(url){
                 modalRowData.innerHTML+=`<div>Наименование поля: ${column.name}</div> `;
                 modalRowData.innerHTML+=`<div>Русское наименование поля:${column.description}</div> `;
                 modalRowData.innerHTML+=`<div>Тип поля: ${column['data_type']}</div> `;
-                modalRowData.innerHTML+=`<div>Может ли быть null: ${column['is_not_null']}</div> `;
+                modalRowData.innerHTML+=`<div>Обязательно к заполнению: ${column['is_not_null']}</div> `;
                 modalRowData.innerHTML+=`<div>Первичный ключ:${column['is_primary_key']}</div> `;
                 modalRowData.innerHTML+=`<div>Уникальность поля: ${column['is_unique']}</div> `;
                 modalRowData.classList.add('modal__row');
                 modalRow.append(modalRowData);
               })
-
+              const  modalRowData=document.createElement('div');
+              modalRowData.classList.add('modal__names');
+              modalRowData.innerHTML+=`<div>Наименование таблицы: ${tableName}</div> `;
+              modalRowData.innerHTML+=`<div>Наименование таблицы (рус): ${rusName}</div> `;
+              modalRow.prepend(modalRowData)
+              console.log(modalRow,'modalRowData')
 
               document.querySelector('#modal__sql .modal_data').append(modalRow);
             })
