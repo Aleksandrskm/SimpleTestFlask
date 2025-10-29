@@ -255,6 +255,23 @@
     z-index: var(--z-index-up);
     background-color: transparent;
 }
+
+.radio-group {
+    display: flex;
+    gap: 20px;
+}
+
+.radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.radio-group input[type="radio"] {
+    margin: 0;
+}
+
 #button-collapse-left {
     margin-right: 10px;
     outline: none;
