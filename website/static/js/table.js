@@ -99,7 +99,14 @@ export function table(url){
               modalRow.append(modalRowData);
             })
 
+            const  modalRowData=document.createElement('div');
 
+
+            modalRowData.innerHTML+=`<div>Наименование таблицы: ${tableName}</div> `;
+            modalRowData.innerHTML+=`<div>Наименование таблицы (рус): ${rusName}</div> `;
+            modalRowData.classList.add('modal__names');
+            modalRow.prepend(modalRowData)
+            console.log(modalRow,'modalRowData')
             document.querySelector('#modal__sql .modal_data').append(modalRow);
           })
           const tr = document.createElement('table');
@@ -157,7 +164,14 @@ export function table(url){
                 modalRowData.classList.add('modal__row');
                 modalRow.append(modalRowData);
               })
+              const  modalRowData=document.createElement('div');
 
+
+              modalRowData.innerHTML+=`<div>Наименование таблицы: ${tableName}</div> `;
+              modalRowData.innerHTML+=`<div>Наименование таблицы (рус): ${rusName}</div> `;
+              modalRowData.classList.add('modal__names');
+              modalRow.prepend(modalRowData)
+              console.log(modalRow,'modalRowData')
 
               document.querySelector('#modal__sql .modal_data').append(modalRow);
             })

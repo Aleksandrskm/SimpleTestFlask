@@ -307,6 +307,15 @@ input{
     z-index: var(--z-index-up);
     background-color: transparent;
 }
+.modal__names{
+    margin-bottom: 20px;
+    /* font-weight: 600; */
+    font-size: 18px;
+    display: grid
+;
+    align-content: initial;
+    justify-content: space-around;
+}
 .collapsed #button-collapse-left {
     margin-right: 10px;
     outline: none;
