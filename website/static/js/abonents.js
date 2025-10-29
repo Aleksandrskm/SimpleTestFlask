@@ -287,7 +287,7 @@ function createModal(type, tableName, selectedRow, columnsInfo) {
 // заполнение таблицы данными
 async function fillTable(tableName, tbodyId, loader, filterByAbonentId = null) {
     try {
-        loader.show(`Загрузка ${tableName}...`);
+        loader.show(`Загрузка...`);
         
         // информация о структуре таблицы
         const tableInfo = await postJSON({ name: tableName });
