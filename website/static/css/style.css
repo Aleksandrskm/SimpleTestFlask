@@ -331,7 +331,7 @@ input{
     display: grid
 ;
     align-content: initial;
-    justify-content: space-around;
+    /*justify-content: space-around;*/
 }
 .collapsed #button-collapse-left {
     margin-right: 10px;
