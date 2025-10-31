@@ -11,7 +11,7 @@ export function table(url){
         postJSON(data).then(result => {
           console.log(result)
           if (result===undefined) {
-            document.querySelector('.container_content').innerHTML+=`<h3>В данный момент таблица недоступна</h3>`
+            document.querySelector('.container_content').innerHTML+=`<h3>В данный момент таблица отсутствует</h3>`
 
           }
           else{  
@@ -102,8 +102,8 @@ export function table(url){
             const  modalRowData=document.createElement('div');
 
 
-            modalRowData.innerHTML+=`<div>Наименование таблицы: ${tableName}</div> `;
-            modalRowData.innerHTML+=`<div>Наименование таблицы (рус): ${rusName}</div> `;
+            modalRowData.innerHTML+=`<div>Наименование таблицы в БД:    ${tableName}</div> `;
+            modalRowData.innerHTML+=`<div>Наименование таблицы (рус):    ${rusName}</div> `;
             modalRowData.classList.add('modal__names');
             modalRow.prepend(modalRowData)
             console.log(modalRow,'modalRowData')
@@ -167,7 +167,7 @@ export function table(url){
               const  modalRowData=document.createElement('div');
 
 
-              modalRowData.innerHTML+=`<div>Наименование таблицы: ${tableName}</div> `;
+              modalRowData.innerHTML+=`<div>Наименование таблицы в БД: ${tableName}</div> `;
               modalRowData.innerHTML+=`<div>Наименование таблицы (рус): ${rusName}</div> `;
               modalRowData.classList.add('modal__names');
               modalRow.prepend(modalRowData)
