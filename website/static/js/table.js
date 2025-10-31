@@ -1,19 +1,24 @@
 import {editRow,deleteRow,insertRow,postJSON,getRowsTable} from './db.js';
 import { Modal } from "./Modal.js";
+import {Loader} from "./Loader.js";
 export function table(url){
+  const loader = new Loader('.loader-container');
       // функция  в которую  передается название выбранной таблицы и на его основе создается таблица
       function createTable(engName,rusName,) {
         let data = { name: engName };
+
+
         postJSON(data).then(result => {
           console.log(result)
           if (result===undefined) {
             document.querySelector('.container_content').innerHTML+=`<h3>В данный момент таблица недоступна</h3>`
+
           }
           else{  
             generateTable(result,rusName,engName);
+
           }
         });
-      
         document.querySelector('.container_content').innerHTML = '';
       }
       // функция которая получает названия таблиц из API и генерирует их на странице
@@ -60,6 +65,8 @@ export function table(url){
       /* функция  которая проверяет  пустая таблица или нет и если она пустая строит её структуру  */
       function checkVoidTable(result,tableName, totalRowsCount,rusName) {
         if (totalRowsCount === 0) {
+          console.log(totalRowsCount);
+          console.log(result);
           const containerContent=document.querySelector('div .container_content');
           containerContent.innerHTML='';
           const name = document.createElement('div');
@@ -70,8 +77,38 @@ export function table(url){
           tableWrapper.classList.add('table-wrapper');
           tableScroll.classList.add('table-scroll');
           name.classList = 'table-name';
-          name.innerHTML = `${rusName}`;
+          name.innerHTML = `${rusName}<img class="sql-img" src="static/img/sql-svg.svg" alt="SQL">`;
           containerContent.append(name);
+          document.querySelector('.sql-img').addEventListener('click', (e) => {
+            document.querySelector('#modal__sql').style=`display: block;`
+            document.querySelector('#modal__sql .modal__closes').addEventListener('click', () => {
+              document.querySelector('#modal__sql').style=`display: none;`
+            })
+            const modalRow=document.createElement('div');
+            document.querySelector('#modal__sql .modal_data').innerHTML=``;
+            modalRow.classList.add('modal__rows');
+            result['columns_info'].forEach(column=>{
+              const modalRowData=document.createElement('div');
+              modalRowData.innerHTML+=`<div>Наименование поля: ${column.name}</div> `;
+              modalRowData.innerHTML+=`<div>Русское наименование поля:${column.description}</div> `;
+              modalRowData.innerHTML+=`<div>Тип поля: ${column['data_type']}</div> `;
+              modalRowData.innerHTML+=`<div>Может ли быть null: ${column['is_not_null']}</div> `;
+              modalRowData.innerHTML+=`<div>Первичный ключ:${column['is_primary_key']}</div> `;
+              modalRowData.innerHTML+=`<div>Уникальность поля: ${column['is_unique']}</div> `;
+              modalRowData.classList.add('modal__row');
+              modalRow.append(modalRowData);
+            })
+
+            const  modalRowData=document.createElement('div');
+
+
+            modalRowData.innerHTML+=`<div>Наименование таблицы: ${tableName}</div> `;
+            modalRowData.innerHTML+=`<div>Наименование таблицы (рус): ${rusName}</div> `;
+            modalRowData.classList.add('modal__names');
+            modalRow.prepend(modalRowData)
+            console.log(modalRow,'modalRowData')
+            document.querySelector('#modal__sql .modal_data').append(modalRow);
+          })
           const tr = document.createElement('table');
           tr.classList.add('mainTable');
           result.columns_info.forEach(column=>{
@@ -89,6 +126,8 @@ export function table(url){
       /* функция  в которую  передается вся информация о таблице 
       строки  в таблице  название выбранной таблицы  на  основе этих параметров строится структура таблицы*/
       function createTableContent(result,columnsInfo,tableName,rusName) {
+        loader.show('Загрузка....');
+        console.log(loader)
         console.log(result)
         console.log(columnsInfo)
         console.log(tableName)
@@ -104,8 +143,38 @@ export function table(url){
             tableWrapper.classList.add('table-wrapper');
             tableScroll.classList.add('table-scroll');
             name.classList = 'table-name';
-            name.innerHTML = `${rusName}`;
+            name.innerHTML = `${rusName} <img class="sql-img" src="static/img/sql-svg.svg" alt="SQL"> `;
             document.querySelector('.container_content').append(name);
+            document.querySelector('.sql-img').addEventListener('click', (e) => {
+              document.querySelector('#modal__sql').style=`display: block;`
+              document.querySelector('#modal__sql .modal__closes').addEventListener('click', () => {
+                document.querySelector('#modal__sql').style=`display: none;`
+              })
+              const modalRow=document.createElement('div');
+              document.querySelector('#modal__sql .modal_data').innerHTML=``;
+              modalRow.classList.add('modal__rows');
+              columnsInfo.forEach(column=>{
+                const modalRowData=document.createElement('div');
+                modalRowData.innerHTML+=`<div>Наименование поля: ${column.name}</div> `;
+                modalRowData.innerHTML+=`<div>Русское наименование поля:${column.description}</div> `;
+                modalRowData.innerHTML+=`<div>Тип поля: ${column['data_type']}</div> `;
+                modalRowData.innerHTML+=`<div>Может ли быть null: ${column['is_not_null']}</div> `;
+                modalRowData.innerHTML+=`<div>Первичный ключ:${column['is_primary_key']}</div> `;
+                modalRowData.innerHTML+=`<div>Уникальность поля: ${column['is_unique']}</div> `;
+                modalRowData.classList.add('modal__row');
+                modalRow.append(modalRowData);
+              })
+              const  modalRowData=document.createElement('div');
+
+
+              modalRowData.innerHTML+=`<div>Наименование таблицы: ${tableName}</div> `;
+              modalRowData.innerHTML+=`<div>Наименование таблицы (рус): ${rusName}</div> `;
+              modalRowData.classList.add('modal__names');
+              modalRow.prepend(modalRowData)
+              console.log(modalRow,'modalRowData')
+
+              document.querySelector('#modal__sql .modal_data').append(modalRow);
+            })
             const table=document.createElement('table');
             table.classList.add('mainTable');
             document.querySelector('.container_content').append(table);
@@ -198,7 +267,7 @@ export function table(url){
 
                   const tableScroll = document.querySelector('.table-scroll');
                   createButtonsTable(tableScroll,result,tableRow,rusName,tableName);
-
+            loader.close();
 
           })
           const trs=document.querySelectorAll('table tr');
