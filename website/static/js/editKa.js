@@ -1,5 +1,5 @@
 'use strict';
-import {getRowsTable,editRow,postJSON} from "./db.js";
+import {getRowsTable,editRow,postJSON,recalculateKas} from "./db.js";
 import {DataTle} from "./DataTle.js";
 async function getKa(){
     const dataKa = await getRowsTable('KA');
@@ -112,6 +112,17 @@ function renderKaData(filtredData,parentElement,rusNames){
     document.querySelector('#arrow-left').addEventListener('click', updateKaData)
     document.querySelector('#arrow-right').addEventListener('click', updateTleData)
 }
+function selectedKaList(selectElement){
+    const kaList=document.querySelectorAll('.id-ka-list');
+    kaList.forEach(listElement=>{
+        if (listElement.innerHTML===selectElement.innerHTML) {
+            selectElement.classList.add('selected');
+        }
+        else {
+            listElement.classList.remove('selected');
+        }
+    })
+}
 function createArrValuesKa(selector){
     const arrValueData=[];
     document.querySelectorAll(`${selector}`).forEach((item,index)=>{
@@ -156,7 +167,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const kaListData=document.querySelector('#ka-Data')
         renderIdsKa(ids,kaList);
         console.log(kaData);
-        let idKa;
+        let idKa=1;
         const btnSendKa=document.querySelector('#send-Ka')
         kaList.addEventListener('click',(e)=>{
             if (e.target.closest('.id-ka-list')){
@@ -164,10 +175,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const filteredKa=filterKaDataForId(kaData,idKa);
                 renderKaData(filteredKa,kaListData,rusNames)
                 btnSendKa.disabled=false;
-                console.log(e.target.innerHTML);
+                selectedKaList(e.target)
             }
         })
+        renderKaData(filterKaDataForId(kaData,idKa),kaListData,rusNames)
+        selectedKaList(document.querySelector('.id-ka-list'))
         btnSendKa.addEventListener('click',(e)=>{
+            updateTleData()
             const arrValueData= createArrValuesKa('.flexTle > input')
             const arrFieldsData = createArrFieldsData('.flexTle > label')
             const objData= createObjKa(arrValueData,arrFieldsData);
@@ -185,6 +199,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 kaData = await getKa()
             })
         })
+        const recalculateBtn=document.querySelector('#recalc')
+        recalculateBtn.addEventListener('click', recalculateKas)
         console.log(ids);
     } catch (error) {
         console.error('Ошибка:', error);
