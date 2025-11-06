@@ -306,6 +306,36 @@ input{
     z-index: var(--z-index-up);
     background-color: transparent;
 }
+.container-Ka{
+    display: flex
+;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.grid-btn{
+    box-sizing: border-box;
+    margin: 3px;
+    padding: 6px;
+    text-align: center;
+    width: 325px;
+    border-radius: 6px;
+    border-width: 2px;
+    font-size: calc(1rem);
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+}
+.grid-container{
+    margin-top: 20px;
+    display: grid
+;
+    /* width: 91vw; */
+    grid-template-columns: 3fr 1fr;
+    /* grid-template-rows: 1fr; */
+    justify-items: end;
+    gap: 20px;
+    justify-content: space-evenly;
+    margin-right: 10px;
+}
 .collapsed #button-collapse-right {
     outline: none;
     border-top: 10px solid transparent;
@@ -372,9 +402,9 @@ input{
     display: none;
 }
 #exit{
-    width: 98%;
-    margin: 0;
-    margin-top: 3px;
+    /*width: 98%;*/
+    /*margin: 0;*/
+    /*margin-top: 3px;*/
 }
 .information_request button{
     box-sizing: border-box;
@@ -1529,22 +1559,11 @@ body:has(dialog[open]) {
     text-align: center;
     cursor: pointer; /* Изменение вида курсора */
 }
-.insert:hover{
+.insert:hover,.grid-btn:hover,.delete:hover,.edit:hover,.copy:hover,.container__nav__el:hover{
     background-color: #C0C0C0;
-}
-.delete:hover{
-    background-color: #C0C0C0;
-}
-.edit:hover{
-    background-color: #C0C0C0;
-}
-.copy:hover{
-    background-color: #C0C0C0;
+    cursor: pointer;
 }
 
-.container__nav__el:hover {
-    background-color: #C0C0C0;
-}
 
 .container__nav__el {
     line-height: 1.5; /* Устанавливаем коэффициент междустрочного интервала */
