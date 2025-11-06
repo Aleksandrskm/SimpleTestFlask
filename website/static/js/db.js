@@ -2,7 +2,7 @@
 import {Loader} from "./Loader.js";
 let URL=`185.192.247.60:7130`;
 const testURL=`127.0.0.1:8000`;
- URL=testURL
+ //URL=testURL
 const loader = new Loader('.loader-container');
 function renderPopup(popupElement,message){
   const div = document.createElement("div");
