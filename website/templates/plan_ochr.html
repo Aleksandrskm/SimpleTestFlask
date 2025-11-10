@@ -77,23 +77,53 @@
             </div>
         </div>
 
-        <div class="table-section">
-            <div class="section-title">Нормы маски сигналов/каналов</div>
-            <div class="table-container">
-                <table class="signals-table">
-                    <thead>
-                        <tr>
-                            <th>Номер сигнала/канала</th>
-                            <th>Центральная частота, МГц</th>
-                            <th>Ширина полосы, МГц</th>
-                            <th>Минимальный уровень, дБ(мкВ/м)</th>
-                            <th>Максимальный уровень, дБ(мкВ/м)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Данные будут загружаться через JavaScript -->
-                    </tbody>
-                </table>
+        <div class="table-and-edit-container">
+            <div class="table-section">
+                <div class="section-title">Нормы маски сигналов/каналов</div>
+                <div class="table-container">
+                    <table class="signals-table">
+                        <thead>
+                            <tr>
+                                <th>Номер сигнала/канала</th>
+                                <th>Центральная частота, МГц</th>
+                                <th>Ширина полосы, МГц</th>
+                                <th>Минимальный уровень, дБ(мкВ/м)</th>
+                                <th>Максимальный уровень, дБ(мкВ/м)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Данные будут загружаться через JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        
+            <div class="right-panel">
+                <button id="button-collapse-right"></button>
+                <div class="information_request right">
+                    <div class="csus">Редактирование сигнала/канала</div>
+                    <br>
+                    <div class="data-district">
+                        <label for="frq_centr">Центральная частота, МГц:</label>
+                        <input id="frq_centr" type="number" value="" autocomplete="off">
+                        
+                        <label for="frq_min">Минимальная частота, МГц:</label>
+                        <input id="frq_min" type="number" value="" autocomplete="off">
+                        
+                        <label for="frq_max">Максимальная частота, МГц:</label>
+                        <input id="frq_max" type="number" value="" autocomplete="off">
+                        
+                        <label for="min_level">Минимальный уровень, дБ(мкВ/м):</label>
+                        <input id="min_level" type="number" value="30" autocomplete="off" readonly>
+                        
+                        <label for="max_level">Максимальный уровень, дБ(мкВ/м):</label>
+                        <input id="max_level" type="number" value="80" autocomplete="off" readonly>
+                        
+                        <button id="save-signal">Сохранить изменения</button>   
+                        <button id="add-signal">Добавить сигнал</button>
+                        <button id="delete-signal">Удалить сигнал</button>
+                    </div> 
+                </div>   
             </div>
         </div>
 
@@ -199,6 +229,159 @@
             margin-left: 5px; /* Отступ слева от единицы измерения */
         }
 
+        .container {
+    display: flex;
+    margin-top: 20px;
+}
+
+.left-panel {
+    display: flex;
+    flex-direction: row-reverse;
+    position: relative;
+    transition: width 0.3s ease;
+}
+
+.left-panel .left {
+    margin-right: 25px;
+}
+
+.data-district input {
+    box-sizing: border-box;
+    margin: 3px;
+    padding: 7px;
+    width: 90%;
+    border-radius: 6px;
+    border-width: 1px;
+    font-size: calc(0.9rem);
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+}
+
+.data-district button {
+    box-sizing: border-box;
+    margin: 3px;
+    padding: 6px;
+    text-align: center;
+    width: 90%;
+    border-radius: 6px;
+    border-width: 2px;
+    font-size: calc(1rem);
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+}
+
+.data-district button:hover {
+    background-color: #C0C0C0;
+}
+
+.signals-table tr.selected {
+    background-color: #B5B8B1;
+}
+
+.table-and-edit-container {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+    align-items: flex-start;
+}
+
+.table-section {
+    flex: 1;
+    margin-top: 0;
+}
+
+.right-panel {
+    position: relative;
+    transition: width 0.3s ease;
+    width: 400px;
+    min-width: 400px;
+}
+
+.information_request.right {
+    background-color: #f1f1f1;
+    border-radius: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+    max-width: 100%;
+}
+
+#button-collapse-right {
+    outline: none;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid black;
+    border-right: 0;
+    position: absolute;
+    left: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    cursor: pointer;
+    z-index: 1000;
+    background-color: transparent;
+}
+
+.collapsed #button-collapse-right {
+    outline: none;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid black;
+    border-left: 0;
+    position: absolute;
+    left: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    cursor: pointer;
+    z-index: 1000;
+    background-color: transparent;
+}
+
+.collapsed .right {
+    display: none;
+}
+
+.data-district input {
+    box-sizing: border-box;
+    margin: 3px;
+    padding: 7px;
+    width: 100%;
+    border-radius: 6px;
+    border-width: 1px;
+    font-size: calc(0.9rem);
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+}
+
+.data-district button {
+    box-sizing: border-box;
+    margin: 3px;
+    padding: 6px;
+    text-align: center;
+    width: 100%;
+    border-radius: 6px;
+    border-width: 2px;
+    font-size: calc(1rem);
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+}
+
+.data-district button:hover {
+    background-color: #C0C0C0;
+}
+
+.signals-table tr.selected {
+    background-color: #B5B8B1;
+}
+
+.data-district label {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
 
 
 
