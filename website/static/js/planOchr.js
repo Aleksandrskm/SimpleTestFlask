@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const updatedData = {
                 where: { column: "ID", operator: "=", value: selectedRow.ID },
-                row: {
+                updates: {
                     FRQ_CENTR: parseFloat(document.getElementById('frq_centr').value),
                     FRQ_MIN: parseFloat(document.getElementById('frq_min').value),
                     FRQ_MAX: parseFloat(document.getElementById('frq_max').value)
