@@ -53,6 +53,7 @@ function updateTleData(){
     const arrValueDataKa= createArrValuesKa('.flexKa > input')
     const arrFieldsDataKa = createArrFieldsData('.flexKa > label')
     let newTleParam= createObjKa(arrValueDataKa,arrFieldsDataKa);
+    console.log(newTleParam,'newTleParam');
     const tleData = DataTle.fromJSON(newTleParam);
     const tleLines=document.querySelectorAll('.flexTle > input');
 // Генерируем TLE строки
@@ -126,7 +127,7 @@ function selectedKaList(selectElement){
 function createArrValuesKa(selector){
     const arrValueData=[];
     document.querySelectorAll(`${selector}`).forEach((item,index)=>{
-        if (!Number.isNaN(+item.value) && item.value!=='' && index!==4 ){
+        if (!Number.isNaN(+item.value) && item.value!=='' && index!==4 && item.name!='field-TLE_INTERNATIONAL_CLASS'){
             arrValueData.push(+item.value)
         }
         else {
@@ -167,7 +168,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const kaListData=document.querySelector('#ka-Data')
         renderIdsKa(ids,kaList);
         console.log(kaData);
-        let idKa=1;
+        let idKa=0;
         const btnSendKa=document.querySelector('#send-Ka')
         kaList.addEventListener('click',(e)=>{
             if (e.target.closest('.id-ka-list')){
@@ -178,8 +179,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 selectedKaList(e.target)
             }
         })
-        renderKaData(filterKaDataForId(kaData,idKa),kaListData,rusNames)
+
+
         selectedKaList(document.querySelector('.id-ka-list'))
+        idKa=Number(document.querySelector('.id-ka-list.selected').innerHTML.slice(-2).trim())
+        renderKaData(filterKaDataForId(kaData,idKa),kaListData,rusNames)
+        btnSendKa.disabled=false;
         btnSendKa.addEventListener('click',(e)=>{
             updateTleData()
             const arrValueData= createArrValuesKa('.flexTle > input')
