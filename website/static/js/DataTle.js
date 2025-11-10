@@ -406,7 +406,7 @@
         line2 += (this.TLE_MEAN_MOTION || "0").toFixed(8).padStart(11, " ") + " ";
 
         // Поле 9: Номер витка
-        line2 += (this.TLE_NOMER_VITKA || "0").toString().padStart(5, "");
+        line2 += (this.TLE_NOMER_VITKA || "0000").toString().padStart(4, "0");
 
         // Поле 10: Контрольная сумма
         line2 += (this.TLE_CONTROL_SUM_LINE2 || "0").toString();
