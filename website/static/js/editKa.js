@@ -1,5 +1,5 @@
 'use strict';
-import {getRowsTable,editRow,postJSON,recalculateKas} from "./db.js";
+import {getRowsTable,editRow,postJSON,recalculateKas,recalculateKA} from "./db.js";
 import {DataTle} from "./DataTle.js";
 async function getKa(){
     const dataKa = await getRowsTable('KA');
@@ -11,6 +11,9 @@ async  function getRusName(){
 }
 function getIdsKA(kaData){
     return  kaData.map(item=> item?.ID);
+}
+function filterIdsKA(kaData){
+    return  kaData.sort((a,b)=> a-b);
 }
 function renderIdsKa(idsKa,parentElement){
     const elemIds=[];
@@ -163,7 +166,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         let kaData = await getKa();
         let rusNames = await getRusName();
         console.log('rusNames',rusNames);
-        const ids = getIdsKA(kaData);
+        const ids =filterIdsKA(getIdsKA(kaData)) ;
         const kaList=document.querySelector('#ids-Ka')
         const kaListData=document.querySelector('#ka-Data')
         renderIdsKa(ids,kaList);
@@ -202,6 +205,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.log('arrValueData',arrValueData)
             editRow({updates: dataTles,where:{column: 'ID',operator: "=",value: idKa,}},'KA').then(async () => {
                 kaData = await getKa()
+                const res = await recalculateKA(idKa)
             })
         })
         const recalculateBtn=document.querySelector('#recalc')
