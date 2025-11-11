@@ -329,7 +329,7 @@ input{
     display: grid
 ;
     /* width: 91vw; */
-    grid-template-columns: 3fr 1fr;
+    grid-template-columns: 1fr;
     /* grid-template-rows: 1fr; */
     justify-items: end;
     gap: 20px;
@@ -1405,10 +1405,29 @@ tr td{
     margin: 0;
     margin-top: 3px;
 }
+.mdl-dialog{
+
+    position: fixed;
+    /* top: 40vh; */
+    left: 0;
+    z-index: 1050;
+    border: 2px solid #575d5b;
+    box-shadow: -1px 0px 16px 0px;
+    background-color: hsl(216deg 58.72% 90.82%);
+    height: min(9vh,120px);
+    width: min(39vw,550px);
+    border-radius: 15px;
+
+}
 .dialog-div{
-    font-size: 1.1rem;
+    /*padding-top: min(20%, 25px);*/
+    font-size: 1.2rem;
     font-weight: bold;
     margin-bottom: 10px;
+    color: hsl(128deg 4.23% 11.47%);
+}
+.dialog-div p{
+    text-align: center;
 }
 dialog button{
     box-sizing: border-box;
@@ -1417,24 +1436,18 @@ dialog button{
     border-radius: 6px;
     border-width: 1px;
     font-size: calc(1rem);
-
     font-family: Arial, sans-serif;
+    font-weight: bold;
 }
 .popup{
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
 }
 body:has(dialog[open]) {
     overflow: hidden;
-}
-.mdl-dialog{
-
-    position: fixed;
-    /*top: 40vh;*/
-    left: 0;
-    z-index: 1050;
-    background-color: #fff;
-    border: 2px solid rgba(0, 0, 0, .2);
 }
 .beams-btns button{
     box-sizing: border-box;

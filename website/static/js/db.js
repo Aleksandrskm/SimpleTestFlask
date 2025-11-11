@@ -10,10 +10,13 @@ if(document.querySelector('#dialog-res')){
 
 function renderPopup(popupElement,message){
   const div = document.createElement("div");
-  popupElement.innerHTML=` <button type="button" onclick="this.closest('dialog').classList.remove('popup');this.closest('dialog').close();">
-        Закрыть
-    </button>`;
-  div.textContent=message;
+  // popupElement.innerHTML=` <button type="button" onclick="this.closest('dialog').classList.remove('popup');this.closest('dialog').close();">
+  //       Закрыть
+  //   </button>`;
+  const p=document.createElement("p");
+  popupElement.innerHTML=``;
+  p.innerHTML=message;
+  div.append(p);
   div.classList.add('dialog-div');
   popupElement.prepend(div);
   popupElement.classList.add('popup');
@@ -73,6 +76,39 @@ async function deleteRow(data,tableName) {
         catch (error) {
           console.error(`Error deleting row:`, error);
         }
+}
+async function recalculateKA(idKA) {
+  try {
+    const response = await fetch(`http://${URL}/ka/${idKA}/recalculate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        "X-Source":12
+      },
+    });
+    const result = await response.json();
+    if (response.ok) {
+      const result = await response;
+      if(document.querySelector('#dialog-res')){
+        loader.close()
+        renderPopup(document.querySelector('#dialog-res'),`Пересчет данных прошел успешно`)
+      }
+      loader.close()
+      return result;
+    }
+    else {
+      if(document.querySelector('#dialog-res')){
+        loader.close()
+        renderPopup(document.querySelector('#dialog-res'),`Произошла ошибка ${error}`)
+      }
+      loader.close()
+      throw new Error(`HTTP error! status: ${response.status} ${response.statusText}`);
+    }
+    return result;
+  }
+  catch (error) {
+    console.error(`Error deleting row:`, error);
+  }
 }
 // функция  добавления строки в API
 async function insertRow(data,tableName) {
@@ -201,4 +237,4 @@ async function recalculateKas(){
   }
 
 }
-export {editRow,deleteRow,insertRow,postJSON,getRowsTable,changeQuery,selectQuery,recalculateKas}
+export {editRow,deleteRow,insertRow,postJSON,getRowsTable,changeQuery,selectQuery,recalculateKas,recalculateKA}
