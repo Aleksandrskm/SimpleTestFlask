@@ -66,6 +66,7 @@ export class Modal{
             } 
             if (this.typeModal=='edit') {
               modalInput.placeholder=value;
+                modalInput.setAttribute('value',value);
             } 
             else{
               modalInput.placeholder=this.columns[i].description;
