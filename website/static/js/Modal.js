@@ -218,6 +218,7 @@ export class Modal{
             }
             else if (this.typeModal==='edit') {
             const inputs=document.querySelectorAll('.modal__input');
+            console.log('inputs',inputs);
             inputs.forEach((input,index)=>{
               if (input.value) {
                   const fieldName=this.table.columns_info[++index].name;
@@ -237,10 +238,11 @@ export class Modal{
                 };
                 console.log(data)
                 this.funcRow(data,this.tableName).then(()=>{
-                  callback(this.tableName,this.rusName);
+
                 });
               }
             });
+            callback(this.tableName,this.rusName);
             modal.remove(); 
              
             }
