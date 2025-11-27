@@ -3,7 +3,7 @@ import {editRow,deleteRow,insertRow,postJSON,getRowsTable,changeQuery,selectQuer
 document.addEventListener('DOMContentLoaded',function(){
     function createKATable(){
         getRowsTable('KA',0,99999).then(KA=>{
-          console.log(KA.rows)
+
           const data = { name: 'KA' };
           const rusName={};
           postJSON(data).then(tableInfo=>{
@@ -215,19 +215,19 @@ document.addEventListener('DOMContentLoaded',function(){
                       beam.addEventListener('click',(e)=>{
                           const trs=document.querySelectorAll('.beams-Table tbody tr');
                           console.log('trs')
-                          trs.forEach((tr)=>{
+                          trs.forEach((tr,index)=>{
                               if (tr===e.target.parentElement) {
                                   clearCanvas();
 
                                   //   tr.style='background-color: #B5B8B1';
                                   tr.classList.add('selected');
-                                  const distanceBeam=700000;
-                                  let centerY=0,centerX=0,radius=(tr.children[4].innerHTML/1000)*0.125;
+                                  const distanceBeam=tr.children[4].innerHTML;
+                                  let centerY=0,centerX=0,radius=(tr.children[5].innerHTML/1000)*0.125;
                                   console.log(tr.children[3].innerHTML)
                                   console.log(tr.children[4].innerHTML)
-                                  centerY=500+(distanceBeam*0.125)/1000+radius*Math.sin(tr.children[3].innerHTML* (Math.PI/180));
-                                  centerX=500+(distanceBeam*0.125)/1000+radius*Math.cos(tr.children[3].innerHTML* (Math.PI/180));
-                                  console.log(centerX,centerY,radius)
+                                  centerY=400+(distanceBeam*0.125)/1000+radius*Math.sin(tr.children[3].innerHTML* (Math.PI/180));
+                                  centerX=400+(distanceBeam*0.125)/1000+radius*Math.cos(tr.children[3].innerHTML* (Math.PI/180));
+                                  console.log('centerX',centerX,'centerX',centerY,'radius',radius)
                                   drawCircle(centerX,centerY,radius,'black')
                               }
                               else{
@@ -268,9 +268,7 @@ document.addEventListener('DOMContentLoaded',function(){
             //
             // }
               console.log( document.querySelectorAll('.beams-element'))
-
           }
-
         document.querySelectorAll('.beams-element').forEach(beam=>{
             console.log('1')
             beam.addEventListener('click',(e)=>{
@@ -282,11 +280,11 @@ document.addEventListener('DOMContentLoaded',function(){
                   
                     //   tr.style='background-color: #B5B8B1';
                     tr.classList.add('selected');
-                    let centerY=0,centerX=0,radius=(tr.children[4].innerHTML/1000)*0.125;
-                    const distanceBeam=700000;
+                    let centerY=0,centerX=0,radius=(tr.children[5].innerHTML/1000)*0.125;
+                        const distanceBeam=tr.children[4].innerHTML;
                     console.log(tr.children[1].innerHTML)
-                    centerY=500+(distanceBeam*0.125)/1000+radius*Math.sin(tr.children[3].innerHTML* (Math.PI/180));
-                    centerX=500+(distanceBeam*0.125)/1000+radius*Math.cos(tr.children[3].innerHTML* (Math.PI/180));
+                        centerY=400+(distanceBeam*0.125)/1000+radius*Math.sin(tr.children[3].innerHTML* (Math.PI/180));
+                        centerX=400+(distanceBeam*0.125)/1000+radius*Math.cos(tr.children[3].innerHTML* (Math.PI/180));
                     console.log(centerX,centerY,radius)
                     drawCircle(centerX,centerY,radius,'black')
                     }
@@ -296,7 +294,6 @@ document.addEventListener('DOMContentLoaded',function(){
                   })
                 
             })
-           
         })
         document.getElementById('view-beams').addEventListener('click',()=>{
             clearCanvas();
@@ -304,32 +301,19 @@ document.addEventListener('DOMContentLoaded',function(){
               
             trs.forEach((tr)=>{
                 
-                console.log(tr.children[1].innerHTML)
+                console.log('5',tr.children[4].innerHTML)
 
                 
-                let centerY=0,centerX=0,radius=(tr.children[4].innerHTML/1000)*0.125;
+                let centerY=0,centerX=0,radius=(tr.children[5].innerHTML/1000)*0.125;
                 console.log(tr.children[1].innerHTML)
-                const distanceBeam=700000;
-                centerY=500+(distanceBeam*0.125)/1000+radius*Math.sin(tr.children[3].innerHTML* (Math.PI/180));
-                centerX=500+(distanceBeam*0.125)/1000+radius*Math.cos(tr.children[3].innerHTML* (Math.PI/180));
+                const distanceBeam=tr.children[4].innerHTML;
+                centerY=400+(distanceBeam*0.125)/1000+radius*Math.sin(tr.children[3].innerHTML* (Math.PI/180));
+                centerX=400+(distanceBeam*0.125)/1000+radius*Math.cos(tr.children[3].innerHTML* (Math.PI/180));
                 console.log(centerX,centerY,radius)
                 drawCircle(centerX,centerY,radius,'black')
-                
 
-            
-                
-               
-                   
-               
               })
         })
-
-
-          
-         
-          
-           
-          
             // leftContent.innerHTML+=`${KA[0].SHIROTA_LN}`
             // console.log(leftContent,KA[0])
         });
@@ -500,11 +484,11 @@ document.addEventListener('DOMContentLoaded',function(){
 
 
         })
-        let centerY=0,centerX=0,radius=(beamSelected.children[4].innerHTML/1000)*0.125;
-        const distanceBeam=700000;
-        console.log(beamSelected.children[1].innerHTML)
-        centerY=500+(distanceBeam*0.125)/1000+radius*Math.sin(beamSelected.children[3].innerHTML* (Math.PI/180));
-        centerX=500+(distanceBeam*0.125)/1000+radius*Math.cos(beamSelected.children[3].innerHTML* (Math.PI/180));
+        let centerY=0,centerX=0,radius=(beamSelected.children[5].innerHTML/1000)*0.125;
+        const distanceBeam=beamSelected.children[4].innerHTML;
+        console.log(beamSelected.children[4].innerHTML)
+        centerY=400+(distanceBeam*0.125)/1000+radius*Math.sin(beamSelected.children[3].innerHTML* (Math.PI/180));
+        centerX=400+(distanceBeam*0.125)/1000+radius*Math.cos(beamSelected.children[3].innerHTML* (Math.PI/180));
         console.log(centerX,centerY,radius)
         clearCanvas();
         drawCircle(centerX,centerY,radius,'black')
