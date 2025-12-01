@@ -7,7 +7,7 @@
 
     <div class="wrapper-top"><div class="head-wrapper">Подсистема калибровки лучей КА</div> 
     <div class="beams">
-        <div class="beams_name">Лучи КА:  </div>
+        <div class="beams_name">Тип лучей:  </div>
         <div class="beams_types">
             <label for="beam_per">Передача</label>
             <input type="radio" name="type_beams" id="beam_per" value="KA_BEAM_PRD" checked>
@@ -141,41 +141,50 @@
    
       
     <div class="content_beams">
+        <div id="table-KA">
+            <div class="tab-Ka-name"></div>
+            <table class="KA-Table">
+                <thead>
+
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+
+        </div>
+        <div id="pain-beam-KA">
+            <canvas  id="canvas"  width="700" height="700"></canvas>
+        </div>
         <div id="beam-KA">
-            <div names-sat>
+            <div class="tab-Beams-name"></div>
+            <div names-sat style="display: none">
                 <span id="id-ka">КА:</span>
                 <span id="ka-name"></span>
             </div>
             <div class="table-scroll-beam">
             <table class="beams-Table">
                 <thead>
-                   
+
                 </thead>
                 <tbody>
-                   
+
                 </tbody>
             </table>
         </div>
             <div class="beams-btns">
-                <button id="view-beams">Отобразить</button>
-                <button id="save-beams">Сохранить</button>
-                <button id="edit-beams">Редактировать</button>
+<!--                <button id="view-beams">Отобразить</button>-->
+
+                <button class="btn_beams" id="edit-beams">Редактировать луч</button>
+                <button class="btn_beams" id="delete-beams" disabled>Удалить луч</button>
+                <button class="btn_beams" id="add-beams" disabled>Добавить луч</button>
+                <button class="btn_beams" id="copy-beams" disabled>Добавить с копированием луч</button>
+
             </div>
+            <button class="saves-beam" id="save-beams">Сохранить таблицу</button>
         </div>
-        <div id="pain-beam-KA">
-            <canvas  id="canvas"  width="1000" height="1000"></canvas>
-        </div>
-        <div id="table-KA">
-            <table class="KA-Table">
-                <thead>
-                   
-                </thead>
-                <tbody>
-                   
-                </tbody>
-            </table>
-            
-        </div>    
+
+
     </div>
     <div class="modal modal-beams-edit close-modal" >
         <div class="modal__dialog">

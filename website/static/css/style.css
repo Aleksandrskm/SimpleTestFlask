@@ -1327,6 +1327,9 @@ table{
 tr td{
     min-width: 200px;
 }
+.KA-Table tr td,.beams-Table tr td ,.beams-Table thead th,.KA-Table thead th{
+    min-width: 0px;
+}
 .confirmation-modal__buttons-add{
     max-width: 500px;
     margin: 10px auto
@@ -1366,14 +1369,14 @@ tr td{
 }
 #beam-KA{
     display: flex;
-        width: 18%;
+        /*width: 18%;*/
         flex-direction: column;
    height: 100%;     
    margin-left: 20px;
 }
 #canvas{
-    width: max(1000px, 100%);
-    height: max(1000px, 100%);
+    /*width:  800px;*/
+    /*height: 800px;*/
 }
 .KA-Table{
     width: 100%;
@@ -1396,14 +1399,34 @@ tr td{
 }
 #table-KA{
     display: flex;
-    width: max(47%,600px);
+    width: 56%;
     overflow: auto;
-    height: 100%;     
+    height: 100%;
+    flex-direction: column;
+}
+.btn_beams,.saves-beam{
+    box-sizing: border-box;
+    font-size: 1.2rem;
+    /* max-height: 55px; */
+    /* min-width: 230px; */
+    width: max(17%, 220px);
+    padding-right: 10px;
+    cursor: pointer;
+    border: 1px solid grey;
+    border-radius: 7px;
 }
 #send-Ka{
     width: 100%;
     margin: 0;
     margin-top: 3px;
+}
+.tab-Ka-name,.tab-Beams-name{
+    font-family: Arial, sans-serif;
+    /*font-weight: 600;*/
+    /*font-size: 20px;*/
+    font-size: calc(0.7rem + 0.6vw);
+    font-weight: bold;
+    margin-bottom: 10px;
 }
 .mdl-dialog{
 
@@ -1648,7 +1671,7 @@ text-transform:uppercase}
     /* height: calc(50vh - var(--size-header-height) - var(--size-footer-height)); */
     /* height:50vh; */
   overflow:auto;  
-  margin-top:20px;
+  /*margin-top:20px;*/
   }
   .table-wrapper{
     height: 75%;
