@@ -25,9 +25,6 @@ document.addEventListener('DOMContentLoaded',function(){
         createBeamTable(tr.children[0].innerHTML)
         clearCanvas();
     }
-
-
-
     function selectFitstKa(e){
         const trs=document.querySelectorAll('.KA-Table tbody tr');
         trs.forEach((tr)=>{
@@ -60,8 +57,16 @@ document.addEventListener('DOMContentLoaded',function(){
                 if ( tableInfo.columns_info[i].description==='Идентификатор' || tableInfo.columns_info[i].description==='Наименование КА'
                      || tableInfo.columns_info[i].description==='Номер орбиты') {
                     console.log()
-                    rusName[tableInfo.columns_info[i].name]=tableInfo.columns_info[i].description;
-                    th.innerHTML+=tableInfo.columns_info[i].description;
+                    if (tableInfo.columns_info[i].description==='Идентификатор'){
+                        rusName[tableInfo.columns_info[i].name]='ID';
+                        th.innerHTML+='ID';
+                    }
+                    else {
+                        rusName[tableInfo.columns_info[i].name]=tableInfo.columns_info[i].description;
+                        th.innerHTML+=tableInfo.columns_info[i].description;
+                    }
+
+                    // th.innerHTML+=tableInfo.columns_info[i].description;
                     tr.append(th);
                 }
             }
@@ -132,6 +137,7 @@ document.addEventListener('DOMContentLoaded',function(){
                   for( let i=2;i<tableInfo.columns_info.length;i++){
                        console.log(tableInfo.columns_info[i].name)
                       if(i>1 && i <6 || i === 8){
+
                           console.log('description',tableInfo.columns_info[i].description)
                           const th=document.createElement('th');
                           rusName[tableInfo.columns_info[i].name]=tableInfo.columns_info[i].description;
@@ -174,10 +180,16 @@ document.addEventListener('DOMContentLoaded',function(){
                               const td=document.createElement('td');
                               td.textContent=dataBeam;
                               tr.append(td);
+                              tr.dataset.id=beams[0];
                           }
+                          // if (index===1){
+                          //     console.log('dataBeam',beams);
+                          //     tr.dataset.id=beams[0];
+                          // }
 
                       })
                       tr.classList.add('beams-element');
+
                       document.querySelector('.beams-Table tbody').append(tr);
 
                   })
@@ -338,6 +350,11 @@ document.addEventListener('DOMContentLoaded',function(){
         const arrDataBeams=[];
         const arrIdBeams=[];
         console.log(elementsAllBeams);
+
+        const dataId=[...document.querySelectorAll('.beams-element')]
+        const dataSetIds=dataId.map((idElem)=> idElem.dataset.id )
+        console.log('datasetID',dataSetIds);
+        console.log('dataset',document.querySelector('.beams-element').dataset);
         for (let i = 0; i < elementsAllBeams.length; i++) {
             Array.from(elementsAllBeams[i].children).forEach((beam,index)=>{
                 if ( index===0){
@@ -377,8 +394,8 @@ document.addEventListener('DOMContentLoaded',function(){
         // }
         // console.log(queryBeam);
         // changeQuery('SELECT * FROM KA_BEAM_PRD');
-        console.log(arrDataBeams)
-        const queryBeam=generateBeamUpdateQuery(selectedValue,arrDataBeams,arrColumsBeams,arrIdBeams,idKa);
+        console.log(arrIdBeams,'arrIdBeams')
+        const queryBeam=generateBeamUpdateQuery(selectedValue,arrDataBeams,arrColumsBeams,dataSetIds,idKa);
         console.log(queryBeam);
         changeQuery(queryBeam).then(r => console.log(r));
         document.querySelector('.modal-beams-save').classList.toggle('close-modal');

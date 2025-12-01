@@ -1369,7 +1369,7 @@ tr td{
 }
 #beam-KA{
     display: flex;
-        /*width: 18%;*/
+        width: 45%;
         flex-direction: column;
    height: 100%;     
    margin-left: 20px;
@@ -1399,7 +1399,7 @@ tr td{
 }
 #table-KA{
     display: flex;
-    width: 56%;
+    width: 30%;
     overflow: auto;
     height: 100%;
     flex-direction: column;
