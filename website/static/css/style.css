@@ -1330,6 +1330,9 @@ tr td{
 .KA-Table tr td,.beams-Table tr td ,.beams-Table thead th,.KA-Table thead th{
     min-width: 0px;
 }
+.beams-Table tr td {
+    text-align: end;
+}
 .confirmation-modal__buttons-add{
     max-width: 500px;
     margin: 10px auto
@@ -1350,12 +1353,21 @@ tr td{
 }
 .content_beams{
     display: flex;
-    height: 70%;
+    height: 78%;
     width: 100%;
 }
 .beams_name{
+    text-align: left;
     font-size: calc(0.7rem + 0.6vw);
     font-weight: bold;
+}
+#calcCenterBeam{
+    margin-left: 10px;
+}
+.beams_types{
+    display: flex
+;
+    justify-content: space-between;
 }
 .beams{
     margin-right: auto;
@@ -1405,6 +1417,7 @@ tr td{
     flex-direction: column;
 }
 .btn_beams,.saves-beam{
+
     box-sizing: border-box;
     font-size: 1.2rem;
     /* max-height: 55px; */
@@ -1414,6 +1427,15 @@ tr td{
     cursor: pointer;
     border: 1px solid grey;
     border-radius: 7px;
+}
+.saves-beam{
+    flex-grow: 1;
+    margin: 10px;
+}
+.btns-beam{
+    display: flex
+;
+    align-items: flex-start;
 }
 #send-Ka{
     width: 100%;
