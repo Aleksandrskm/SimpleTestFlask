@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded',function(){
                                   decr_rus='Дальность центра  луча от подспутниковой точки КА, метры'
                                   break;
                               case 'Азимут центр точки луча на поверхности, градус':
-                                  decr_rus='Азимут луча относительно орбиты КА, метры'
+                                  decr_rus='Азимут луча относительно орбиты КА, градус'
                                   break;
 
                               default:
