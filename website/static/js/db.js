@@ -2,7 +2,7 @@
 import {Loader} from "./Loader.js";
 let URL=`185.192.247.60:7130`;
 const testURL=`127.0.0.1:8000`;
-// URL=testURL
+ // URL=testURL
 let loader;
 if(document.querySelector('#dialog-res')){
    loader = new Loader('.loader-container');
@@ -36,6 +36,26 @@ function cleanStringCompact(str) {
       .replace(/[\r\n\t]/g, '')
       .trim();
 }
+// http://185.192.247.60:7130/Geography/CalculateLocationBeamCoordinates?elevation_angle=-50&satellite_altitude=1500
+    async function getDistanceBeam(elevationAngle,satelliteAltitude) {
+      try {
+        const response = await fetch(`http://${URL}/Geography/CalculateLocationBeamCoordinates?elevation_angle=${elevationAngle}&satellite_altitude=${satelliteAltitude}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          // body: JSON.stringify(data),
+        });
+        const result = await response.json();
+        console.log(`Success:`, result);
+        if (response.ok) {
+          return result;
+        }
+
+      } catch (error) {
+        console.error(`Error:`, error);
+      }
+    }
 async function editRow(data,tableName) {
         try {
           const response = await fetch(`http://${URL}/db/update/${tableName}`, {
@@ -237,4 +257,4 @@ async function recalculateKas(){
   }
 
 }
-export {editRow,deleteRow,insertRow,postJSON,getRowsTable,changeQuery,selectQuery,recalculateKas,recalculateKA}
+export {editRow,deleteRow,insertRow,postJSON,getRowsTable,changeQuery,selectQuery,recalculateKas,recalculateKA,getDistanceBeam}

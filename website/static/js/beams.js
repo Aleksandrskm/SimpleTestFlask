@@ -1,18 +1,27 @@
 'use strict';
-import {editRow,deleteRow,insertRow,postJSON,getRowsTable,changeQuery,selectQuery} from './db.js';
+import {
+    editRow,
+    deleteRow,
+    insertRow,
+    postJSON,
+    getRowsTable,
+    changeQuery,
+    selectQuery,
+    getDistanceBeam
+} from './db.js';
 document.addEventListener('DOMContentLoaded',function(){
     function drawsTrBeam(tr,flagSelected=true,color='black',lineWidth = 1){
         if(flagSelected){
             tr.classList.add('selected');
         }
-        const distanceBeam=tr.children[2].innerHTML;
+        const distanceBeam=tr.children[2].innerHTML/5;
         let centerY=0,centerX=0,radius=(tr.children[4].innerHTML/1000)*0.125;
         console.log(tr.children[3].innerHTML)
         console.log(tr.children[4].innerHTML)
         const widthCanvas = document.getElementById('canvas').offsetWidth;
         const heightCanvas = document.getElementById('canvas').offsetHeight;
-        centerY=widthCanvas/3+(distanceBeam*0.125)/1000+radius*Math.sin(tr.children[3].innerHTML* (Math.PI/180));
-        centerX=heightCanvas/3+(distanceBeam*0.125)/1000+radius*Math.cos(tr.children[3].innerHTML* (Math.PI/180));
+        centerY=250+(distanceBeam*0.125)/1000+radius*Math.sin(tr.children[3].innerHTML* (Math.PI/180));
+        centerX=250+(distanceBeam*0.125)/1000+radius*Math.cos(tr.children[3].innerHTML* (Math.PI/180));
         console.log('centerX',centerX,'centerX',centerY,'radius',radius)
         drawCircle(centerX,centerY,radius,color,lineWidth)
     }
@@ -118,7 +127,7 @@ document.addEventListener('DOMContentLoaded',function(){
         const widthCanvas = document.getElementById('canvas').offsetWidth;
         const heightCanvas = document.getElementById('canvas').offsetHeight;
         console.log('width/2',widthCanvas/2,'height/2',heightCanvas/2);
-        drawCircle(heightCanvas/2,widthCanvas/2,252.5,'gray');
+        drawCircle(350,350,252.5,'gray');
         const trsBeams=document.querySelectorAll('.beams-Table tbody tr');
         trsBeams.forEach((tr)=>{
             drawsTrBeam(tr,false)
@@ -330,6 +339,7 @@ document.addEventListener('DOMContentLoaded',function(){
             createBeamTable();
         })
     )
+
     document.getElementById('save-beams').addEventListener('click',()=>{
         const idKaData=document.getElementById('id-ka').innerHTML;
         if (idKaData!=='КА:') {
@@ -378,7 +388,7 @@ document.addEventListener('DOMContentLoaded',function(){
                     // dataColum.innerHTML+=`<div class="name-column">${ths[index].innerHTML}</div>`;
                     if (index===0){
                         dataColum.innerHTML+=`<div class="name-column">${ths[index].innerHTML}</div>`;
-                        dataColum.innerHTML+=`<input disabled value='${child.innerHTML}'></input>`;
+                        dataColum.innerHTML+=`<input  class="beams-input" disabled value='${child.innerHTML}'></input>`;
 
                     }
                     else if (index===beamSelected.children.length-1 || index===2){
@@ -389,19 +399,35 @@ document.addEventListener('DOMContentLoaded',function(){
                             dataColum.innerHTML+=`<div class="name-column">${ths[index].innerHTML.replace(/метры/g, 'км')}</div>`;
                         }
 
-                        dataColum.innerHTML+=`<input value='${formatLastThree(child.innerHTML)}'></input>`;
+                        dataColum.innerHTML+=`<input class="beams-input" value='${formatLastThree(child.innerHTML)}'></input>`;
 
                     }
                     else {
                         dataColum.innerHTML+=`<div class="name-column">${ths[index].innerHTML}</div>`;
-                        dataColum.innerHTML+=`<input value='${child.innerHTML}'></input>`;
+                        dataColum.innerHTML+=`<input  class="beams-input" value='${child.innerHTML}'></input>`;
 
                     }
 
 
                     console.log(child.innerHTML)
                     if (index===1){
-                        dataColum.innerHTML+=` <button disabled id="calcCenterBeam">Расчет дальности центра луча</button>`;
+                        const butnCulc=document.createElement('button');
+                        butnCulc.id='calcCenterBeam';
+                        // butnCulc.disabled=true;
+                        butnCulc.textContent='Расчет дальности центра луча';
+                        butnCulc.addEventListener('click',()=>{
+                            const inputModalElements = [...document.querySelectorAll('.data-column input')];
+                            getDistanceBeam(Number(inputModalElements[1].value),1500).then( distanse=>{
+
+                                    console.log(distanse);
+                                    inputModalElements[2].value=distanse.toFixed(3);
+                                    inputModalElements[2].value=inputModalElements[2].value.replace('.',',')
+                            }
+
+                            )
+                        })
+                        // dataColum.innerHTML+=` <button disabled id="calcCenterBeam">Расчет дальности центра луча</button>`;
+                        dataColum.append(butnCulc);
                     }
                     document.querySelector('.modal-columns-edit').append(dataColum)
 
@@ -419,6 +445,110 @@ document.addEventListener('DOMContentLoaded',function(){
     })
     document.getElementById('close-save-beams').addEventListener('click',()=>{
         document.querySelector('.modal-beams-save').classList.toggle('close-modal');
+    })
+    document.getElementById('copy-beams-Kas').addEventListener('click',()=>{
+        const idKas=[...document.querySelectorAll('.KA-Table tbody tr')].map(trKa=>Number(trKa.id));
+        const idKaData=document.getElementById('id-ka').innerHTML;
+        const idKaCurrent=Number(idKaData.replace(/\D/g, ''));
+        const dataId=[...document.querySelectorAll('.beams-element')]
+
+        const selectedValue = document.querySelector('input[name="type_beams"]:checked').value;
+
+        console.log(idKas,'idKas');
+        console.log(idKaCurrent);
+
+        idKas.forEach((idKa,index)=>{
+            const arrColumsBeams=[];
+            const arrDataBeams=[];
+            const arrIdBeams=[];
+            let dataSetIds=dataId.map((idElem)=> idElem.dataset.id )
+            if(idKa>idKaCurrent){
+                dataSetIds=dataSetIds.map(id=> String(Number(id) + 16*(idKa-idKaCurrent)))
+            }
+            else  if(idKa<idKaCurrent){
+                dataSetIds=dataSetIds.map(id=>String(Number(id) - 16*(idKaCurrent-idKa)))
+            }
+            console.log(dataSetIds,'dataSetIdsCurr',idKa,'idKa')
+            const elementsAllBeams=document.querySelectorAll('tr.beams-element');
+            const elementsColumsBeams=document.querySelectorAll('table.beams-Table thead th');
+            elementsColumsBeams.forEach((column,i)=> {
+                        arrColumsBeams.push(column.id);
+                        console.log(column.id,'column.id');
+            })
+            for (let i = 0; i < elementsAllBeams.length; i++) {
+                Array.from(elementsAllBeams[i].children).forEach((beam,index)=>{
+                    console.log(beam.innerHTML,'beamsIn');
+                    arrDataBeams.push(beam.innerHTML);
+                })
+            }
+            console.log(arrIdBeams,'arrIdBeams')
+            const queryBeam=generateBeamUpdateQuery(selectedValue,arrDataBeams,arrColumsBeams,dataSetIds,idKa);
+
+            changeQuery(queryBeam).then(r => console.log(r));
+        })
+        // idKas.forEach((idKa,index)=>{
+        //     const elementsAllBeams=document.querySelectorAll('tr.beams-element');
+        //     const elementsColumsBeams=document.querySelectorAll('table.beams-Table thead th');
+        //     console.log(elementsAllBeams[0]);
+        //     console.log(elementsColumsBeams[1]);
+        //
+        //
+        //     const arrColumsBeams=[];
+        //     const arrDataBeams=[];
+        //     const arrIdBeams=[];
+        //     console.log(elementsAllBeams);
+        //
+        //     const dataId=[...document.querySelectorAll('.beams-element')]
+        //
+        //     let dataSetIds=dataId.map((idElem)=> idElem.dataset.id )
+        //     if (idKa==idKaCorrect){
+        //         dataSetIds=dataId.map((idElem)=> idElem.dataset.id )
+        //     }
+        //     else if(index>0) {
+        //         if (idKa<Number(idKaCorrect)){
+        //             dataSetIds=dataSetIds.map(id=>Number(id)-(16*idKa))
+        //         }
+        //         else {
+        //             dataSetIds=dataSetIds.map(id=>Number(id)+(16*Number(idKaCorrect)-idKa))
+        //             console.log(dataSetIds,'dataSetIds>')
+        //         }
+        //
+        //     }
+        //     else {
+        //         dataSetIds=dataSetIds.map(id=>Number(id)-(16*idKaCorrect)+16)
+        //     }
+        //
+        //     console.log('datasetID',dataSetIds);
+        //     console.log('dataset',document.querySelector('.beams-element').dataset);
+        //     for (let i = 0; i < elementsAllBeams.length; i++) {
+        //         Array.from(elementsAllBeams[i].children).forEach((beam,index)=>{
+        //             if ( index===0){
+        //                 arrIdBeams.push(+beam.innerHTML);
+        //
+        //             }
+        //         })
+        //     }
+        //     console.log(arrIdBeams)
+        //     console.log(elementsColumsBeams.length)
+        //     elementsColumsBeams.forEach((column,i)=> {
+        //
+        //         // console.log(column.id)
+        //         arrColumsBeams.push(column.id);
+        //
+        //         console.log(`......................`)
+        //         // queryBeam+=`${elementsColumsBeams[i]} = CASE ID`;
+        //     })
+        //     for (let i = 0; i < elementsAllBeams.length; i++) {
+        //         Array.from(elementsAllBeams[i].children).forEach((beam,index)=>{
+        //             // console.log(beam.innerHTML);
+        //             arrDataBeams.push(beam.innerHTML);
+        //         })
+        //     }
+        //     console.log(arrIdBeams,'arrIdBeams')
+        //     const queryBeam=generateBeamUpdateQuery(selectedValue,arrDataBeams,arrColumsBeams,dataSetIds,idKa);
+        //     console.log(queryBeam);
+        //     changeQuery(queryBeam).then(r => console.log(r));
+        // })
     })
     document.getElementById('save-save-beams').addEventListener('click',()=>{
         const idKaData=document.getElementById('id-ka').innerHTML;
@@ -461,23 +591,10 @@ document.addEventListener('DOMContentLoaded',function(){
         })
         for (let i = 0; i < elementsAllBeams.length; i++) {
             Array.from(elementsAllBeams[i].children).forEach((beam,index)=>{
-                    // console.log(beam.innerHTML);
+                     console.log(beam.innerHTML,'beamsIn');
                     arrDataBeams.push(beam.innerHTML);
             })
         }
-
-        // for (let i = 0; i < arrIdBeams.length; i++) {
-        //     for (let j = 0; j < arrDataBeams.length; j++) {
-        //         let k= j>=10?j%10 :j;
-        //             // console.log(k)
-        //         queryBeam+=` ${arrColumsBeams[k]} = ${arrDataBeams[j]},`;
-        //
-        //     }
-        //     queryBeam+=`WHERE ID = ${i} ID_KA = ${idKa};`;
-        //
-        // }
-        // console.log(queryBeam);
-        // changeQuery('SELECT * FROM KA_BEAM_PRD');
         console.log(arrIdBeams,'arrIdBeams')
         const queryBeam=generateBeamUpdateQuery(selectedValue,arrDataBeams,arrColumsBeams,dataSetIds,idKa);
         console.log(queryBeam);
