@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded',function(){
     function drawsTrBeam(tr,flagSelected=true,color='black',lineWidth = 1){
         if(flagSelected){
             tr.classList.add('selected');
+
         }
         const distanceBeam=tr.children[2].innerHTML/5;
         let centerY=0,centerX=0,radius=(tr.children[4].innerHTML/1000)*0.125;
@@ -23,7 +24,7 @@ document.addEventListener('DOMContentLoaded',function(){
         centerY=250+(distanceBeam*0.125)/1000+radius*Math.sin(tr.children[3].innerHTML* (Math.PI/180));
         centerX=250+(distanceBeam*0.125)/1000+radius*Math.cos(tr.children[3].innerHTML* (Math.PI/180));
         console.log('centerX',centerX,'centerX',centerY,'radius',radius)
-        drawCircle(centerX,centerY,radius,color,lineWidth)
+        drawCircle(centerX,centerY,radius,color,lineWidth,tr.children[0].innerHTML)
     }
     function closeTab() {
         // Создаем пустую страницу и сразу закрываем
@@ -312,7 +313,7 @@ document.addEventListener('DOMContentLoaded',function(){
         // Формируем итоговый запрос в одну строку
         return `UPDATE ${tableName} SET ${caseStatements} WHERE ID IN (${arrIdBeams.join(', ')}) AND ID_KA = ${idKa};`;
     }
-    function drawCircle(centerY,centerX,radius,color,lineWidth = 1 ) {
+    function drawCircle(centerY,centerX,radius,color,lineWidth = 1,text ='' ) {
         const canvas = document.getElementById("canvas");
         const ctx = canvas.getContext('2d');
         ctx.beginPath();
@@ -320,6 +321,16 @@ document.addEventListener('DOMContentLoaded',function(){
         ctx.strokeStyle = color;
         ctx.lineWidth = lineWidth;
         ctx.stroke();
+        if (text !== "") {
+            // Настраиваем стиль текста
+            ctx.font = `16px Arial`; // Размер шрифта зависит от радиуса
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillStyle = color;
+
+            // Рисуем текст
+            ctx.fillText(text, centerY, centerX);
+        }
       }
    
     createKATable();
