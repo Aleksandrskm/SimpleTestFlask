@@ -9,6 +9,24 @@ import {
     selectQuery,
     getDistanceBeam
 } from './db.js';
+function renderPopup(popupElement,message){
+    const div = document.createElement("div");
+    // popupElement.innerHTML=` <button type="button" onclick="this.closest('dialog').classList.remove('popup');this.closest('dialog').close();">
+    //       Закрыть
+    //   </button>`;
+    const p=document.createElement("p");
+    popupElement.innerHTML=``;
+    p.innerHTML=message;
+    div.append(p);
+    div.classList.add('dialog-div');
+    popupElement.prepend(div);
+    popupElement.classList.add('popup');
+    popupElement.showModal()
+    setTimeout(()=>{
+        popupElement.classList.remove('popup')
+        popupElement.close()
+    },5000)
+}
 document.addEventListener('DOMContentLoaded',function(){
     function drawsTrBeam(tr,flagSelected=true,color='black',lineWidth = 1){
         if(flagSelected){
@@ -128,7 +146,7 @@ document.addEventListener('DOMContentLoaded',function(){
         const widthCanvas = document.getElementById('canvas').offsetWidth;
         const heightCanvas = document.getElementById('canvas').offsetHeight;
         console.log('width/2',widthCanvas/2,'height/2',heightCanvas/2);
-        drawCircle(350,350,252.5,'gray');
+        drawCircle(350,350,312.5,'gray');
         const trsBeams=document.querySelectorAll('.beams-Table tbody tr');
         trsBeams.forEach((tr)=>{
             drawsTrBeam(tr,false)
@@ -467,7 +485,7 @@ document.addEventListener('DOMContentLoaded',function(){
 
         console.log(idKas,'idKas');
         console.log(idKaCurrent);
-
+        const allPromisesKa=[]
         idKas.forEach((idKa,index)=>{
             const arrColumsBeams=[];
             const arrDataBeams=[];
@@ -493,10 +511,21 @@ document.addEventListener('DOMContentLoaded',function(){
                 })
             }
             console.log(arrIdBeams,'arrIdBeams')
+            arrDataBeams
             const queryBeam=generateBeamUpdateQuery(selectedValue,arrDataBeams,arrColumsBeams,dataSetIds,idKa);
-
-            changeQuery(queryBeam).then(r => console.log(r));
+            allPromisesKa.push( changeQuery(queryBeam))
+            // changeQuery(queryBeam).then(r => console.log(r,'r'));
         })
+        allPromisesKa.push(Promise)
+        Promise.all(allPromisesKa)
+            .then(results => {
+                renderPopup(document.querySelector('#dialog-res'), `Данные лучей успешно перенесены на другие КА`);
+            })
+            .catch(error => {
+                renderPopup(document.querySelector('#dialog-res'), `Произошла ошибка ${error}`);
+            });
+
+
 
     })
     document.getElementById('save-save-beams').addEventListener('click',()=>{
@@ -547,7 +576,9 @@ document.addEventListener('DOMContentLoaded',function(){
         console.log(arrIdBeams,'arrIdBeams')
         const queryBeam=generateBeamUpdateQuery(selectedValue,arrDataBeams,arrColumsBeams,dataSetIds,idKa);
         console.log(queryBeam);
-        changeQuery(queryBeam).then(r => console.log(r));
+        changeQuery(queryBeam).then(r => {
+            renderPopup(document.querySelector('#dialog-res'),`Данные таблицы успешно обновлены`)
+        });
         document.querySelector('.modal-beams-save').classList.toggle('close-modal');
     })
     document.getElementById('save-edit-beams').addEventListener('click',()=>{

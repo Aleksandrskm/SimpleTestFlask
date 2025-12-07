@@ -194,13 +194,18 @@ async function changeQuery(query) {
       },
       'body':`"${(query)}"`,
     })
+    if (!response.ok) {
+      // Если сервер вернул ошибку (например, 404, 500), выбрасываем ошибку
+      throw new Error(`HTTP error: ${response.status}`);
+    }
     const result = await response.json();
     console.log((query));
     console.log(`Success:`, result);
     return result;
   } catch (error) {
-    console.error('Error:', error);
 
+    console.error('Error:', error);
+    throw error;
   }
 }
 async function selectQuery(query) {
