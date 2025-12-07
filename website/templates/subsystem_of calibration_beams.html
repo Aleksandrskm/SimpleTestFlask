@@ -3,7 +3,10 @@
 {% block content %}
 
 <!-- <script src="https://cdn.jsdelivr.net/npm/ol@v10.3.1/dist/ol.js"></script> -->
-
+<div class="loader-container loader-container--hidden">
+    <span class="loader"></span>
+    <span class="loader-container__title">Загрузка...</span>
+</div>
 
     <div class="wrapper-top"><div class="head-wrapper">Подсистема калибровки лучей КА</div> 
     <div class="beams">
@@ -208,7 +211,7 @@
           <button class="btn modal__close btn_dark btn_min" id="close-edit-beams">Отмена</button>
 
           </div>
-                <div>  - разделитель дробной части "." (точка)</div>
+                <div> * - разделитель дробной части "." (точка)</div>
             </div>
         </div>
     </div>
@@ -223,8 +226,12 @@
               <button class="btn modal__close btn_dark btn_min" id="close-save-beams">Отмена</button></div></div></div></div>
     <div class="footer">
         
-    </div>   
-        
+    </div>
+<dialog   class="mdl-dialog" id="dialog-res">
+    <!--    <button type="button" onclick="this.closest('dialog').classList.add('hidden');this.closest('dialog').close();">-->
+    <!--        Закрыть-->
+    <!--    </button>-->
+</dialog>
        
         
         
