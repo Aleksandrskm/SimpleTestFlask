@@ -14,13 +14,7 @@ let selectedAbonentId = null; // ID абонента
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Abonents page loaded');
-    const loader = new Loader('.loader-container');
-    
-    initializeTimer();
-    initializeSettingsHandlers();
-    initializeEventDelegation();
-    initializeAbonentSelect();
-    initializeTables(loader);
+
 });
 
 function initializeEventDelegation() {
@@ -649,5 +643,11 @@ function initializeTimer() {
 
 // экспорт для других модулей
 export function completionAbonents(url) {
+    const loader = new Loader('.loader-container');
+    initializeTimer();
+    initializeSettingsHandlers();
+    initializeEventDelegation();
+    initializeAbonentSelect();
+    initializeTables(loader);
     console.log('Initializing abonents with URL:', url);
 }
