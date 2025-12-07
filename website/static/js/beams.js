@@ -516,7 +516,7 @@ document.addEventListener('DOMContentLoaded',function(){
             allPromisesKa.push( changeQuery(queryBeam))
             // changeQuery(queryBeam).then(r => console.log(r,'r'));
         })
-        allPromisesKa.push(Promise)
+
         Promise.all(allPromisesKa)
             .then(results => {
                 renderPopup(document.querySelector('#dialog-res'), `Данные лучей успешно перенесены на другие КА`);
