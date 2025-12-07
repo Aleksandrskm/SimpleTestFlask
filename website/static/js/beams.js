@@ -15,14 +15,14 @@ document.addEventListener('DOMContentLoaded',function(){
             tr.classList.add('selected');
 
         }
-        const distanceBeam=tr.children[2].innerHTML/5;
+        const distanceBeam=tr.children[2].innerHTML;
         let centerY=0,centerX=0,radius=(tr.children[4].innerHTML/1000)*0.125;
         console.log(tr.children[3].innerHTML)
         console.log(tr.children[4].innerHTML)
         const widthCanvas = document.getElementById('canvas').offsetWidth;
         const heightCanvas = document.getElementById('canvas').offsetHeight;
-        centerY=250+(distanceBeam*0.125)/1000+radius*Math.sin(tr.children[3].innerHTML* (Math.PI/180));
-        centerX=250+(distanceBeam*0.125)/1000+radius*Math.cos(tr.children[3].innerHTML* (Math.PI/180));
+        centerY=350+(distanceBeam*0.125)/1000*Math.sin(tr.children[3].innerHTML* (Math.PI/180));
+        centerX=350+(distanceBeam*0.125)/1000*Math.cos(tr.children[3].innerHTML* (Math.PI/180));
         console.log('centerX',centerX,'centerX',centerY,'radius',radius)
         drawCircle(centerX,centerY,radius,color,lineWidth,tr.children[0].innerHTML)
     }
@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded',function(){
               let typeBeams='';
               if (data.name==='KA_BEAM_PRD')
               {
-                  typeBeams='по передачи'
+                  typeBeams='по передаче'
               }
               else {
                   typeBeams='по приему'
@@ -410,7 +410,7 @@ document.addEventListener('DOMContentLoaded',function(){
                             dataColum.innerHTML+=`<div class="name-column">${ths[index].innerHTML.replace(/метры/g, 'км')}</div>`;
                         }
 
-                        dataColum.innerHTML+=`<input class="beams-input" value='${formatLastThree(child.innerHTML)}'></input>`;
+                        dataColum.innerHTML+=`<input class="beams-input" value='${Number(child.innerHTML)/1000}'></input>`;
 
                     }
                     else {
@@ -432,7 +432,7 @@ document.addEventListener('DOMContentLoaded',function(){
 
                                     console.log(distanse);
                                     inputModalElements[2].value=distanse.toFixed(3);
-                                    inputModalElements[2].value=inputModalElements[2].value.replace('.',',')
+                                    inputModalElements[2].value=inputModalElements[2].value;
                             }
 
                             )
@@ -497,69 +497,7 @@ document.addEventListener('DOMContentLoaded',function(){
 
             changeQuery(queryBeam).then(r => console.log(r));
         })
-        // idKas.forEach((idKa,index)=>{
-        //     const elementsAllBeams=document.querySelectorAll('tr.beams-element');
-        //     const elementsColumsBeams=document.querySelectorAll('table.beams-Table thead th');
-        //     console.log(elementsAllBeams[0]);
-        //     console.log(elementsColumsBeams[1]);
-        //
-        //
-        //     const arrColumsBeams=[];
-        //     const arrDataBeams=[];
-        //     const arrIdBeams=[];
-        //     console.log(elementsAllBeams);
-        //
-        //     const dataId=[...document.querySelectorAll('.beams-element')]
-        //
-        //     let dataSetIds=dataId.map((idElem)=> idElem.dataset.id )
-        //     if (idKa==idKaCorrect){
-        //         dataSetIds=dataId.map((idElem)=> idElem.dataset.id )
-        //     }
-        //     else if(index>0) {
-        //         if (idKa<Number(idKaCorrect)){
-        //             dataSetIds=dataSetIds.map(id=>Number(id)-(16*idKa))
-        //         }
-        //         else {
-        //             dataSetIds=dataSetIds.map(id=>Number(id)+(16*Number(idKaCorrect)-idKa))
-        //             console.log(dataSetIds,'dataSetIds>')
-        //         }
-        //
-        //     }
-        //     else {
-        //         dataSetIds=dataSetIds.map(id=>Number(id)-(16*idKaCorrect)+16)
-        //     }
-        //
-        //     console.log('datasetID',dataSetIds);
-        //     console.log('dataset',document.querySelector('.beams-element').dataset);
-        //     for (let i = 0; i < elementsAllBeams.length; i++) {
-        //         Array.from(elementsAllBeams[i].children).forEach((beam,index)=>{
-        //             if ( index===0){
-        //                 arrIdBeams.push(+beam.innerHTML);
-        //
-        //             }
-        //         })
-        //     }
-        //     console.log(arrIdBeams)
-        //     console.log(elementsColumsBeams.length)
-        //     elementsColumsBeams.forEach((column,i)=> {
-        //
-        //         // console.log(column.id)
-        //         arrColumsBeams.push(column.id);
-        //
-        //         console.log(`......................`)
-        //         // queryBeam+=`${elementsColumsBeams[i]} = CASE ID`;
-        //     })
-        //     for (let i = 0; i < elementsAllBeams.length; i++) {
-        //         Array.from(elementsAllBeams[i].children).forEach((beam,index)=>{
-        //             // console.log(beam.innerHTML);
-        //             arrDataBeams.push(beam.innerHTML);
-        //         })
-        //     }
-        //     console.log(arrIdBeams,'arrIdBeams')
-        //     const queryBeam=generateBeamUpdateQuery(selectedValue,arrDataBeams,arrColumsBeams,dataSetIds,idKa);
-        //     console.log(queryBeam);
-        //     changeQuery(queryBeam).then(r => console.log(r));
-        // })
+
     })
     document.getElementById('save-save-beams').addEventListener('click',()=>{
         const idKaData=document.getElementById('id-ka').innerHTML;
@@ -616,8 +554,15 @@ document.addEventListener('DOMContentLoaded',function(){
         const dataColumns=document.querySelectorAll('.data-column input');
         const beamSelected=document.querySelector('tr.beams-element.selected');
         dataColumns.forEach((data,i)=>{
-                beamSelected.children[i].innerHTML=`<td>${data.value.replace(/,/g, '')}</td>`
+            if (i==2 || i==4){
+                beamSelected.children[i].innerHTML=`<td>${Number(data.value.replace(/,/g, '.'))*1000}</td>`
                 console.log(data.value)
+            }
+            else {
+                beamSelected.children[i].innerHTML=`<td>${Number(data.value.replace(/,/g, '.'))}</td>`
+                console.log(data.value)
+            }
+
         })
 
         clearCanvas();

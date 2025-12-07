@@ -121,14 +121,20 @@ if (document.querySelector('.close')){
        document.getElementById('myModal').style.display='none';
    })}
 
+    if (window.location.pathname ==='/abonents') {
+        completionAbonents(url);
+    }
+    if ( window.location.pathname ==='/viewing_tables') {
+        table(url);
+    }
   if (h2) {
-    if (h2.innerText==='Редактор данных') {
-      table(url);
-    }
-    if (h2.innerText==='Заполнение данных для Абонентов') {
-        console.log(222);
-      completionAbonents(url);
-    }
+    // if (h2.innerText==='Редактор данных') {
+    //
+    // }
+    // if (h2.innerText==='Заполнение данных для Абонентов') {
+    //     console.log(222);
+    //
+    // }
     if (h2.innerText==='Cервис монотонного времени') {
      
       // example usage: realtime clock
