@@ -39,10 +39,10 @@ document.addEventListener('DOMContentLoaded',function(){
         console.log(tr.children[4].innerHTML)
         const widthCanvas = document.getElementById('canvas').offsetWidth;
         const heightCanvas = document.getElementById('canvas').offsetHeight;
-        centerY=350+(distanceBeam*0.125)/1000*Math.sin(tr.children[3].innerHTML* (Math.PI/180));
-        centerX=350+(distanceBeam*0.125)/1000*Math.cos(tr.children[3].innerHTML* (Math.PI/180));
+        centerX=350+(distanceBeam*0.125)/1000*Math.sin((180-tr.children[3].innerHTML)* (Math.PI/180));
+        centerY=350+(distanceBeam*0.125)/1000*Math.cos((180-tr.children[3].innerHTML)* (Math.PI/180));
         console.log('centerX',centerX,'centerX',centerY,'radius',radius)
-        drawCircle(centerX,centerY,radius,color,lineWidth,tr.children[0].innerHTML)
+        drawCircle(centerY,centerX,radius,color,lineWidth,tr.children[0].innerHTML)
     }
     function closeTab() {
         // Создаем пустую страницу и сразу закрываем
@@ -335,7 +335,7 @@ document.addEventListener('DOMContentLoaded',function(){
         const canvas = document.getElementById("canvas");
         const ctx = canvas.getContext('2d');
         ctx.beginPath();
-        ctx.arc(centerY, centerX, radius, 0, 2 * Math.PI);
+        ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
         ctx.strokeStyle = color;
         ctx.lineWidth = lineWidth;
         ctx.stroke();
@@ -347,7 +347,7 @@ document.addEventListener('DOMContentLoaded',function(){
             ctx.fillStyle = color;
 
             // Рисуем текст
-            ctx.fillText(text, centerY, centerX);
+            ctx.fillText(text, centerX, centerY);
         }
       }
    
