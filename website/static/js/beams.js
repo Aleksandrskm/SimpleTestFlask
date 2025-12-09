@@ -7,7 +7,7 @@ import {
     getRowsTable,
     changeQuery,
     selectQuery,
-    getDistanceBeam
+    getDistanceBeam,updateOrInsert
 } from './db.js';
 function renderPopup(popupElement,message){
     const div = document.createElement("div");
@@ -27,6 +27,9 @@ function renderPopup(popupElement,message){
         popupElement.close()
     },5000)
 }
+let tableInfoBeams=[];
+let tableValuesBeams=[];
+
 document.addEventListener('DOMContentLoaded',function(){
     function drawsTrBeam(tr,flagSelected=true,color='black',lineWidth = 1){
         if(flagSelected){
@@ -176,6 +179,8 @@ document.addEventListener('DOMContentLoaded',function(){
               console.log(data)
               const rusName={};
               postJSON(data).then(tableInfo=>{
+                  tableInfoBeams=[...tableInfo.columns_info.map(column => column.name)];
+                  console.log(tableInfoBeams,'tableInfoBeams');
                   const tr = document.createElement('tr');
                   for( let i=2;i<tableInfo.columns_info.length;i++){
                        console.log(tableInfo.columns_info[i].name)
@@ -227,7 +232,9 @@ document.addEventListener('DOMContentLoaded',function(){
              //     document.getElementById('id-ka').innerText=`KA: ${idKa}`;
              // }
               console.log(idKa)
+
               selectQuery(`SELECT * FROM ${selectedValue} WHERE ID_KA = ${idKa}`).then((dataBeams)=>{
+                  tableValuesBeams=[]
                   dataBeams.forEach((beams) => {
                       const tr = document.createElement('tr');
                       tr.classList.add('beams-element');
@@ -241,7 +248,7 @@ document.addEventListener('DOMContentLoaded',function(){
                               tdArray.push(td); // Добавляем td в массив
                           }
                       });
-
+                      tableValuesBeams.push(beams.map(beam=>beam.toFixed(2)));
                       // Переупорядочиваем массив td: 0, 4, 2, 1, 3
                       const orderedTdArray = [
                           tdArray[0],
@@ -260,6 +267,7 @@ document.addEventListener('DOMContentLoaded',function(){
                       // Вставляем строку в таблицу
                       document.querySelector('.beams-Table tbody').append(tr);
                   });
+                  console.log(tableValuesBeams,'tableValuesBeams');
                   const trsBeams=document.querySelectorAll('.beams-Table tbody tr');
                   trsBeams.forEach((tr)=>{
                       console.log('5',tr.children[4].innerHTML)
@@ -483,47 +491,94 @@ document.addEventListener('DOMContentLoaded',function(){
 
         const selectedValue = document.querySelector('input[name="type_beams"]:checked').value;
 
-        console.log(idKas,'idKas');
-        console.log(idKaCurrent);
-        const allPromisesKa=[]
-        idKas.forEach((idKa,index)=>{
-            const arrColumsBeams=[];
-            const arrDataBeams=[];
-            const arrIdBeams=[];
-            let dataSetIds=dataId.map((idElem)=> idElem.dataset.id )
-            if(idKa>idKaCurrent){
-                dataSetIds=dataSetIds.map(id=> String(Number(id) + 16*(idKa-idKaCurrent)))
-            }
-            else  if(idKa<idKaCurrent){
-                dataSetIds=dataSetIds.map(id=>String(Number(id) - 16*(idKaCurrent-idKa)))
-            }
-            console.log(dataSetIds,'dataSetIdsCurr',idKa,'idKa')
-            const elementsAllBeams=document.querySelectorAll('tr.beams-element');
-            const elementsColumsBeams=document.querySelectorAll('table.beams-Table thead th');
-            elementsColumsBeams.forEach((column,i)=> {
-                        arrColumsBeams.push(column.id);
-                        console.log(column.id,'column.id');
-            })
-            for (let i = 0; i < elementsAllBeams.length; i++) {
-                Array.from(elementsAllBeams[i].children).forEach((beam,index)=>{
-                    console.log(beam.innerHTML,'beamsIn');
-                    arrDataBeams.push(beam.innerHTML);
-                })
-            }
-            console.log(arrIdBeams,'arrIdBeams')
-            arrDataBeams
-            const queryBeam=generateBeamUpdateQuery(selectedValue,arrDataBeams,arrColumsBeams,dataSetIds,idKa);
-            allPromisesKa.push( changeQuery(queryBeam))
-            // changeQuery(queryBeam).then(r => console.log(r,'r'));
-        })
+        async function processBeamsForAllKAs() {
+            try {
+                let promises = []; // Массив для промисов
 
-        Promise.all(allPromisesKa)
-            .then(results => {
-                renderPopup(document.querySelector('#dialog-res'), `Данные лучей успешно перенесены на другие КА`);
-            })
-            .catch(error => {
-                renderPopup(document.querySelector('#dialog-res'), `Произошла ошибка ${error}`);
-            });
+                for (const idKa of idKas) {
+                    promises=[]
+                    const arrColumsBeams = [];
+                    const arrDataBeams = [];
+                    const arrIdBeams = [];
+                    const arrAllBeams=[]
+                    let dataSetIds = dataId.map((idElem) => idElem.dataset.id);
+
+                    if (idKa > idKaCurrent) {
+                        dataSetIds = dataSetIds.map(id => String(Number(id) + 16 * (idKa - idKaCurrent)));
+                    } else if (idKa < idKaCurrent) {
+                        dataSetIds = dataSetIds.map(id => String(Number(id) - 16 * (idKaCurrent - idKa)));
+                    }
+
+                    console.log(dataSetIds, 'dataSetIdsCurr', idKa, 'idKa');
+
+                    const elementsAllBeams = document.querySelectorAll('tr.beams-element');
+                    const elementsColumsBeams = document.querySelectorAll('table.beams-Table thead th');
+
+                    elementsColumsBeams.forEach((column, i) => {
+                        arrColumsBeams.push(column.id);
+                        console.log(column.id, 'column.id');
+                    });
+
+                    for (let i = 0; i < elementsAllBeams.length; i++) {
+                        Array.from(elementsAllBeams[i].children).forEach((beam,index)=>{
+                            console.log(beam.innerHTML,'beamsIn');
+                            arrAllBeams.push(beam.innerHTML);
+                        })
+                    }
+                    for (let i = 0; i < arrAllBeams.length; i += 5) {
+                        arrDataBeams.push(arrAllBeams.slice(i, i + 5));
+                    }
+                    console.log(arrIdBeams, 'arrIdBeams');
+                    const fieldIndices = arrColumsBeams.map(field => tableInfoBeams.indexOf(field));
+
+
+                    tableValuesBeams.forEach((row, index) => {
+                        arrDataBeams[index].forEach((value, i) => {
+                            row[fieldIndices[i]] = value;
+                        });
+                    });
+                    console.log(tableInfoBeams,'tableInfoBeamsRes')
+                    console.log(tableValuesBeams,'tableValuesBeamsRes');
+
+                    const filteredColumns = tableInfoBeams.filter(col => col !== "ID" && col !== "ID_KA");
+                    const filteredData = tableValuesBeams.map(row => row.slice(2)); // Удаляем первые два элемента
+
+                    const resultBody = filteredData.map(row => {
+                        const rowObj = {};
+                        filteredColumns.forEach((col, index) => {
+                            rowObj[col] = row[index];
+                        });
+                        return {
+                            row: rowObj,
+                            matching: [filteredColumns[0]]
+                        };
+                    });
+                    console.log(resultBody,'resultObj');
+                    resultBody.forEach((body) => {
+                        promises.push(updateOrInsert(selectedValue,body))
+                    })
+
+                    // const queryBeam = generateBeamUpdateQuery(selectedValue, arrAllBeams, arrColumsBeams, dataSetIds, idKa);
+                    // promises.push(changeQuery(queryBeam)); // Реальный запрос
+
+
+                }
+
+                // Теперь запускаем ВСЕ запросы одновременно с Promise.all
+                const results = await Promise.all(promises);
+
+
+                return results;
+
+            } catch (error) {
+
+                throw error;
+            }
+        }
+
+        processBeamsForAllKAs()
+            .then(results =>  renderPopup(document.querySelector('#dialog-res'), `Данные лучей успешно перенесены на другие КА`))
+            .catch(error =>  renderPopup(document.querySelector('#dialog-res'), `Произошла ошибка ${error}`));
 
 
 
@@ -537,7 +592,7 @@ document.addEventListener('DOMContentLoaded',function(){
         console.log(elementsAllBeams[0]);
         console.log(elementsColumsBeams[1]);
         const selectedValue = document.querySelector('input[name="type_beams"]:checked').value;
-
+        const arrAllBeams=[]
         const arrColumsBeams=[];
         const arrDataBeams=[];
         const arrIdBeams=[];
@@ -570,14 +625,32 @@ document.addEventListener('DOMContentLoaded',function(){
         for (let i = 0; i < elementsAllBeams.length; i++) {
             Array.from(elementsAllBeams[i].children).forEach((beam,index)=>{
                      console.log(beam.innerHTML,'beamsIn');
-                    arrDataBeams.push(beam.innerHTML);
+                arrAllBeams.push(beam.innerHTML);
             })
         }
+        for (let i = 0; i < arrAllBeams.length; i += 5) {
+            arrDataBeams.push(arrAllBeams.slice(i, i + 5));
+        }
         console.log(arrIdBeams,'arrIdBeams')
-        const queryBeam=generateBeamUpdateQuery(selectedValue,arrDataBeams,arrColumsBeams,dataSetIds,idKa);
+        console.log(arrColumsBeams,'arrColumsBeams')
+        console.log(arrDataBeams,'arrDataBeams')
+        const fieldIndices = arrColumsBeams.map(field => tableInfoBeams.indexOf(field));
+
+        // Обновляем основной массив
+        tableValuesBeams.forEach((row, index) => {
+            console.log(arrDataBeams[index],'arrDataBeams[index]');
+            arrDataBeams[index].forEach((value, i) => {
+                row[fieldIndices[i]] = value;
+            });
+        });
+
+        console.log(tableValuesBeams,'tableValuesBeamsRes');
+        const queryBeam=generateBeamUpdateQuery(selectedValue,arrAllBeams,arrColumsBeams,dataSetIds,idKa);
         console.log(queryBeam);
         changeQuery(queryBeam).then(r => {
             renderPopup(document.querySelector('#dialog-res'),`Данные таблицы успешно обновлены`)
+        }).catch(error => {
+            renderPopup(document.querySelector('#dialog-res'), `Произошла ошибка ${error}`);
         });
         document.querySelector('.modal-beams-save').classList.toggle('close-modal');
     })
