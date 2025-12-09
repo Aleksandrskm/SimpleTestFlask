@@ -195,11 +195,31 @@ async function changeQuery(query) {
       'body':`"${(query)}"`,
     })
     if (!response.ok) {
-      // Если сервер вернул ошибку (например, 404, 500), выбрасываем ошибку
       throw new Error(`HTTP error: ${response.status}`);
     }
     const result = await response.json();
     console.log((query));
+    console.log(`Success:`, result);
+    return result;
+  } catch (error) {
+
+    console.error('Error:', error);
+    throw error;
+  }
+}
+async function updateOrInsert(tableName,body) {
+  try {
+    const response =await fetch(`http://${URL}/db/update_or_insert_row/${tableName}`, {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+      },
+      'body':JSON.stringify(body),
+    })
+    if (!response.ok) {
+      throw new Error(`HTTP error: ${response.status}`);
+    }
+    const result = await response.json();
     console.log(`Success:`, result);
     return result;
   } catch (error) {
@@ -262,4 +282,4 @@ async function recalculateKas(){
   }
 
 }
-export {editRow,deleteRow,insertRow,postJSON,getRowsTable,changeQuery,selectQuery,recalculateKas,recalculateKA,getDistanceBeam}
+export {editRow,deleteRow,insertRow,postJSON,getRowsTable,changeQuery,selectQuery,recalculateKas,recalculateKA,getDistanceBeam,updateOrInsert}
