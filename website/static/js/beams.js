@@ -560,7 +560,7 @@ document.addEventListener('DOMContentLoaded',function(){
 
                     // const queryBeam = generateBeamUpdateQuery(selectedValue, arrAllBeams, arrColumsBeams, dataSetIds, idKa);
                     // promises.push(changeQuery(queryBeam)); // Реальный запрос
-
+                    break;
 
                 }
 
