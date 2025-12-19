@@ -239,7 +239,15 @@ export function table(url){
             for(let field in row) {
                       // console.log(element[field])
                 const cell = document.createElement('td');
+                console.log('row[field]:',row[field])
+              if( typeof row[field] ==='number' && !Number.isInteger( row[field])){
+                console.log('cell[field]:',);
+                cell.innerText = row[field].toFixed(6);
+              }
+              else {
                 cell.innerText = row[field];
+              }
+
                 if (rowsIndex === 0) {
                   cell.setAttribute('data-key', 'ID');
                   ++rowsIndex;

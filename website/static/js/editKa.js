@@ -79,13 +79,22 @@ function renderKaData(filtredData,parentElement,rusNames){
     console.log('filtredData',filtredData);
     parentElement.innerHTML=``;
     filtredData.forEach(
-        ka=>
+        ka =>
             Object.keys(ka).forEach((key,index)=>{
                 const dataKa=document.createElement('div');
                 const elementLabelKa=document.createElement('label');
                 const elementInputKa=document.createElement('input');
                 dataKa.classList.add('flexKa')
-                elementInputKa.value=ka[key];
+                if( typeof ka[key] ==='number' && !Number.isInteger( ka[key])){
+                    console.log(' ka[key].fixed:', ka[key].toFixed(6));
+                    elementInputKa.value=ka[key].toFixed(6);
+
+                }
+                else {
+                    console.log(' ka[key]:', ka[key]);
+                    elementInputKa.value=ka[key];
+                }
+
                 elementInputKa.name=`field-${key}`
                 elementInputKa.id=`field-${key}`
                 if (key===rusNames[index].name){
