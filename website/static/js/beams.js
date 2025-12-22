@@ -457,7 +457,7 @@ document.addEventListener('DOMContentLoaded',function(){
                             getDistanceBeam(Number(inputModalElements[1].value),1500).then( distanse=>{
 
                                     console.log(distanse);
-                                    inputModalElements[2].value=distanse.toFixed(6);
+                                    inputModalElements[2].value=distanse.toFixed(3);
                                     inputModalElements[2].value=inputModalElements[2].value;
                             }
 
@@ -662,7 +662,11 @@ document.addEventListener('DOMContentLoaded',function(){
                 beamSelected.children[i].innerHTML=`<td>${Number(data.value.replace(/,/g, '.'))*1000}</td>`
                 console.log(data.value)
             }
-            else {
+            else if(i!=0 && i!=1){
+                beamSelected.children[i].innerHTML=`<td>${Number(data.value.replace(/,/g, '.')).toFixed(6)}</td>`
+                console.log(data.value)
+            }
+            else  {
                 beamSelected.children[i].innerHTML=`<td>${Number(data.value.replace(/,/g, '.'))}</td>`
                 console.log(data.value)
             }
