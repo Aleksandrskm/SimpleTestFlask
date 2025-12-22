@@ -56,6 +56,63 @@ function cleanStringCompact(str) {
         console.error(`Error:`, error);
       }
     }
+async function getActiveSessions() {
+  try {
+    const response = await fetch(`http://${URL}/users/sessions`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // body: JSON.stringify(data),
+    });
+    const result = await response.json();
+    console.log(`Success:`, result);
+    if (response.ok) {
+      return result;
+    }
+
+  } catch (error) {
+    console.error(`Error:`, error);
+  }
+}
+async function getAllUsers() {
+  try {
+    const response = await fetch(`http://${URL}/users`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // body: JSON.stringify(data),
+    });
+    const result = await response.json();
+    console.log(`Success:`, result);
+    if (response.ok) {
+      return result;
+    }
+
+  } catch (error) {
+    console.error(`Error:`, error);
+  }
+}
+async function postUsersActivity(userIds,startDate,endDate) {
+  try {
+    const response = await fetch(`http://${URL}/users/activity?start_date=${startDate}?end_date=${endDate}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userIds),
+    });
+    const result = await response.json();
+    console.log(`Success:`, result);
+    if (response.ok) {
+      return result;
+    }
+
+  } catch (error) {
+    console.error(`Error:`, error);
+  }
+}
 async function editRow(data,tableName) {
         try {
           const response = await fetch(`http://${URL}/db/update/${tableName}`, {
@@ -282,4 +339,6 @@ async function recalculateKas(){
   }
 
 }
-export {editRow,deleteRow,insertRow,postJSON,getRowsTable,changeQuery,selectQuery,recalculateKas,recalculateKA,getDistanceBeam,updateOrInsert}
+export {editRow,deleteRow,insertRow,postJSON,getRowsTable,changeQuery,
+        selectQuery,recalculateKas,recalculateKA,getDistanceBeam,
+        updateOrInsert,getActiveSessions,getAllUsers,postUsersActivity}

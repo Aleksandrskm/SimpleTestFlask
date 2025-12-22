@@ -47,3 +47,6 @@ def function_plan_ochr():
 @views.route('/edit_KA')
 def function_edit_KA():
     return render_template('edit_Ka.html')
+@views.route('/system-for-view-curr-sessions')
+def function_system_for_view_curr_sessions():
+    return render_template('system-for-view-curr-sessions.html')
