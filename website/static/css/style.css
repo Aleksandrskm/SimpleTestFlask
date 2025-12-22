@@ -336,6 +336,63 @@ input{
     justify-content: space-evenly;
     margin-right: 10px;
 }
+.input-users{
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+#select-users{
+    display: flex;
+    margin-bottom: 10px;
+    margin-top: 10px;
+
+}
+.active-session{
+    margin-bottom: 10px;
+    margin-top: 10px;
+    background-color: white;
+    border: 1px solid black;
+}
+#refresh-sessions,#activity-btn{
+    align-self: center;
+}
+#activity-btn{
+    margin-top: 20px;
+}
+#active-users{
+    display: flex;
+    flex-direction: column;
+}
+.active-session-w{
+    max-width: 55vw
+}
+.activity-session{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+#activity{
+    max-height: 300px;   /* нужная максимальная высота */
+    overflow-y: auto;    /* вертикальная прокрутка, если контента больше */
+    overflow-x: hidden;  /* чтобы не было горизонтального скролла */
+
+    padding: 8px;
+    box-sizing: border-box;
+}
+#start-date-time,#start-date, #end-date-time,#end-date,#users-select{
+    border-radius: 5px;
+}
+#users-select{
+    margin-left: 10px ;
+}
+.activity-data{
+    margin-bottom: 10px;
+    margin-top: 10px;
+    border: 1px solid black;
+    background-color: white;
+}
+.activity-session > div{
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
 .collapsed #button-collapse-right {
     outline: none;
     border-top: 10px solid transparent;
