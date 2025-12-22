@@ -51,7 +51,7 @@ const renderUserElem=(id,name)=>{
     //     <div>Идентификатор пользователя: ${id}</div>
     // `)
     userElement.setAttribute('value',id);
-    userElement.innerText=id;
+    userElement.innerText=name;
     return userElement;
 
 }
@@ -64,10 +64,28 @@ const renderAllUsers= (users)=>{
     }
     return allUsersElements;
 }
+const renderUserElement=(id,name)=>{
+    const userElement=document.createElement('div');
+    userElement.classList.add('user');
+    userElement.insertAdjacentHTML('afterbegin', `
+        <div class="id-user">ID: ${id}</div>
+        <div>Инициалы: ${name}</div>
+    `)
+    return userElement;
+
+}
+const renderAllUsersElements= (users)=>{
+    const allUsersElements= document.createElement('div');
+    allUsersElements.id='users-data'
+    for (const [id, name] of Object.entries(users)) {
+        allUsersElements.append(renderUserElement(id,name));
+    }
+    return allUsersElements;
+}
 function renderInputsTimeDate(){
     const currentDate = new Date();
     const endDate = new Date();
-    endDate.setMinutes(endDate.getMinutes() + 60);
+    currentDate.setMonth(currentDate.getMonth() - 1);
     const [dateStart, timeStart] = formatDate(currentDate).split(' ');
     const [dateEnd, timeEnd] = formatDate(endDate).split(' ');
     const dateStartInput = document.getElementById('start-date');
@@ -94,7 +112,7 @@ function renderActivitySession(session){
     const durSessionElement=document.createElement('div');
     startSessionElement.innerText+=`Время начала сессии: ${session['DATA_BEG']}`
     endSessionElement.innerText+=`Время завершения сессии: ${session['DATA_END']}`
-    durSessionElement.innerText+=`Продолжительность сессии: ${session['DURATION']}`
+    durSessionElement.innerText+=`Продолжительность сессии: ${session['DURATION']} ,сек`
     divSessionElement.classList.add('activity-session');
     divSessionElement.append(startSessionElement, endSessionElement, durSessionElement);
     return divSessionElement;
@@ -106,7 +124,7 @@ function renderAllActivitySession(activityValue){
     })
     const totalDurElement= document.createElement('div');
     totalDurElement.classList.add('total-session');
-    totalDurElement.innerText=`Общее время всех сессий: ${activityValue['total_duration']}`
+    totalDurElement.innerText=`Общее время всех сессий: ${activityValue['total_duration']} ,сек`
    return[arrSessions, totalDurElement];
 }
 async  function showActivity(){
@@ -163,6 +181,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('activeSessions: ',activeSessions);
     document.getElementById('active-sessions').append(...renderActiveSessions(activeSessions));
     document.getElementById('select-users').append(renderAllUsers(users));
+    document.getElementById('all-users').append(renderAllUsersElements(users));
      await showActivity()
     document.getElementById('refresh-sessions').addEventListener('click', async () => {
         activeSessions = await getActiveSessions();
