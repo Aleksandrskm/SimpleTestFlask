@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded',function(){
                               tdArray.push(td); // Добавляем td в массив
                           }
                       });
-                      tableValuesBeams.push(beams.map(beam=>beam.toFixed(2)));
+                      tableValuesBeams.push(beams.map(beam=>beam.toFixed(6)));
                       // Переупорядочиваем массив td: 0, 4, 2, 1, 3
                       const orderedTdArray = [
                           tdArray[0],
@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded',function(){
                           tdArray[1],
                           tdArray[3]
                       ];
-                      orderedTdArray[3].innerHTML=(Number(orderedTdArray[3].innerHTML).toFixed(2));
+                      orderedTdArray[3].innerHTML=(Number(orderedTdArray[3].innerHTML).toFixed(6));
                       // Добавляем td в строку в нужном порядке
                       tr.append(...orderedTdArray);
 
@@ -457,7 +457,7 @@ document.addEventListener('DOMContentLoaded',function(){
                             getDistanceBeam(Number(inputModalElements[1].value),1500).then( distanse=>{
 
                                     console.log(distanse);
-                                    inputModalElements[2].value=distanse.toFixed(3);
+                                    inputModalElements[2].value=distanse.toFixed(6);
                                     inputModalElements[2].value=inputModalElements[2].value;
                             }
 
