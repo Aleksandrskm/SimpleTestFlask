@@ -143,7 +143,7 @@ async  function showActivity(){
     else {
         idUser=[idUser]
     }
-    const activity = await postUsersActivity(idUser,dateStartInput,dateEndInput);
+    const activity = await postUsersActivity(idUser,dateStart,dateEnd);
     renderActivityUsers(activity)
 }
 function renderActivityUsers(activity){
