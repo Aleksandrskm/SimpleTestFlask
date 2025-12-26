@@ -352,18 +352,16 @@ input{
     background-color: white;
     border: 1px solid black;
 }
-#refresh-sessions,#activity-btn{
-    align-self: center;
-}
+
 #activity-btn{
-    margin-top: 20px;
+    margin-bottom: 20px;
 }
 #active-users{
     display: flex;
     flex-direction: column;
 }
 .active-session-w{
-    max-width: 36vw
+    max-width: 54vw
 }
 .activity-session{
     margin-top: 10px;
@@ -380,17 +378,21 @@ input{
 .id-user{
     margin-right: 10px;
 }
+#refresh-sessions,#activity-btn,#print-activity-arh,#print-activity{
+    align-self: center;
+}
 .user{
     display: flex;
 }
 .user-all{
     width: 27vw;
+    display: none;
 }
 .active-session-section{
-    max-width: 27vw
+    max-width: 30vw
 }
 .active-ses{
-    width: 27vw;
+    width: 33vw;
 }
 #all-users{
     display: flex;
@@ -398,6 +400,9 @@ input{
     overflow: auto;
     max-height: 70vh;
 
+}
+#print-activity-arh{
+    margin-top: 10px;
 }
 #users-data{
     margin-top: 10px;

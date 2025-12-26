@@ -7,7 +7,7 @@
     <span class="loader"></span>
     <span class="loader-container__title">Загрузка...</span>
 </div>
-<h2>Подсистема просмотра текущих сессий</h2>
+<h2>Просмотр активности пользователей</h2>
 <article class="container-Ka">
     <section class="information_request user-all">
         <div id="all-users">
@@ -16,31 +16,39 @@
     </section>
     <section class="information_request  active-session-w">
         <div id="active-users">
-            <div class="csus">Просмотр активности пользователей</div>
+            <div class="csus">Просмотр активности пользователей за период</div>
+            <div class="input-users">
+
+                <label for="start-date">С</label>
+                <input  id="start-date" type="date">
+                <label for="start-date-time"></label>
+                <input  id="start-date-time" type="time">
+
+                <label for="end-date">По</label>
+                <input id="end-date" type="date">
+                <label for="end-date-time"></label>
+                <input  id="end-date-time" type="time">
+            </div>
             <div id="select-users">
                 <div>Выбор пользователя:</div>
             </div>
-            <div class="input-users">
-                <label for="start-date-time">Начало</label>
-                <input  id="start-date-time" type="time">
-                <label for="start-date"></label>
-                <input  id="start-date" type="date">
+            <button id="activity-btn">Отобразить активность пользователей за период</button>
 
-                <label for="end-date-time">Завершение</label>
-                <input  id="end-date-time" type="time">
-                <label for="end-date"></label>
-                <input id="end-date" type="date">
-            </div>
             <div id="activity"></div>
-            <button id="activity-btn">Получить активность пользователей за период</button>
+            <button id="print-activity-arh" disabled>Печать</button>
         </div>
     </section>
     <section class="information_request active-ses">
+        <div class="csus">Активные сессии</div>
+        <button id="refresh-sessions">Отобразить активные сессии</button>
         <div id="active-sessions">
-            <div class="csus">Активные сессии</div>
+
+
+
 
         </div>
-        <button id="refresh-sessions">Обновить активные сессии</button>
+        <button id="print-activity" disabled >Печать</button>
+
     </section>
 
 </article>
