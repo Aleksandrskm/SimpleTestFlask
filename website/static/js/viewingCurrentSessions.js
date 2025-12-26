@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', async () => {
      await showActivity()
     document.getElementById('refresh-sessions').addEventListener('click', async () => {
         activeSessions = await getActiveSessions();
-        document.getElementById('active-sessions').innerHTML = `<div class="csus">Активные сессии</div>`;
+        document.getElementById('active-sessions').innerHTML = ``;
         document.getElementById('active-sessions').append(...renderActiveSessions(activeSessions));
     })
     document.getElementById('activity-btn').addEventListener('click', showActivity);
