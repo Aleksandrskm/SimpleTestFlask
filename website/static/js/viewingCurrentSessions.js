@@ -15,7 +15,7 @@ function formatDate(date) {
         [
             padTo2Digits(date.getHours()),
             padTo2Digits(date.getMinutes()),
-            // padTo2Digits(date.getSeconds()),  // 👈️ can also add seconds
+             padTo2Digits(date.getSeconds()),  // 👈️ can also add seconds
         ].join(':')
     );
 }
@@ -100,8 +100,9 @@ function renderInputsTimeDate(){
 }
 function timeToUtcIso(dateStr, timeStr) {
     const [year, month, day] = dateStr.split('-').map(Number);
-    const [hours, minutes] = timeStr.split(':').map(Number);
-    const moscowDate = new Date(year, month - 1, day, hours, minutes, 0, 0);
+    const [hours, minutes, seconds = 0] = timeStr.split(':').map(Number); // ✅ добавлены секунды
+
+    const moscowDate = new Date(year, month - 1, day, hours, minutes, seconds, 0);
 
     return moscowDate.toISOString();
 }
