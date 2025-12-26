@@ -96,7 +96,7 @@ async function getAllUsers() {
 }
 async function postUsersActivity(userIds,startDate,endDate) {
   try {
-    const response = await fetch(`http://${URL}/users/activity?start_date=${startDate}?end_date=${endDate}`, {
+    const response = await fetch(`http://${URL}/users/activity?start_date=${startDate}&end_date=${endDate}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
